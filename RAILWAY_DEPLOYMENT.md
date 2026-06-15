@@ -44,7 +44,7 @@ You'll need to create 4 services in your Railway project:
 1. **Remove Root Directory** — leave it **empty** (repo root). Railway must see `package-lock.json` at the root.
 2. In API service **Settings** → **Config file path**: `apps/api/railway.json`
 3. Or set manually:
-   - **Build Command:** `npm ci && npm run build -w @vikela/api`
+   - **Build Command:** `npm run build -w @vikela/api` (Nixpacks runs `npm ci` in the install phase — do not repeat it here)
    - **Start Command:** `bash scripts/railway-start-api.sh`
 
 4. Add these environment variables to the API service:
@@ -119,7 +119,7 @@ STRIPE_WEBHOOK_SECRET=
 1. **Remove Root Directory** — leave it **empty** (repo root).
 2. In Web service **Settings** → **Config file path**: `apps/web/railway.json`
 3. Or set manually:
-   - **Build Command:** `npm ci && npm run build -w @vikela/web`
+   - **Build Command:** `npm run build -w @vikela/web` (Nixpacks runs `npm ci` in the install phase — do not repeat it here)
    - **Start Command:** `npm run start -w @vikela/web`
 
 4. Add these environment variables to the web service:
