@@ -1,6 +1,6 @@
 // Shared types across Vikela apps
 
-export * from "./providers";
+export * from "./providers.js";
 
 export type ApiResponse<T> = {
   data: T | null;

@@ -2,13 +2,35 @@
   "name": "@vikela/shared",
   "version": "0.0.1",
   "private": true,
-  "main": "./types/index.ts",
-  "types": "./types/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "prepare": "npm run build"
+  },
+  "main": "./dist/types/index.js",
+  "types": "./dist/types/index.d.ts",
   "exports": {
-    ".": "./types/index.ts",
-    "./providers": "./types/providers.ts",
-    "./framework-catalog": "./framework-catalog.ts",
-    "./framework-control-mappings": "./framework-control-mappings.ts",
-    "./native-control-packs": "./native-control-packs.ts"
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "default": "./dist/types/index.js"
+    },
+    "./providers": {
+      "types": "./dist/types/providers.d.ts",
+      "default": "./dist/types/providers.js"
+    },
+    "./framework-catalog": {
+      "types": "./dist/framework-catalog.d.ts",
+      "default": "./dist/framework-catalog.js"
+    },
+    "./framework-control-mappings": {
+      "types": "./dist/framework-control-mappings.d.ts",
+      "default": "./dist/framework-control-mappings.js"
+    },
+    "./native-control-packs": {
+      "types": "./dist/native-control-packs.d.ts",
+      "default": "./dist/native-control-packs.js"
+    }
+  },
+  "devDependencies": {
+    "typescript": "^5.6.3"
   }
 }

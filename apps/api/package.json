@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "DOTENV_CONFIG_PATH=../../.env tsx watch src/index.ts",
-    "build": "prisma generate && tsc",
+    "build": "npm run build -w @vikela/shared && prisma generate && tsc",
     "start": "node dist/index.js",
     "start:railway": "prisma migrate deploy && node dist/index.js",
     "db:generate": "prisma generate",
