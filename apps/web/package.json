@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev -p 3000",
-    "build": "next build",
-    "start": "next start",
+    "build": "npm run build -w @vikela/shared && next build",
+    "start": "next start -H 0.0.0.0 -p ${PORT:-3000}",
     "lint": "next lint",
     "lint:security": "eslint --ext .ts,.tsx app components lib --plugin security --max-warnings 0",
     "test": "jest",

@@ -116,13 +116,16 @@ STRIPE_WEBHOOK_SECRET=
 
 ### 5. Configure the Web Service
 
-1. **Remove Root Directory** — leave it **empty** (repo root).
+1. **Root Directory** — leave **empty** (repo root). Do not set `apps/web`.
 2. In Web service **Settings** → **Config file path**: `apps/web/railway.json`
 3. Or set manually:
-   - **Build Command:** `npm run build -w @vikela/web` (Nixpacks runs `npm ci` in the install phase — do not repeat it here)
+   - **Builder:** Nixpacks
+   - **Build Command:** `npm run build -w @vikela/shared && npm run build -w @vikela/web` (Nixpacks runs `npm ci --include=dev` in the install phase — do not repeat it here)
    - **Start Command:** `npm run start -w @vikela/web`
+   - **Healthcheck Path:** `/`
+4. Clear any dashboard overrides that use `cd ../..` or `npm run start` without the workspace flag — those only applied when Root Directory was `apps/web`.
 
-4. Add these environment variables to the web service:
+5. Add these environment variables to the web service:
 
 ```bash
 # Required

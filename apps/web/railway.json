@@ -2,8 +2,8 @@
   "$schema": "https://railway.app/railway.schema.json",
   "build": {
     "builder": "NIXPACKS",
-    "buildCommand": "npm run build -w @vikela/web",
-    "watchPatterns": ["apps/web/**", "packages/**"]
+    "buildCommand": "npm run build -w @vikela/shared && npm run build -w @vikela/web",
+    "watchPatterns": ["apps/web/**", "packages/shared/**"]
   },
   "deploy": {
     "startCommand": "npm run start -w @vikela/web",
