@@ -3,7 +3,7 @@
 # In Railway: Settings → Config file path → apps/api/railway.json (or apps/web/railway.json)
 
 [phases.install]
-cmds = ["npm ci"]
+cmds = ["npm ci --include=dev"]
 
 [variables]
 NIXPACKS_NODE_VERSION = "22"

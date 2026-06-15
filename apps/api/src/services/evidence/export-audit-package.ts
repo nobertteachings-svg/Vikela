@@ -112,7 +112,7 @@ export async function streamAuditEvidenceExport(
 
   const archive = archiver("zip", { zlib: { level: 6 } });
 
-  archive.on("error", (err) => {
+  archive.on("error", (err: Error) => {
     req.log.error({ err }, "export_zip_error");
     reply.raw.destroy(err);
   });
