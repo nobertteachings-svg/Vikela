@@ -132,7 +132,8 @@ STRIPE_WEBHOOK_SECRET=
 NODE_ENV=production
 NEXT_PUBLIC_API_URL=https://api-production-eec4.up.railway.app
 
-# Auth (same as API)
+# Auth (same Clerk application as API — both keys required on Web)
+CLERK_SECRET_KEY=sk_test_...
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
 NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
 NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
@@ -269,6 +270,18 @@ npm run db:seed
 ```
 
 Then redeploy the API service.
+
+### Clerk handshake / secret-key-invalid (Web 500)
+
+If deploy logs show `Clerk: Handshake token verification failed` / `secret-key-invalid`:
+
+1. In [Clerk Dashboard](https://dashboard.clerk.com) → your app → **API Keys**, copy the **publishable** and **secret** keys from the **same** application.
+2. On the **Web** service, set:
+   - `CLERK_SECRET_KEY` = `sk_test_...` or `sk_live_...`
+   - `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` = matching `pk_test_...` or `pk_live_...`
+3. Keys must be a matching pair (both test or both live — not mixed).
+4. No quotes or trailing spaces in Railway variable values.
+5. After changing any `NEXT_PUBLIC_*` variable, **redeploy** (Next.js bakes them in at build time). `CLERK_SECRET_KEY` alone only needs a service restart/redeploy.
 
 ### Build Failures
 
