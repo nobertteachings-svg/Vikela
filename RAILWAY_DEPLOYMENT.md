@@ -239,6 +239,34 @@ If you see "Can't reach database server" errors:
 2. Verify `DATABASE_URL` and `DIRECT_URL` environment variables
 3. Ensure the API service can connect to the database (check Railway networking)
 
+### Failed migration (P3009)
+
+If deploy logs show `P3009` / `migrate found failed migrations`:
+
+The repo has incremental migrations but no initial baseline; a first deploy may fail mid-migration and block startup.
+
+**Automatic recovery:** `scripts/railway-start-api.sh` detects P3009/P3005, runs `db push`, marks migrations applied, and retries.
+
+**Manual fix (Railway API → Shell):**
+
+```bash
+bash scripts/railway-db-bootstrap.sh
+```
+
+Or step by step:
+
+```bash
+cd apps/api
+npx prisma migrate resolve --rolled-back "20250522140000_production_features"
+npx prisma db push
+npx prisma migrate resolve --applied "20250522140000_production_features"
+npx prisma migrate resolve --applied "20250523120000_production_blockers"
+npx prisma migrate resolve --applied "20250523180000_scan_parent_scan_id"
+npm run db:seed
+```
+
+Then redeploy the API service.
+
 ### Build Failures
 
 If builds fail:
