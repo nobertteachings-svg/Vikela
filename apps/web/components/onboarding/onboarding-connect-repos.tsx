@@ -737,7 +737,7 @@ function OnboardingConnectReposBody({
       initial.add(list[0]!.id);
     }
     setSelectedIds(initial);
-    const first = [...initial][0] ?? null;
+    const first = Array.from(initial)[0] ?? null;
     setScanRepoId(first);
   }, []);
 
@@ -814,7 +814,7 @@ function OnboardingConnectReposBody({
         return next;
       }
       if (!scanRepoId || !next.has(scanRepoId)) {
-        setScanRepoId([...next][0] ?? null);
+        setScanRepoId(Array.from(next)[0] ?? null);
       }
       return next;
     });
