@@ -29,7 +29,11 @@
     "db:migrate:dev": "npm run db:migrate:dev -w @vikela/api",
     "db:studio": "npm run db:studio -w @vikela/api",
     "setup": "npm install && npm run db:generate",
-    "setup:production": "bash scripts/setup-production.sh"
+    "setup:production": "bash scripts/setup-production.sh",
+    "build:api": "npm run build -w @vikela/api",
+    "build:web": "npm run build -w @vikela/web",
+    "start:api": "npm run start:railway -w @vikela/api",
+    "start:web": "npm run start -w @vikela/web"
   },
   "devDependencies": {
     "@playwright/test": "^1.49.1",
@@ -38,6 +42,6 @@
   },
   "packageManager": "npm@10.8.2",
   "engines": {
-    "node": ">=18"
+    "node": ">=20.20.0"
   }
 }

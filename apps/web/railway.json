@@ -2,8 +2,8 @@
   "$schema": "https://railway.app/railway.schema.json",
   "build": {
     "builder": "NIXPACKS",
-    "buildCommand": "cd ../.. && npm ci && cd apps/web && npm run build",
-    "watchPatterns": ["apps/web/**"]
+    "buildCommand": "bash ../../scripts/railway-build-web.sh",
+    "watchPatterns": ["apps/web/**", "packages/**", "scripts/railway-build-web.sh"]
   },
   "deploy": {
     "startCommand": "npm run start",

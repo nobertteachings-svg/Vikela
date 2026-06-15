@@ -1,10 +1,5 @@
 [phases.build]
-cmds = [
-  "cd ../..",
-  "npm ci",
-  "cd apps/web",
-  "npm run build"
-]
+cmds = ["bash ../../scripts/railway-build-web.sh"]
 
 [start]
 cmd = "npm run start"

@@ -1,1 +1,4 @@
-# This is a placeholder - actual nixpacks configs are in apps/api and apps/web
+# Vikela monorepo — do NOT deploy from repo root.
+# Create separate Railway services with Root Directory:
+#   API: apps/api
+#   Web: apps/web
