@@ -3,6 +3,9 @@
 # Railway Setup Helper Script
 # This script helps generate required values for Railway deployment
 
+API_URL="https://api-production-eec4.up.railway.app"
+WEB_URL="https://REPLACE-WITH-WEB-DOMAIN.up.railway.app"
+
 echo "🚀 Railway Setup Helper for Vikela"
 echo "====================================="
 echo ""
@@ -28,16 +31,16 @@ echo "  - DATABASE_URL={{RAILWAY_POSTGRES_DATABASE_URL}}"
 echo "  - DIRECT_URL={{RAILWAY_POSTGRES_DATABASE_URL}}"
 echo "  - REDIS_URL={{RAILWAY_REDIS_REDIS_URL}}"
 echo "  - ENCRYPTION_KEY=$ENCRYPTION_KEY"
-echo "  - APP_URL=https://your-web-app.railway.app"
-echo "  - API_URL=https://your-api-app.railway.app"
+echo "  - APP_URL=$WEB_URL"
+echo "  - API_URL=$API_URL"
+echo "  - CORS_ALLOWED_ORIGINS=$WEB_URL"
 echo "  - CLERK_PUBLISHABLE_KEY=pk_test_..."
 echo "  - CLERK_SECRET_KEY=sk_test_..."
 echo "  - CLERK_WEBHOOK_SECRET=whsec_..."
+echo "  - Clerk webhook: $API_URL/api/v1/webhooks/clerk"
 echo ""
-
-echo "🔑 Required Environment Variables for Web:"
 echo "  - NODE_ENV=production"
-echo "  - NEXT_PUBLIC_API_URL=https://your-api-app.railway.app"
+echo "  - NEXT_PUBLIC_API_URL=$API_URL"
 echo "  - NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_..."
 echo ""
 

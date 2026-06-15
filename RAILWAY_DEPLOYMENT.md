@@ -58,8 +58,8 @@ REDIS_URL={{RAILWAY_REDIS_REDIS_URL}}
 ENCRYPTION_KEY={{generate with: openssl rand -hex 32}}
 
 # App URLs (replace with your Railway domain)
-APP_URL=https://your-web-app.railway.app
-API_URL=https://your-api-app.railway.app
+APP_URL=https://WEB-DOMAIN.up.railway.app
+API_URL=https://api-production-eec4.up.railway.app
 
 # Auth (required for production)
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
@@ -75,7 +75,7 @@ VIKELA_DEV_ORG_SLUG=demo
 API_RATE_LIMIT_MAX=300
 
 # CORS (add your Railway web app domain)
-CORS_ALLOWED_ORIGINS=https://your-web-app.railway.app
+CORS_ALLOWED_ORIGINS=https://WEB-DOMAIN.up.railway.app
 
 # Disable scan worker if needed
 DISABLE_SCAN_WORKER=false
@@ -127,7 +127,7 @@ STRIPE_WEBHOOK_SECRET=
 ```bash
 # Required
 NODE_ENV=production
-NEXT_PUBLIC_API_URL=https://your-api-app.railway.app
+NEXT_PUBLIC_API_URL=https://api-production-eec4.up.railway.app
 
 # Auth (same as API)
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
@@ -166,7 +166,7 @@ npm run db:seed
 1. Go to your API service settings
 2. Click "Networking"
 3. Enable "Publicly accessible" if not already enabled
-4. Copy the generated domain (e.g., `your-api-app.railway.app`)
+4. Copy the generated domain (e.g., `api-production-eec4.up.railway.app`)
 
 5. Go to your Web service settings
 6. Click "Networking"
@@ -181,7 +181,7 @@ npm run db:seed
 
 1. Go to your Clerk dashboard
 2. Add webhook endpoint:
-   - `https://your-api-app.railway.app/api/v1/webhooks/clerk`
+   - `https://api-production-eec4.up.railway.app/api/v1/webhooks/clerk`
 3. Update the `CLERK_WEBHOOK_SECRET` in Railway with the secret from Clerk
 
 ### 9. Test the Deployment
