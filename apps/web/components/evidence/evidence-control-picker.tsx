@@ -64,6 +64,7 @@ export function EvidenceControlPicker({ value, onChange, className }: EvidenceCo
         <input
           type="text"
           role="combobox"
+          aria-controls="control-picker-listbox"
           aria-expanded={open}
           aria-autocomplete="list"
           placeholder={loading ? "Loading controls…" : "Search by code or title"}
@@ -96,6 +97,7 @@ export function EvidenceControlPicker({ value, onChange, className }: EvidenceCo
 
       {open && !loading && (
         <ul
+          id="control-picker-listbox"
           role="listbox"
           className="absolute z-20 mt-1 max-h-48 w-full overflow-auto rounded-md border border-white/10 bg-comply-elevated py-1 shadow-lg"
         >
@@ -103,6 +105,7 @@ export function EvidenceControlPicker({ value, onChange, className }: EvidenceCo
             <button
               type="button"
               role="option"
+              aria-selected={value === null}
               className="w-full px-3 py-2 text-left text-sm text-comply-text-secondary hover:bg-white/[0.06]"
               onClick={() => {
                 onChange(null);

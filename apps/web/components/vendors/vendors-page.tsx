@@ -62,7 +62,7 @@ export function VendorsPageContent({ vendors: initialVendors }: { vendors: UiVen
       const matchStatus = statusFilter === "All" || v.status === statusFilter;
       return matchQuery && matchStatus;
     });
-  }, [query, statusFilter]);
+  }, [query, statusFilter, vendors]);
 
   const approved = vendors.filter((v) => v.status === "Approved").length;
   const needsReview = vendors.filter((v) => v.status === "Review needed" || v.status === "Not reviewed").length;
