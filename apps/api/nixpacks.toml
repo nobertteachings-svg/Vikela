@@ -1,12 +1,15 @@
-# Install from monorepo root so @vikela/shared workspace resolves.
+# Deprecated when Root Directory is empty — use repo root nixpacks.toml instead.
+# If you must set Root Directory to apps/api, Railway cannot access package-lock.json.
+# Remove Root Directory and set Config file path to apps/api/railway.json.
+
 [phases.install]
-cmds = ["cd ../.. && npm ci"]
+cmds = ["npm ci"]
 
 [phases.build]
-cmds = ["cd ../.. && npm run build -w @vikela/api"]
+cmds = ["npm run build -w @vikela/api"]
 
 [start]
-cmd = "bash ../../scripts/railway-start-api.sh"
+cmd = "bash scripts/railway-start-api.sh"
 
 [variables]
 NIXPACKS_NODE_VERSION = "22"

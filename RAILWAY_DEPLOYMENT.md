@@ -41,12 +41,11 @@ You'll need to create 4 services in your Railway project:
 
 ### 4. Configure the API Service
 
-1. Railway should auto-detect the API service from `apps/api/railway.json`
-2. If not, click "New Service" → "Deploy from GitHub repo" → select the same repo
-3. In the API service settings:
-   - Set **Root Directory** to `apps/api`
-   - Build command (auto from `railway.json`): `cd ../.. && npm ci && cd apps/api && npm run build`
-   - Start command: `npm run start:railway` (runs migrations, then starts the API)
+1. **Remove Root Directory** — leave it **empty** (repo root). Railway must see `package-lock.json` at the root.
+2. In API service **Settings** → **Config file path**: `apps/api/railway.json`
+3. Or set manually:
+   - **Build Command:** `npm ci && npm run build -w @vikela/api`
+   - **Start Command:** `bash scripts/railway-start-api.sh`
 
 4. Add these environment variables to the API service:
 
@@ -117,12 +116,11 @@ STRIPE_WEBHOOK_SECRET=
 
 ### 5. Configure the Web Service
 
-1. Railway should auto-detect the web service from `apps/web/railway.json`
-2. If not, create another service from the same repo
-3. In the web service settings:
-   - Set **Root Directory** to `apps/web`
-   - Build command (auto from `railway.json`): `cd ../.. && npm ci && cd apps/web && npm run build`
-   - Start command: `npm run start`
+1. **Remove Root Directory** — leave it **empty** (repo root).
+2. In Web service **Settings** → **Config file path**: `apps/web/railway.json`
+3. Or set manually:
+   - **Build Command:** `npm ci && npm run build -w @vikela/web`
+   - **Start Command:** `npm run start -w @vikela/web`
 
 4. Add these environment variables to the web service:
 

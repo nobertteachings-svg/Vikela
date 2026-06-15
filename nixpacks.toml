@@ -1,4 +1,11 @@
-# Vikela monorepo — do NOT deploy from repo root.
-# Create separate Railway services with Root Directory:
-#   API: apps/api
-#   Web: apps/web
+# Vikela monorepo — deploy from REPO ROOT (Root Directory must be empty).
+# Per-service build/start commands live in apps/api/railway.json and apps/web/railway.json.
+# In Railway: Settings → Config file path → apps/api/railway.json (or apps/web/railway.json)
+
+[phases.install]
+cmds = ["npm ci"]
+
+[variables]
+NIXPACKS_NODE_VERSION = "22"
+NPM_CONFIG_PRODUCTION = "false"
+NODE_ENV = "production"
