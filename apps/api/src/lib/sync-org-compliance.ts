@@ -1,5 +1,9 @@
 import { prisma } from "./prisma.js";
-import { deriveControlStatus, hasOrgCompletedScan } from "./framework-score.js";
+import {
+  computeFrameworkScoresForOrg,
+  deriveControlStatus,
+  hasOrgCompletedScan,
+} from "./framework-score.js";
 import { buildControlIdsWithGaps } from "./control-gap-inheritance.js";
 
 /** Recompute and persist OrgFramework scores and OrgControl statuses after scans. */

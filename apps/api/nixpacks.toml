@@ -1,13 +1,13 @@
 [phases.build]
 cmds = [
   "cd ../..",
-  "npm install",
+  "npm ci",
   "cd apps/api",
   "npm run build"
 ]
 
 [start]
-cmd = "npm run start"
+cmd = "npm run start:railway"
 
 [variables]
 NODE_ENV = "production"

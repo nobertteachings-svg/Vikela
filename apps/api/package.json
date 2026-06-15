@@ -4,8 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "DOTENV_CONFIG_PATH=../../.env tsx watch src/index.ts",
-    "build": "tsc",
+    "build": "prisma generate && tsc",
     "start": "node dist/index.js",
+    "start:railway": "prisma migrate deploy && node dist/index.js",
     "db:generate": "prisma generate",
     "db:push": "DOTENV_CONFIG_PATH=../../.env prisma db push",
     "db:migrate": "DOTENV_CONFIG_PATH=../../.env prisma migrate deploy",

@@ -44,9 +44,9 @@ You'll need to create 4 services in your Railway project:
 1. Railway should auto-detect the API service from `apps/api/railway.json`
 2. If not, click "New Service" → "Deploy from GitHub repo" → select the same repo
 3. In the API service settings:
-   - Set root directory to `apps/api`
-   - Build command: `cd .. && npm install && cd apps/api && npm run build`
-   - Start command: `npm run start`
+   - Set **Root Directory** to `apps/api`
+   - Build command (auto from `railway.json`): `cd ../.. && npm ci && cd apps/api && npm run build`
+   - Start command: `npm run start:railway` (runs migrations, then starts the API)
 
 4. Add these environment variables to the API service:
 
@@ -120,8 +120,8 @@ STRIPE_WEBHOOK_SECRET=
 1. Railway should auto-detect the web service from `apps/web/railway.json`
 2. If not, create another service from the same repo
 3. In the web service settings:
-   - Set root directory to `apps/web`
-   - Build command: `cd .. && npm install && cd apps/web && npm run build`
+   - Set **Root Directory** to `apps/web`
+   - Build command (auto from `railway.json`): `cd ../.. && npm ci && cd apps/web && npm run build`
    - Start command: `npm run start`
 
 4. Add these environment variables to the web service:
@@ -149,27 +149,21 @@ ANTHROPIC_API_KEY=sk-ant-...
 
 ### 6. Run Database Migrations
 
-1. Once the API service is deployed, you need to run the database migrations
-2. In the Railway API service, enable "Deployments" → "Add Command"
-3. Add this as a post-deploy command:
-   ```bash
-   npx prisma migrate deploy
-   ```
-4. Or run it manually via Railway's console:
-   - Click on your API service
-   - Click "Console" tab
-   - Run: `npx prisma migrate deploy`
+Migrations run automatically on API startup via `start:railway` (`prisma migrate deploy` then `node dist/index.js`).
 
-### 7. Seed the Database (Optional)
+To run manually (Railway API service → **Shell**):
 
-For development/demo purposes, you can seed the database:
+```bash
+npx prisma migrate deploy
+```
 
-1. In the Railway API service console:
-   ```bash
-   npx tsx apps/api/src/db/seed.ts
-   ```
+To seed compliance frameworks and controls (first deploy only):
 
-### 8. Configure Service Networking
+```bash
+npm run db:seed
+```
+
+### 7. Configure Service Networking
 
 1. Go to your API service settings
 2. Click "Networking"
@@ -181,16 +175,18 @@ For development/demo purposes, you can seed the database:
 7. Enable "Publicly accessible"
 8. Copy the generated domain
 
-9. Update the environment variables in both services with the actual Railway domains
+9. Update the environment variables in both services with the actual Railway domains:
+   - API: `APP_URL`, `API_URL`, `CORS_ALLOWED_ORIGINS`
+   - Web: `NEXT_PUBLIC_API_URL`
 
-### 9. Configure Clerk Webhooks (if using Clerk)
+### 8. Configure Clerk Webhooks (if using Clerk)
 
 1. Go to your Clerk dashboard
-2. Add webhook endpoints:
+2. Add webhook endpoint:
    - `https://your-api-app.railway.app/api/v1/webhooks/clerk`
 3. Update the `CLERK_WEBHOOK_SECRET` in Railway with the secret from Clerk
 
-### 10. Test the Deployment
+### 9. Test the Deployment
 
 1. Visit your web app URL (e.g., `https://your-web-app.railway.app`)
 2. You should see the Vikela interface
