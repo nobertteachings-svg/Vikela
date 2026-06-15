@@ -4,7 +4,7 @@
 # This script helps generate required values for Railway deployment
 
 API_URL="https://api-production-eec4.up.railway.app"
-WEB_URL="https://REPLACE-WITH-WEB-DOMAIN.up.railway.app"
+WEB_URL="https://web-production-1c70bf.up.railway.app"
 
 echo "🚀 Railway Setup Helper for Vikela"
 echo "====================================="

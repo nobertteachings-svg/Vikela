@@ -58,7 +58,7 @@ REDIS_URL={{RAILWAY_REDIS_REDIS_URL}}
 ENCRYPTION_KEY={{generate with: openssl rand -hex 32}}
 
 # App URLs (replace with your Railway domain)
-APP_URL=https://WEB-DOMAIN.up.railway.app
+APP_URL=https://web-production-1c70bf.up.railway.app
 API_URL=https://api-production-eec4.up.railway.app
 
 # Auth (required for production)
@@ -75,7 +75,7 @@ VIKELA_DEV_ORG_SLUG=demo
 API_RATE_LIMIT_MAX=300
 
 # CORS (add your Railway web app domain)
-CORS_ALLOWED_ORIGINS=https://WEB-DOMAIN.up.railway.app
+CORS_ALLOWED_ORIGINS=https://web-production-1c70bf.up.railway.app
 
 # Disable scan worker if needed
 DISABLE_SCAN_WORKER=false
@@ -186,7 +186,7 @@ npm run db:seed
 
 ### 9. Test the Deployment
 
-1. Visit your web app URL (e.g., `https://your-web-app.railway.app`)
+1. Visit your web app URL: `https://web-production-1c70bf.up.railway.app`
 2. You should see the Vikela interface
 3. Test authentication flow
 4. Try connecting an integration or running a scan
