@@ -1,0 +1,30 @@
+#!/bin/sh
+# Block pushes unless using the Vikela SSH key and Skyeware git identity.
+set -e
+
+remote_url=$(git config --get remote.origin.url || true)
+case "$remote_url" in
+  git@github.com-vikela:*|git@github.com-vikela/*) ;;
+  *)
+    echo "pre-push: origin must use git@github.com-vikela:skyewareinnovations-spec/Vikela.git"
+    echo "  Current: $remote_url"
+    exit 1
+    ;;
+esac
+
+email=$(git config --get user.email || true)
+case "$email" in
+  *Ekfuingei*|*ekfuingeinkwain*)
+    echo "pre-push: refusing push with Ekfuingei identity ($email)."
+    echo "  This repo is configured for skyewareinnovations-spec only."
+    exit 1
+    ;;
+esac
+
+expected_key="$HOME/.ssh/id_ed25519_vikela"
+if [ ! -f "$expected_key" ]; then
+  echo "pre-push: missing SSH key $expected_key"
+  exit 1
+fi
+
+exit 0

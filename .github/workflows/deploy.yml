@@ -1,0 +1,54 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy-web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+      - run: npm ci
+      - name: Deploy to Vercel
+        if: env.VERCEL_TOKEN != ''
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: npx vercel deploy --prod --token="$VERCEL_TOKEN"
+      - name: Skip Vercel (no secrets)
+        if: env.VERCEL_TOKEN == ''
+        run: echo "Set VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID in repo secrets to deploy web"
+
+  deploy-api:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+      - run: npm ci
+      - run: npm run build -w @vikela/api
+      - name: Run database migrations
+        if: env.DATABASE_URL != ''
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY }}
+        run: npm run db:migrate -w @vikela/api
+      - name: Deploy API to Railway
+        if: env.RAILWAY_TOKEN != ''
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: |
+          npx @railway/cli@latest up --service api --detach || echo "Configure RAILWAY_TOKEN and service name"
+      - name: Skip API deploy (no secrets)
+        if: env.RAILWAY_TOKEN == ''
+        run: |
+          echo "Set RAILWAY_TOKEN (or container registry secrets) to deploy API."
+          echo "Ensure production runs: npm run db:migrate on API startup."

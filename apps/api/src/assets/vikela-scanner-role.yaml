@@ -1,0 +1,39 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Vikela cross-account scanner role (read-only SecurityAudit-style access)
+
+Parameters:
+  VikelaAccountId:
+    Type: String
+    Description: Vikela AWS account ID that will assume this role
+  ExternalId:
+    Type: String
+    Description: External ID for secure AssumeRole (set AWS_EXTERNAL_ID in Vikela)
+    Default: vikela-scanner
+
+Resources:
+  VikelaScannerRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: VikelaScanner
+      MaxSessionDuration: 3600
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: !Sub "arn:aws:iam::${VikelaAccountId}:root"
+            Action: sts:AssumeRole
+            Condition:
+              StringEquals:
+                sts:ExternalId: !Ref ExternalId
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/SecurityAudit
+        - arn:aws:iam::aws:policy/job-function/ViewOnlyAccess
+
+Outputs:
+  RoleArn:
+    Description: Paste this ARN into Vikela AWS integration
+    Value: !GetAtt VikelaScannerRole.Arn
+  ExternalId:
+    Description: External ID configured on the trust policy
+    Value: !Ref ExternalId

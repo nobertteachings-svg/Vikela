@@ -1,0 +1,30 @@
+{
+  "extends": [
+    "eslint:recommended",
+    "plugin:security/recommended",
+    "plugin:jsx-a11y/recommended",
+    "plugin:react/recommended",
+    "next/core-web-vitals"
+  ],
+  "plugins": ["security", "jsx-a11y", "react"],
+  "rules": {
+    "security/detect-object-injection": "warn",
+    "security/detect-non-literal-fs-filename": "warn",
+    "security/detect-unsafe-regex": "error",
+    "jsx-a11y/anchor-is-valid": "warn",
+    "jsx-a11y/click-events-have-key-events": "warn",
+    "jsx-a11y/no-static-element-interactions": "warn"
+  },
+  "parserOptions": {
+    "ecmaVersion": 2022,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  }
+}

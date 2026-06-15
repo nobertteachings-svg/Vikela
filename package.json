@@ -1,0 +1,43 @@
+{
+  "name": "vikela",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "lint:security": "npm run lint:security -w @vikela/web --if-present && npm run lint:security -w @vikela/api --if-present",
+    "db:generate": "npm run db:generate -w @vikela/api",
+    "db:push": "npm run db:push -w @vikela/api",
+    "db:seed": "npm run db:seed -w @vikela/api",
+    "db:setup": "npm run db:push && npm run db:seed",
+    "db:migrate": "npm run db:migrate -w @vikela/api",
+    "db:local": "docker compose up -d postgres redis && sleep 4 && npm run db:local:migrate && npm run db:local:seed",
+    "db:local:migrate": "DATABASE_URL=postgresql://postgres:postgres@localhost:5432/vikela DIRECT_URL=postgresql://postgres:postgres@localhost:5432/vikela npm run db:migrate -w @vikela/api",
+    "db:local:seed": "DATABASE_URL=postgresql://postgres:postgres@localhost:5432/vikela npm run db:seed -w @vikela/api",
+    "test": "npm run test -w @vikela/api",
+    "test:coverage": "npm run test:coverage -w @vikela/api",
+    "test:mutation": "npm run test:mutation -w @vikela/api",
+    "test:security": "npm run test:security -w @vikela/api",
+    "test:e2e": "playwright test",
+    "test:a11y": "playwright test",
+    "test:performance": "command -v k6 >/dev/null && k6 run performance/load-test.js || echo 'Install k6: https://grafana.com/docs/k6/latest/set-up/install-k6/'",
+    "test:all": "npm run lint && npm run test",
+    "db:migrate:dev": "npm run db:migrate:dev -w @vikela/api",
+    "db:studio": "npm run db:studio -w @vikela/api",
+    "setup": "npm install && npm run db:generate",
+    "setup:production": "bash scripts/setup-production.sh"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.49.1",
+    "turbo": "^2.3.0",
+    "typescript": "^5.6.3"
+  },
+  "packageManager": "npm@10.8.2",
+  "engines": {
+    "node": ">=18"
+  }
+}

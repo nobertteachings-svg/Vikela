@@ -1,0 +1,14 @@
+{
+  "name": "@vikela/shared",
+  "version": "0.0.1",
+  "private": true,
+  "main": "./types/index.ts",
+  "types": "./types/index.ts",
+  "exports": {
+    ".": "./types/index.ts",
+    "./providers": "./types/providers.ts",
+    "./framework-catalog": "./framework-catalog.ts",
+    "./framework-control-mappings": "./framework-control-mappings.ts",
+    "./native-control-packs": "./native-control-packs.ts"
+  }
+}

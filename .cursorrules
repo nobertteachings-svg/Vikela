@@ -1,0 +1,13 @@
+- TypeScript strict mode always
+- All API responses: { data, error, meta } envelope
+- All dates UTC in database
+- All provider tokens AES-256-GCM encrypted before storing
+- AWS customer connections use AssumeRole only — never long-lived keys
+- All provider logic must implement the correct interface (IGitProvider / ICloudProvider / IIdentityProvider)
+- Use provider.factory.ts — never instantiate providers directly in routes
+- Cloud scans always run in BullMQ background jobs (when >2s)
+- Scanner findings always include: source, severity, resourceType, resourceId, region, remediation
+- All file uploads to S3 — never store binary in the database
+- All DB queries through Prisma — raw SQL only for pgvector similarity search
+- Provider brand colors only on badges — never as primary UI palette
+- ENCRYPTION_KEY must be set — throw on startup if missing

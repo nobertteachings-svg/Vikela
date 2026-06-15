@@ -1,0 +1,82 @@
+import type { Config } from "tailwindcss";
+
+const config: Config = {
+  darkMode: ["class"],
+  content: [
+    "./pages/**/*.{js,ts,jsx,tsx,mdx}",
+    "./components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./app/**/*.{js,ts,jsx,tsx,mdx}",
+  ],
+  theme: {
+    extend: {
+      colors: {
+        background: "var(--bg-primary)",
+        foreground: "var(--text-primary)",
+        card: {
+          DEFAULT: "var(--bg-secondary)",
+          foreground: "var(--text-primary)",
+        },
+        primary: {
+          DEFAULT: "var(--purple)",
+          foreground: "var(--text-primary)",
+        },
+        comply: {
+          app: "var(--bg-app)",
+          card: "var(--bg-card)",
+          cream: "var(--bg-cream)",
+          "cream-dark": "var(--bg-cream-dark)",
+          primary: "var(--bg-primary)",
+          secondary: "var(--bg-secondary)",
+          elevated: "var(--bg-elevated)",
+          tertiary: "var(--bg-tertiary)",
+          purple: "var(--purple)",
+          "purple-light": "var(--purple-light)",
+          "purple-border": "var(--purple-border)",
+          "purple-dark": "var(--purple-dark)",
+          "purple-text": "var(--purple-text)",
+          green: "var(--green)",
+          "green-dark": "var(--green-dark)",
+          "green-light": "var(--green-light)",
+          "green-border": "var(--green-border)",
+          "green-text": "var(--green-text)",
+          red: "var(--red)",
+          amber: "var(--amber)",
+          "amber-dark": "var(--amber-dark)",
+          "amber-light": "var(--amber-light)",
+          "amber-text": "var(--amber-text)",
+          "text-primary": "var(--text-primary)",
+          "text-secondary": "var(--text-secondary)",
+          "text-tertiary": "var(--text-tertiary)",
+          muted: "var(--text-muted)",
+          "text-dark": "var(--text-dark)",
+        },
+      },
+      fontFamily: {
+        sans: ['"DM Sans"', "system-ui", "sans-serif"],
+        mono: ['"DM Mono"', "ui-monospace", "monospace"],
+      },
+      borderRadius: {
+        lg: "var(--radius-lg)",
+        md: "var(--radius-md)",
+        sm: "var(--radius-sm)",
+      },
+      animation: {
+        "fade-in": "fadeIn 0.4s ease-out",
+        "slide-up": "slideUp 0.4s ease-out",
+      },
+      keyframes: {
+        fadeIn: {
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
+        },
+        slideUp: {
+          "0%": { opacity: "0", transform: "translateY(8px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+      },
+    },
+  },
+  plugins: [require("tailwindcss-animate")],
+};
+
+export default config;

@@ -1,0 +1,14 @@
+[phases.build]
+cmds = [
+  "cd ../..",
+  "npm install",
+  "cd apps/api",
+  "npm run build"
+]
+
+[start]
+cmd = "npm run start"
+
+[variables]
+NODE_ENV = "production"
+PORT = "3001"
