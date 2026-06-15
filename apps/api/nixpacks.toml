@@ -1,9 +1,15 @@
+# Install from monorepo root so @vikela/shared workspace resolves.
+[phases.install]
+cmds = ["cd ../.. && npm ci"]
+
 [phases.build]
-cmds = ["bash ../../scripts/railway-build-api.sh"]
+cmds = ["cd ../.. && npm run build -w @vikela/api"]
 
 [start]
 cmd = "bash ../../scripts/railway-start-api.sh"
 
 [variables]
+NIXPACKS_NODE_VERSION = "22"
+NPM_CONFIG_PRODUCTION = "false"
 NODE_ENV = "production"
 PORT = "3001"
