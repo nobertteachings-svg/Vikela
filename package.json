@@ -43,5 +43,9 @@
   "packageManager": "npm@10.8.2",
   "engines": {
     "node": ">=20.20.0"
+  },
+  "overrides": {
+    "next": "14.2.35",
+    "eslint-config-next": "14.2.35"
   }
 }
