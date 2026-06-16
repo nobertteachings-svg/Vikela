@@ -17,11 +17,13 @@ export function ClerkApiAuthBridge({ children }: { children: React.ReactNode }) 
     registerClientApiHeaders(async () => {
       const headers: Record<string, string> = {};
       if (orgId) headers["X-Clerk-Org-Id"] = orgId;
-      if (orgSlug) headers["X-Org-Slug"] = orgSlug;
-      else if (typeof window !== "undefined") {
-        const slug = localStorage.getItem("vikela_org_slug");
-        if (slug) headers["X-Org-Slug"] = slug;
-      }
+
+      // Prefer Vikela DB slug (set after /onboarding/status) over Clerk org slug.
+      const vikelaSlug =
+        typeof window !== "undefined" ? localStorage.getItem("vikela_org_slug") : null;
+      if (vikelaSlug) headers["X-Org-Slug"] = vikelaSlug;
+      else if (orgSlug) headers["X-Org-Slug"] = orgSlug;
+
       if (isLoaded) {
         const token = await getToken();
         if (token) headers.Authorization = `Bearer ${token}`;

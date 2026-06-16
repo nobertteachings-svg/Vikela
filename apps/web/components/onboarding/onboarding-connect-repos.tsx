@@ -746,10 +746,12 @@ function OnboardingConnectReposBody({
     try {
       const list = await apiGet<OnboardingRepo[]>("/api/v1/onboarding/repositories");
       applyRepoList(list);
-    } catch {
+    } catch (e) {
       setRepos([]);
       setSelectedIds(new Set());
       setScanRepoId(null);
+      const message = e instanceof Error ? e.message : "Could not load repositories";
+      setError(message);
     } finally {
       setReposLoading(false);
     }
@@ -762,8 +764,14 @@ function OnboardingConnectReposBody({
         "/api/v1/onboarding/sync-repositories"
       );
       applyRepoList(result.repositories);
-    } catch {
-      await loadRepos();
+    } catch (e) {
+      try {
+        await loadRepos();
+      } catch (loadErr) {
+        const message =
+          loadErr instanceof Error ? loadErr.message : "Could not sync repositories";
+        setError(message);
+      }
     } finally {
       setReposLoading(false);
     }
@@ -858,7 +866,9 @@ function OnboardingConnectReposBody({
       const message = e instanceof Error ? e.message : "Could not load workspace status";
       setError(/unauthorized/i.test(message)
         ? "Your session could not be verified. Sign in again to connect repositories."
-        : message);
+        : /failed to fetch|cannot reach the api/i.test(message)
+          ? "Cannot reach the API. Confirm the API service is deployed and NEXT_PUBLIC_API_URL is set on the Web service, then redeploy."
+          : message);
     });
   }, [isLoaded, isSignedIn, bootstrap, skipAuth, requireAuth]);
 

@@ -1,9 +1,9 @@
 import "server-only";
 import type { ApiResponse } from "@vikela/shared";
 import { auth } from "@clerk/nextjs/server";
-import { assertProductionApiUrl, getApiUrl } from "./api-url";
+import { assertProductionApiUrl, getServerApiUrl } from "./api-url";
 
-const API_URL = getApiUrl();
+const API_URL = getServerApiUrl();
 
 async function parseApiResponse<T>(res: Response): Promise<T> {
   const text = await res.text();

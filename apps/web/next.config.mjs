@@ -1,8 +1,22 @@
 /** @type {import('next').NextConfig} */
+const apiBase = (
+  process.env.API_URL ??
+  process.env.NEXT_PUBLIC_API_URL ??
+  "http://localhost:3001"
+).replace(/\/+$/, "");
+
 const nextConfig = {
   transpilePackages: ["@vikela/shared"],
   experimental: {
     instrumentationHook: true,
+  },
+  async rewrites() {
+    return [
+      {
+        source: "/api/v1/:path*",
+        destination: `${apiBase}/api/v1/:path*`,
+      },
+    ];
   },
   async redirects() {
     return [

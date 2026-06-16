@@ -1,16 +1,27 @@
 const DEFAULT_API_URL = "http://localhost:3001";
 
-/** Base API URL without trailing slash. Server may use API_URL; browser uses NEXT_PUBLIC_API_URL. */
-export function getApiUrl(): string {
+/** Server-side API base URL (direct to Fastify). */
+export function getServerApiUrl(): string {
   const raw =
     process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL ?? DEFAULT_API_URL;
   return raw.replace(/\/+$/, "");
 }
 
+/**
+ * API base URL for fetch().
+ * In the browser we use same-origin `/api/v1` (proxied by Next.js) to avoid CORS failures.
+ */
+export function getApiUrl(): string {
+  if (typeof window !== "undefined") {
+    return "";
+  }
+  return getServerApiUrl();
+}
+
 export function assertProductionApiUrl(): void {
   if (process.env.NODE_ENV !== "production") return;
 
-  const url = getApiUrl();
+  const url = getServerApiUrl();
   if (url.includes("localhost") || url.includes("127.0.0.1")) {
     throw new Error(
       "API URL not configured for production — set NEXT_PUBLIC_API_URL on the Web service to your Railway API domain (e.g. https://api-xxx.up.railway.app), then redeploy"

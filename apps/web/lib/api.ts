@@ -14,72 +14,82 @@ async function clientHeaders(): Promise<HeadersInit> {
   return getClientApiHeaders();
 }
 
-export async function apiGet<T>(path: string, opts?: { cache?: RequestCache }): Promise<T> {
-  const headers = await clientHeaders();
-  const res = await fetch(`${API_URL}${path}`, {
-    headers,
-    cache: opts?.cache ?? "no-store",
-  });
-  const json = (await res.json()) as ApiResponse<T>;
-  if (json.error || json.data === null) {
-    throw new Error(json.error ?? "API request failed");
+function formatNetworkError(e: unknown): string {
+  const detail = e instanceof Error ? e.message : "network error";
+  if (/failed to fetch/i.test(detail)) {
+    return "Cannot reach the API — check that the API service is running and NEXT_PUBLIC_API_URL is set on the Web service, then redeploy";
+  }
+  return detail;
+}
+
+async function parseClientResponse<T>(res: Response): Promise<T> {
+  const text = await res.text();
+  let json: ApiResponse<T> & { message?: string };
+  try {
+    json = JSON.parse(text) as ApiResponse<T> & { message?: string };
+  } catch {
+    throw new Error(
+      res.ok
+        ? "API returned invalid JSON"
+        : `API ${res.status}: ${text.slice(0, 120) || res.statusText}`
+    );
+  }
+
+  const message = json.error ?? json.message;
+  if (!res.ok || json.error || json.data === null) {
+    throw new Error(message ?? `API request failed (${res.status})`);
+  }
+  if (json.data === undefined) {
+    throw new Error(message ?? "API returned no data");
   }
   return json.data;
+}
+
+async function clientFetch<T>(path: string, init?: RequestInit): Promise<T> {
+  const headers = await clientHeaders();
+  let res: Response;
+  try {
+    res = await fetch(`${API_URL}${path}`, {
+      ...init,
+      headers: { ...headers, ...(init?.headers as Record<string, string> | undefined) },
+      credentials: "include",
+    });
+  } catch (e) {
+    throw new Error(formatNetworkError(e));
+  }
+  return parseClientResponse<T>(res);
+}
+
+export async function apiGet<T>(path: string, opts?: { cache?: RequestCache }): Promise<T> {
+  return clientFetch<T>(path, { cache: opts?.cache ?? "no-store" });
 }
 
 export async function apiPost<T>(path: string, body?: unknown): Promise<T> {
-  const headers = await clientHeaders();
-  const res = await fetch(`${API_URL}${path}`, {
+  return clientFetch<T>(path, {
     method: "POST",
-    headers: { "Content-Type": "application/json", ...headers },
+    headers: { "Content-Type": "application/json" },
     body: body != null ? JSON.stringify(body) : undefined,
   });
-  const json = (await res.json()) as ApiResponse<T>;
-  if (json.error || json.data === null) {
-    throw new Error(json.error ?? "API request failed");
-  }
-  return json.data;
 }
 
 export async function apiDelete<T>(path: string): Promise<T> {
-  const headers = await clientHeaders();
-  const res = await fetch(`${API_URL}${path}`, {
-    method: "DELETE",
-    headers,
-  });
-  const json = (await res.json()) as ApiResponse<T>;
-  if (json.error || json.data === null) {
-    throw new Error(json.error ?? "API request failed");
-  }
-  return json.data;
+  return clientFetch<T>(path, { method: "DELETE" });
 }
 
 export async function apiPut<T>(path: string, body?: unknown): Promise<T> {
-  const headers = await clientHeaders();
-  const res = await fetch(`${API_URL}${path}`, {
+  return clientFetch<T>(path, {
     method: "PUT",
-    headers: { "Content-Type": "application/json", ...headers },
+    headers: { "Content-Type": "application/json" },
     body: body != null ? JSON.stringify(body) : undefined,
   });
-  const json = (await res.json()) as ApiResponse<T>;
-  if (json.error || json.data === null) {
-    throw new Error(json.error ?? "API request failed");
-  }
-  return json.data;
 }
 
 export async function apiPatch<T>(path: string, body?: unknown): Promise<T> {
-  const headers = await clientHeaders();
-  const res = await fetch(`${API_URL}${path}`, {
+  return clientFetch<T>(path, {
     method: "PATCH",
-    headers: { "Content-Type": "application/json", ...headers },
+    headers: { "Content-Type": "application/json" },
     body: body != null ? JSON.stringify(body) : undefined,
   });
-  const json = (await res.json()) as ApiResponse<T>;
-  if (json.error || json.data === null) {
-    throw new Error(json.error ?? "API request failed");
-  }
-  return json.data;
 }
 
 /** Client-side auth headers (async). */

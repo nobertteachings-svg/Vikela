@@ -1,10 +1,6 @@
-import { getApiUrl } from "./api-url";
-
-const API_URL = getApiUrl();
-
 export type GitOAuthFrom = "onboarding";
 
-/** Browser links for git OAuth — same-origin on the web app (port 3000), not the API (3001). */
+/** Browser links for git OAuth — same-origin on the web app, proxied to the API. */
 function webGitAuthPath(
   path: string,
   orgSlug: string | null | undefined,
@@ -22,14 +18,14 @@ function withFromOnboarding(base: string, from?: GitOAuthFrom): string {
   return `${base}${sep}from=onboarding`;
 }
 
-/** Server-side / API-to-API URLs (callbacks, server fetch). */
+/** Browser OAuth start URLs — same-origin `/api/v1/...` (rewritten to the API). */
 export function integrationOAuthUrl(
   path: string,
   orgSlug: string | null | undefined
 ): string {
   if (!orgSlug) return "/sign-in?reason=org_required";
   const sep = path.includes("?") ? "&" : "?";
-  return `${API_URL}${path}${sep}org=${encodeURIComponent(orgSlug)}`;
+  return `${path}${sep}org=${encodeURIComponent(orgSlug)}`;
 }
 
 /** GitHub → Settings → Applications → Installed GitHub Apps → configure repository access */
@@ -83,7 +79,7 @@ export function bitbucketStartUrl(
 export function oktaStartUrl(domain: string, orgSlug: string | null | undefined): string {
   if (!orgSlug) return "/sign-in?reason=org_required";
   const d = domain.trim().replace(/^https?:\/\//, "").replace(/\/$/, "");
-  return `${API_URL}/api/v1/auth/okta/start?domain=${encodeURIComponent(d)}&org=${encodeURIComponent(orgSlug)}`;
+  return `/api/v1/auth/okta/start?domain=${encodeURIComponent(d)}&org=${encodeURIComponent(orgSlug)}`;
 }
 
 export function azureCloudStartUrl(orgSlug: string | null | undefined): string {
