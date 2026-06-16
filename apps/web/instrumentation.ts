@@ -1,10 +1,15 @@
 export async function register() {
-  if (process.env.NEXT_RUNTIME === "nodejs" && process.env.SENTRY_DSN) {
-    const Sentry = await import("@sentry/nextjs");
-    Sentry.init({
-      dsn: process.env.SENTRY_DSN,
-      environment: process.env.NODE_ENV,
-      tracesSampleRate: process.env.NODE_ENV === "production" ? 0.1 : 1,
-    });
+  if (process.env.NEXT_RUNTIME === "nodejs") {
+    const { assertProductionWebEnv } = await import("./lib/api-url");
+    assertProductionWebEnv();
+
+    if (process.env.SENTRY_DSN) {
+      const Sentry = await import("@sentry/nextjs");
+      Sentry.init({
+        dsn: process.env.SENTRY_DSN,
+        environment: process.env.NODE_ENV,
+        tracesSampleRate: process.env.NODE_ENV === "production" ? 0.1 : 1,
+      });
+    }
   }
 }

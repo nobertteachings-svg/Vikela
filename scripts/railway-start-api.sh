@@ -59,8 +59,14 @@ run_migrations() {
   return 1
 }
 
+echo "==> Validating API environment"
+bash "$ROOT/scripts/railway-validate-env.sh" api
+
 echo "==> Running database migrations"
 run_migrations
+
+echo "==> Checking database seed"
+bash "$ROOT/scripts/railway-seed-if-empty.sh"
 
 echo "==> Starting API"
 exec node dist/index.js

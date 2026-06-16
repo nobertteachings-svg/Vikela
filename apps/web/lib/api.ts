@@ -1,6 +1,7 @@
 import type { ApiResponse } from "@vikela/shared";
+import { getApiUrl } from "./api-url";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
+const API_URL = getApiUrl();
 
 export function setOrgContext(slug: string, clerkOrgId?: string) {
   if (typeof window === "undefined") return;

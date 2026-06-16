@@ -7,6 +7,7 @@ import rateLimit from "@fastify/rate-limit";
 import { clerkPlugin } from "@clerk/fastify";
 import { requireEncryptionKey } from "./lib/crypto.js";
 import { requireProductionClerkConfig } from "./lib/auth.js";
+import { validateApiProductionEnv, assertApiConnectivity } from "./lib/validate-production-env.js";
 import { authGuardPlugin } from "./plugins/auth-guard.js";
 import { frameworksRoutes } from "./routes/frameworks.js";
 import { controlsRoutes } from "./routes/controls.js";
@@ -56,8 +57,27 @@ function parseCorsOrigins(): string[] {
 async function main() {
   requireEncryptionKey();
   requireProductionClerkConfig();
+  validateApiProductionEnv();
+  await assertApiConnectivity();
 
   const app = Fastify({ logger: true, trustProxy: true });
+
+  app.setNotFoundHandler(async (req, reply) => {
+    const accept = String(req.headers.accept ?? "");
+    const isBrowserRequest = req.method === "GET" && accept.includes("text/html");
+    const isApiPath =
+      req.url.startsWith("/api/") ||
+      req.url.startsWith("/api?") ||
+      req.url === "/api" ||
+      req.url.startsWith("/health");
+
+    if (isBrowserRequest && !isApiPath) {
+      const target = new URL(req.url, APP_URL);
+      return reply.redirect(target.toString(), 302);
+    }
+
+    return reply.code(404).send({ data: null, error: "Not Found" });
+  });
 
   app.addContentTypeParser(
     "application/json",

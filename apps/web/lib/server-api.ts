@@ -1,8 +1,32 @@
 import "server-only";
 import type { ApiResponse } from "@vikela/shared";
 import { auth } from "@clerk/nextjs/server";
+import { assertProductionApiUrl, getApiUrl } from "./api-url";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
+const API_URL = getApiUrl();
+
+async function parseApiResponse<T>(res: Response): Promise<T> {
+  const text = await res.text();
+  let json: ApiResponse<T> & { message?: string };
+  try {
+    json = JSON.parse(text) as ApiResponse<T> & { message?: string };
+  } catch {
+    throw new Error(
+      res.ok
+        ? "API returned invalid JSON"
+        : `API ${res.status}: ${text.slice(0, 120) || res.statusText}`
+    );
+  }
+
+  const message = json.error ?? json.message;
+  if (!res.ok || json.error || json.data === null) {
+    throw new Error(message ?? `API request failed (${res.status})`);
+  }
+  if (json.data === undefined) {
+    throw new Error(message ?? "API returned no data");
+  }
+  return json.data;
+}
 
 const hasClerk = Boolean(process.env.CLERK_SECRET_KEY);
 
@@ -54,46 +78,46 @@ export async function getServerApiHeaders(): Promise<Record<string, string>> {
   return headers;
 }
 
+async function serverApiFetch<T>(
+  path: string,
+  init?: RequestInit & { cache?: RequestCache }
+): Promise<T> {
+  assertProductionApiUrl();
+  const headers = await getServerApiHeaders();
+  let res: Response;
+  try {
+    res = await fetch(`${API_URL}${path}`, {
+      ...init,
+      headers: { ...headers, ...(init?.headers as Record<string, string> | undefined) },
+    });
+  } catch (e) {
+    const detail = e instanceof Error ? e.message : "network error";
+    throw new Error(
+      `Cannot reach API at ${API_URL} (${detail}) — check NEXT_PUBLIC_API_URL on the Web service and that the API service is running`
+    );
+  }
+  return parseApiResponse<T>(res);
+}
+
 export async function serverApiGet<T>(
   path: string,
   opts?: { cache?: RequestCache }
 ): Promise<T> {
-  const headers = await getServerApiHeaders();
-  const res = await fetch(`${API_URL}${path}`, {
-    headers,
-    cache: opts?.cache ?? "no-store",
-  });
-  const json = (await res.json()) as ApiResponse<T>;
-  if (json.error || json.data === null) {
-    throw new Error(json.error ?? "API request failed");
-  }
-  return json.data;
+  return serverApiFetch<T>(path, { cache: opts?.cache ?? "no-store" });
 }
 
 export async function serverApiPost<T>(path: string, body?: unknown): Promise<T> {
-  const headers = await getServerApiHeaders();
-  const res = await fetch(`${API_URL}${path}`, {
+  return serverApiFetch<T>(path, {
     method: "POST",
-    headers: { "Content-Type": "application/json", ...headers },
+    headers: { "Content-Type": "application/json" },
     body: body != null ? JSON.stringify(body) : undefined,
   });
-  const json = (await res.json()) as ApiResponse<T>;
-  if (json.error || json.data === null) {
-    throw new Error(json.error ?? "API request failed");
-  }
-  return json.data;
 }
 
 export async function serverApiPatch<T>(path: string, body?: unknown): Promise<T> {
-  const headers = await getServerApiHeaders();
-  const res = await fetch(`${API_URL}${path}`, {
+  return serverApiFetch<T>(path, {
     method: "PATCH",
-    headers: { "Content-Type": "application/json", ...headers },
+    headers: { "Content-Type": "application/json" },
     body: body != null ? JSON.stringify(body) : undefined,
   });
-  const json = (await res.json()) as ApiResponse<T>;
-  if (json.error || json.data === null) {
-    throw new Error(json.error ?? "API request failed");
-  }
-  return json.data;
 }

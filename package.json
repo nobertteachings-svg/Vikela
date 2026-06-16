@@ -30,6 +30,8 @@
     "db:studio": "npm run db:studio -w @vikela/api",
     "setup": "npm install && npm run db:generate",
     "setup:production": "bash scripts/setup-production.sh",
+    "railway:validate:api": "bash scripts/railway-validate-env.sh api",
+    "railway:validate:web": "bash scripts/railway-validate-env.sh web",
     "build:api": "npm run build -w @vikela/api",
     "build:web": "npm run build -w @vikela/web",
     "start:api": "npm run start:railway -w @vikela/api",
