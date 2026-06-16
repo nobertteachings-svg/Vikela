@@ -48,16 +48,26 @@ function oauthReturnTo(query: { from?: string }): OAuthReturnTo {
   return query.from === "onboarding" ? "onboarding" : "integrations";
 }
 
+function oauthErrorRedirect(returnTo: OAuthReturnTo): string {
+  return returnTo === "onboarding"
+    ? `${APP_URL}/onboarding/connect-repos`
+    : INTEGRATIONS;
+}
+
 export const authRoutes: FastifyPluginAsync = async (app) => {
   app.get("/auth/github/connect-info", async (_req, reply) => {
+    const appInstall = isGitHubAppConfigured();
+    const oauth = isGitHubOAuthConfigured();
     return reply.send(
       ok({
-        appInstall: isGitHubAppConfigured(),
-        oauth: isGitHubOAuthConfigured(),
+        appInstall,
+        oauth,
         appSlug: getGitHubAppSlug(),
         appPublicPageUrl: getGitHubAppPublicPageUrl(),
         installPath: "/api/v1/auth/github/install",
         oauthPath: "/api/v1/auth/github/oauth",
+        /** OAuth works for private GitHub Apps; App install requires a public app or allowed installers. */
+        recommendedMethod: oauth ? "oauth" : appInstall ? "app" : null,
       })
     );
   });
@@ -124,10 +134,10 @@ export const authRoutes: FastifyPluginAsync = async (app) => {
         );
       }
 
-      return reply.redirect(`${INTEGRATIONS}?error=github_missing_params`);
+      return reply.redirect(`${oauthErrorRedirect(returnTo)}?error=github_missing_params`);
     } catch (e) {
       const msg = encodeURIComponent(e instanceof Error ? e.message : "GitHub connect failed");
-      return reply.redirect(`${INTEGRATIONS}?error=${msg}`);
+      return reply.redirect(`${oauthErrorRedirect(returnTo)}?error=${msg}`);
     }
   });
 

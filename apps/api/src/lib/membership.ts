@@ -110,6 +110,7 @@ export async function getOnboardingStatus(req: FastifyRequest): Promise<{
   memberReady: boolean;
   orgSlug?: string;
   needsClerkOrg?: boolean;
+  gitConnected?: boolean;
 }> {
   if (!isAuthEnforced()) {
     const slug = process.env.VIKELA_DEV_ORG_SLUG ?? "demo";
@@ -119,6 +120,11 @@ export async function getOnboardingStatus(req: FastifyRequest): Promise<{
       orgReady: Boolean(org),
       memberReady: true,
       orgSlug: org?.slug ?? slug,
+      gitConnected: org
+        ? (await prisma.integration.count({
+            where: { orgId: org.id, category: "GIT", isActive: true },
+          })) > 0
+        : false,
     };
   }
 
@@ -154,11 +160,17 @@ export async function getOnboardingStatus(req: FastifyRequest): Promise<{
     });
   }
 
+  const gitConnected =
+    (await prisma.integration.count({
+      where: { orgId: org.id, category: "GIT", isActive: true },
+    })) > 0;
+
   return {
     mode: "clerk",
     orgReady: true,
     memberReady: Boolean(member),
     orgSlug: org.slug,
+    gitConnected,
   };
 }
 

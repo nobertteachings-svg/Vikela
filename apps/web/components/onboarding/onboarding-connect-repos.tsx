@@ -32,6 +32,7 @@ type OnboardingStatus = {
   memberReady: boolean;
   orgSlug?: string;
   needsClerkOrg?: boolean;
+  gitConnected?: boolean;
 };
 
 type OnboardingRepo = {
@@ -215,6 +216,7 @@ type GitHubConnectInfo = {
   oauth: boolean;
   appSlug: string;
   appPublicPageUrl: string;
+  recommendedMethod?: "oauth" | "app" | null;
 };
 
 function GitHubConnectSection({ orgSlug }: { orgSlug: string }) {
@@ -226,52 +228,76 @@ function GitHubConnectSection({ orgSlug }: { orgSlug: string }) {
       .catch(() => setInfo(null));
   }, []);
 
-  const showPrivateAppHint = info && !info.appInstall;
+  const preferOAuth = info?.recommendedMethod === "oauth";
+  const oauthPrimaryClass =
+    "border-[var(--green-dark)] bg-[var(--green)] text-[var(--green-light)] hover:brightness-110";
+  const oauthSecondaryClass =
+    "border-white/[0.12] bg-white/[0.04] text-comply-text-secondary hover:text-comply-text-primary";
 
   return (
     <div className="relative mt-4 rounded-md border border-white/[0.08] bg-black/20 p-3">
-      <div className="flex flex-col gap-2 sm:flex-row">
-        <Link
-          href={githubConnectUrl(orgSlug, { from: "onboarding" })}
-          className={cn(
-            "flex flex-1 flex-col items-center justify-center gap-2 rounded-md border py-3.5 text-[11px] font-medium transition-all duration-200",
-            ONBOARDING_GIT_PROVIDERS[0]!.className
-          )}
-        >
-          <IconBrandGithub size={22} stroke={1.25} />
-          {info?.oauth && !info.appInstall ? "Connect GitHub" : "Install GitHub App"}
-        </Link>
-        {info?.oauth && (
-          <Link
-            href={githubOAuthUrl(orgSlug, { from: "onboarding" })}
-            className="flex flex-1 flex-col items-center justify-center gap-1 rounded-md border border-white/[0.12] bg-white/[0.04] py-3.5 text-[11px] font-medium text-comply-text-secondary transition-colors hover:text-comply-text-primary"
-          >
-            <IconBrandGithub size={18} stroke={1.25} />
-            Connect with GitHub OAuth
-          </Link>
-        )}
-      </div>
-      {showPrivateAppHint && (
-        <p className="mt-3 text-[11px] leading-relaxed text-amber-200/90">
-          If you only see &quot;Vikela is a private GitHub App&quot; on{" "}
+      {preferOAuth && (
+        <p className="mb-3 rounded-md border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-[11px] leading-relaxed text-amber-100/90">
+          <strong className="text-amber-50">Use Connect with GitHub OAuth</strong> — your GitHub App (
           <a
-            href={info.appPublicPageUrl}
+            href={info?.appPublicPageUrl ?? "https://github.com/apps/vikela1"}
             target="_blank"
             rel="noopener noreferrer"
             className="underline"
           >
-            github.com/apps/{info.appSlug}
+            {info?.appSlug ?? "vikela1"}
           </a>
-          , the app is private or the PEM key is missing. Use <strong>Connect with GitHub OAuth</strong>{" "}
-          above, or in GitHub → Developer settings → GitHub Apps → Vikela → set visibility to{" "}
-          <strong>Public</strong> and paste the downloaded <strong>.pem</strong> into{" "}
-          <code className="font-mono text-[10px]">GITHUB_APP_PRIVATE_KEY</code>.
+          ) is <strong>private</strong>, so &quot;Install GitHub App&quot; only works for app owners.
+          OAuth lists your repos right after you authorize.
         </p>
       )}
-      {!showPrivateAppHint && (
+
+      <div className="flex flex-col gap-2 sm:flex-row">
+        {info?.oauth && (
+          <Link
+            href={githubOAuthUrl(orgSlug, { from: "onboarding" })}
+            className={cn(
+              "flex flex-1 flex-col items-center justify-center gap-2 rounded-md border py-3.5 text-[11px] font-medium transition-all duration-200",
+              preferOAuth ? oauthPrimaryClass : oauthSecondaryClass
+            )}
+          >
+            <IconBrandGithub size={22} stroke={1.25} />
+            Connect with GitHub OAuth
+          </Link>
+        )}
+        {(info?.appInstall || !info) && (
+          <Link
+            href={githubConnectUrl(orgSlug, { from: "onboarding" })}
+            className={cn(
+              "flex flex-1 flex-col items-center justify-center gap-2 rounded-md border py-3.5 text-[11px] font-medium transition-all duration-200",
+              preferOAuth ? oauthSecondaryClass : ONBOARDING_GIT_PROVIDERS[0]!.className
+            )}
+          >
+            <IconBrandGithub size={18} stroke={1.25} />
+            Install GitHub App
+          </Link>
+        )}
+        {info && !info.oauth && !info.appInstall && (
+          <p className="text-center text-xs text-red-300">
+            GitHub is not configured on the API — set OAuth client credentials or GitHub App PEM key.
+          </p>
+        )}
+      </div>
+
+      {info && !info.oauth && !info.appInstall && (
+        <p className="mt-3 text-[11px] leading-relaxed text-amber-200/90">
+          On Railway API: <code className="font-mono text-[10px]">GITHUB_APP_SLUG=vikela1</code>,{" "}
+          <code className="font-mono text-[10px]">GITHUB_CLIENT_ID</code>,{" "}
+          <code className="font-mono text-[10px]">GITHUB_CLIENT_SECRET</code>. Callback:{" "}
+          <code className="font-mono text-[10px]">https://your-web-url/api/auth/github/callback</code>
+        </p>
+      )}
+
+      {info?.appInstall && !preferOAuth && (
         <p className="mt-3 text-center text-[11px] leading-relaxed text-comply-muted">
-          On the install screen, choose <strong className="text-comply-text-secondary">Only select repositories</strong> and
-          check the repos to scan.
+          On the install screen, choose{" "}
+          <strong className="text-comply-text-secondary">Only select repositories</strong> and check the
+          repos to scan.
         </p>
       )}
     </div>
@@ -881,12 +907,19 @@ function OnboardingConnectReposBody({
 
   useEffect(() => {
     if (!status?.orgReady || !status.memberReady) return;
-    if (justConnected) {
+    if (justConnected || status.gitConnected) {
       syncAndLoadRepos();
     } else {
       loadRepos();
     }
-  }, [status?.orgReady, status?.memberReady, loadRepos, syncAndLoadRepos, justConnected]);
+  }, [
+    status?.orgReady,
+    status?.memberReady,
+    status?.gitConnected,
+    loadRepos,
+    syncAndLoadRepos,
+    justConnected,
+  ]);
 
   const awaitingAuth = requireAuth && isLoaded && !isSignedIn;
   const needsClerkOrg = Boolean(status?.needsClerkOrg);
