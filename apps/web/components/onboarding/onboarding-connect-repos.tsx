@@ -649,7 +649,15 @@ function ConnectPanel({
             className="h-7 w-7 animate-spin rounded-full border-2 border-comply-purple-border/30 border-t-comply-purple"
             aria-hidden
           />
-          <p className="text-sm text-comply-text-secondary">Loading workspace…</p>
+          <p className="text-sm text-comply-text-secondary">Setting up your workspace…</p>
+          <button
+            type="button"
+            onClick={onRetry}
+            disabled={retrying}
+            className="text-[11px] text-comply-muted hover:text-comply-text-secondary hover:underline disabled:opacity-50"
+          >
+            {retrying ? "Retrying…" : "Taking too long? Retry"}
+          </button>
         </div>
       )}
 
@@ -801,7 +809,7 @@ function OnboardingConnectReposBody({
     setError(null);
     const data = await refreshStatus();
     if (data.needsClerkOrg) return data;
-    if (data.orgReady && !data.memberReady && data.mode === "clerk") {
+    if (data.mode === "clerk" && (!data.orgReady || !data.memberReady)) {
       const ensured = await apiPost<OnboardingStatus>("/api/v1/onboarding/ensure-membership");
       setStatus(ensured);
       if (ensured.orgSlug) setOrgContext(ensured.orgSlug, clerkOrgId);

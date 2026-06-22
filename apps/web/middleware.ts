@@ -17,10 +17,17 @@ const isPublicRoute = createRouteMatcher([
   "/api/auth(.*)",
 ]);
 
+/** Proxied to Fastify — auth is Bearer token on the API, not a Clerk session gate here. */
+const isApiProxyRoute = createRouteMatcher(["/api/v1(.*)"]);
+
 const isOnboardingRoute = createRouteMatcher(["/onboarding(.*)"]);
 
 export default hasClerk
   ? clerkMiddleware(async (auth, req) => {
+      if (isApiProxyRoute(req)) {
+        return NextResponse.next();
+      }
+
       const { orgRole, userId } = await auth();
 
       if (userId && isAuditor(orgRole) && isAuditorBlockedPath(req.nextUrl.pathname)) {
