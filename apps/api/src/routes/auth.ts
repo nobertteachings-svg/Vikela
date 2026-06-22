@@ -40,6 +40,7 @@ import {
 import { prisma } from "../lib/prisma.js";
 import { ok } from "../lib/response.js";
 import { applyOnboardingRepoDefaults } from "../services/onboarding/repository-selection.js";
+import { resolveOAuthOrganization } from "../lib/oauth-org-resolve.js";
 
 const APP_URL = process.env.APP_URL ?? "http://localhost:3000";
 const INTEGRATIONS = `${APP_URL}/integrations`;
@@ -73,22 +74,23 @@ export const authRoutes: FastifyPluginAsync = async (app) => {
   });
 
   app.get("/auth/github/install", async (req, reply) => {
-    const query = req.query as { org?: string; from?: string };
+    const query = req.query as { org?: string; from?: string; clerkOrg?: string };
+    const returnTo = oauthReturnTo(query);
     const orgSlug = resolveOAuthOrgSlug(query.org);
-    if (!orgSlug) return reply.redirect(oauthOrgErrorRedirect());
-    const state = encodeOAuthState(orgSlug, oauthReturnTo(query));
+    if (!orgSlug) return reply.redirect(oauthOrgErrorRedirect(returnTo));
+    const state = encodeOAuthState(orgSlug, returnTo, query.clerkOrg);
+
+    // OAuth first — works for private repos and private GitHub Apps (vikela1)
+    if (isGitHubOAuthConfigured()) {
+      return reply.redirect(getGitHubOAuthUrl(state));
+    }
 
     if (isGitHubAppConfigured()) {
       return reply.redirect(getGitHubAppInstallUrl(state));
     }
 
-    if (isGitHubOAuthConfigured()) {
-      return reply.redirect(getGitHubOAuthUrl(state));
-    }
-
-    const returnBase = oauthReturnTo(query) === "onboarding" ? `${APP_URL}/onboarding/connect-repos` : INTEGRATIONS;
     return reply.redirect(
-      `${returnBase}?error=${encodeURIComponent("GitHub is not configured. Set GITHUB_APP_ID + PEM private key, or GITHUB_CLIENT_ID + GITHUB_CLIENT_SECRET.")}`
+      `${oauthErrorRedirect(returnTo)}?error=${encodeURIComponent("GitHub is not configured. Set GITHUB_CLIENT_ID + GITHUB_CLIENT_SECRET (OAuth) or GITHUB_APP_ID + PEM key (App).")}`
     );
   });
 
@@ -99,17 +101,18 @@ export const authRoutes: FastifyPluginAsync = async (app) => {
       setup_action?: string;
       state?: string;
     };
-    const { orgSlug, returnTo } = parseOAuthState(query.state);
-    if (!orgSlug) return reply.redirect(oauthOrgErrorRedirect());
+    const { orgSlug, clerkOrgId, returnTo } = parseOAuthState(query.state);
+    if (!orgSlug && !clerkOrgId) return reply.redirect(oauthOrgErrorRedirect(returnTo));
 
     try {
       if (query.installation_id) {
         const { repoCount } = await handleGitHubInstallationCallback(
           query.installation_id,
-          orgSlug
+          orgSlug,
+          clerkOrgId
         );
         if (returnTo === "onboarding") {
-          const org = await prisma.organization.findFirst({ where: { slug: orgSlug } });
+          const org = await resolveOAuthOrganization(orgSlug, clerkOrgId);
           if (org) await applyOnboardingRepoDefaults(org.id);
         }
         return reply.redirect(
@@ -121,9 +124,9 @@ export const authRoutes: FastifyPluginAsync = async (app) => {
       }
 
       if (query.code) {
-        const { repoCount } = await handleGitHubOAuthCallback(query.code, orgSlug);
+        const { repoCount } = await handleGitHubOAuthCallback(query.code, orgSlug, clerkOrgId);
         if (returnTo === "onboarding") {
-          const org = await prisma.organization.findFirst({ where: { slug: orgSlug } });
+          const org = await resolveOAuthOrganization(orgSlug, clerkOrgId);
           if (org) await applyOnboardingRepoDefaults(org.id);
         }
         return reply.redirect(
@@ -142,17 +145,18 @@ export const authRoutes: FastifyPluginAsync = async (app) => {
   });
 
   app.get("/auth/github/oauth", async (req, reply) => {
-    const query = req.query as { org?: string; from?: string };
+    const query = req.query as { org?: string; from?: string; clerkOrg?: string };
+    const returnTo = oauthReturnTo(query);
     const orgSlug = resolveOAuthOrgSlug(query.org);
-    if (!orgSlug) return reply.redirect(oauthOrgErrorRedirect());
+    if (!orgSlug) return reply.redirect(oauthOrgErrorRedirect(returnTo));
     if (!isGitHubOAuthConfigured()) {
-      const returnBase =
-        oauthReturnTo(query) === "onboarding" ? `${APP_URL}/onboarding/connect-repos` : INTEGRATIONS;
       return reply.redirect(
-        `${returnBase}?error=${encodeURIComponent("GitHub OAuth is not configured (GITHUB_CLIENT_ID / GITHUB_CLIENT_SECRET).")}`
+        `${oauthErrorRedirect(returnTo)}?error=${encodeURIComponent("GitHub OAuth is not configured (GITHUB_CLIENT_ID / GITHUB_CLIENT_SECRET).")}`
       );
     }
-    return reply.redirect(getGitHubOAuthUrl(encodeOAuthState(orgSlug, oauthReturnTo(query))));
+    return reply.redirect(
+      getGitHubOAuthUrl(encodeOAuthState(orgSlug, returnTo, query.clerkOrg))
+    );
   });
 
   app.get("/auth/gitlab/start", async (req, reply) => {

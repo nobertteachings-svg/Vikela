@@ -4,11 +4,13 @@ export type GitOAuthFrom = "onboarding";
 function webGitAuthPath(
   path: string,
   orgSlug: string | null | undefined,
-  from?: GitOAuthFrom
+  from?: GitOAuthFrom,
+  clerkOrgId?: string | null
 ): string {
   if (!orgSlug) return "/sign-in?reason=org_required";
   const params = new URLSearchParams({ org: orgSlug });
   if (from === "onboarding") params.set("from", "onboarding");
+  if (clerkOrgId) params.set("clerkOrg", clerkOrgId);
   return `${path}?${params.toString()}`;
 }
 
@@ -33,12 +35,12 @@ export function githubManageInstallationsUrl(): string {
   return "https://github.com/settings/installations";
 }
 
-/** Server picks GitHub App install or OAuth fallback based on env configuration. */
+/** Primary GitHub connect — API prefers OAuth (private repos + private apps). */
 export function githubConnectUrl(
   orgSlug: string | null | undefined,
-  opts?: { from?: GitOAuthFrom }
+  opts?: { from?: GitOAuthFrom; clerkOrgId?: string | null }
 ): string {
-  return webGitAuthPath("/api/auth/github/install", orgSlug, opts?.from);
+  return webGitAuthPath("/api/auth/github/install", orgSlug, opts?.from, opts?.clerkOrgId);
 }
 
 /** @deprecated Use githubConnectUrl — same install entrypoint with OAuth fallback. */
@@ -51,9 +53,9 @@ export function githubInstallUrl(
 
 export function githubOAuthUrl(
   orgSlug: string | null | undefined,
-  opts?: { from?: GitOAuthFrom }
+  opts?: { from?: GitOAuthFrom; clerkOrgId?: string | null }
 ): string {
-  return webGitAuthPath("/api/auth/github/oauth", orgSlug, opts?.from);
+  return webGitAuthPath("/api/auth/github/oauth", orgSlug, opts?.from, opts?.clerkOrgId);
 }
 
 export function gitlabStartUrl(

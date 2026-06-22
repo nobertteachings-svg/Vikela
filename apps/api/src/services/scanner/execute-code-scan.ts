@@ -66,13 +66,18 @@ export async function executeCodeScan(options: CodeScanOptions) {
         },
       });
 
-  const { decrypt } = await import("../../lib/crypto.js");
   const { getGitProvider, toGitProviderName } = await import("../git/provider.factory.js");
+  const { resolveGithubAccessToken } = await import("../git/github/github-token.js");
 
   const gitName = toGitProviderName(repo.integration.provider);
   if (!gitName) throw new Error("Not a git integration");
 
-  const git = getGitProvider(gitName, decrypt(repo.integration.accessToken));
+  const token =
+    gitName === "github"
+      ? await resolveGithubAccessToken(repo.integration)
+      : (await import("../../lib/crypto.js")).decrypt(repo.integration.accessToken);
+
+  const git = getGitProvider(gitName, token);
 
   const scope = await getOrgFrameworkScanScope(repo.orgId);
 

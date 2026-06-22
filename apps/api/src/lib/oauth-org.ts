@@ -7,7 +7,8 @@ export function resolveOAuthOrgSlug(orgParam: string | undefined): string | null
   return DEMO_ORG_SLUG;
 }
 
-export function oauthOrgErrorRedirect(): string {
+export function oauthOrgErrorRedirect(from?: "onboarding" | "integrations"): string {
   const app = process.env.APP_URL ?? "http://localhost:3000";
+  if (from === "onboarding") return `${app}/onboarding/connect-repos?error=org_context_required`;
   return `${app}/integrations?error=org_context_required`;
 }

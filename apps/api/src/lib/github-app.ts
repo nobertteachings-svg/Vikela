@@ -63,7 +63,7 @@ export async function getInstallationAccessToken(installationId: number | string
 }
 
 export function getGitHubAppSlug(): string {
-  return process.env.GITHUB_APP_SLUG ?? "vikela";
+  return process.env.GITHUB_APP_SLUG ?? "vikela1";
 }
 
 /** Install wizard (repo selection happens on GitHub). Requires a public app or allowed private install. */
@@ -82,7 +82,7 @@ export function getGitHubOAuthUrl(state: string): string {
   const redirectUri =
     process.env.GITHUB_REDIRECT_URI ??
     `${process.env.APP_URL ?? "http://localhost:3000"}/api/auth/github/callback`;
-  const scope = "read:user repo";
+  const scope = "read:user repo read:org";
   return `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}&state=${encodeURIComponent(state)}`;
 }
 

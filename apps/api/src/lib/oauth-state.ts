@@ -2,32 +2,51 @@ import { DEMO_ORG_SLUG } from "./org-context.js";
 
 export type OAuthReturnTo = "integrations" | "onboarding";
 
-export function encodeOAuthState(orgSlug: string, returnTo: OAuthReturnTo = "integrations"): string {
-  if (returnTo === "onboarding") return `onboarding:${orgSlug}`;
-  return orgSlug;
+export function encodeOAuthState(
+  orgSlug: string,
+  returnTo: OAuthReturnTo = "integrations",
+  clerkOrgId?: string
+): string {
+  const payload = clerkOrgId?.trim()
+    ? `${orgSlug}::${clerkOrgId.trim()}`
+    : orgSlug;
+  if (returnTo === "onboarding") return `onboarding:${payload}`;
+  return payload;
 }
 
 export function parseOAuthState(state: string | undefined): {
   orgSlug: string | null;
+  clerkOrgId: string | null;
   returnTo: OAuthReturnTo;
 } {
   const raw = state?.trim();
   if (!raw) {
     return {
       orgSlug: process.env.NODE_ENV === "production" ? null : DEMO_ORG_SLUG,
+      clerkOrgId: null,
       returnTo: "integrations",
     };
   }
 
   if (raw.startsWith("onboarding:")) {
-    const orgSlug = raw.slice("onboarding:".length).trim();
+    const payload = raw.slice("onboarding:".length).trim();
+    const [orgSlugPart, clerkOrgIdPart] = payload.split("::");
+    const orgSlug =
+      orgSlugPart?.trim() ||
+      (process.env.NODE_ENV === "production" ? null : DEMO_ORG_SLUG);
     return {
-      orgSlug: orgSlug || (process.env.NODE_ENV === "production" ? null : DEMO_ORG_SLUG),
+      orgSlug,
+      clerkOrgId: clerkOrgIdPart?.trim() || null,
       returnTo: "onboarding",
     };
   }
 
-  return { orgSlug: raw, returnTo: "integrations" };
+  const [orgSlugPart, clerkOrgIdPart] = raw.split("::");
+  return {
+    orgSlug: orgSlugPart?.trim() || null,
+    clerkOrgId: clerkOrgIdPart?.trim() || null,
+    returnTo: "integrations",
+  };
 }
 
 export function oauthSuccessRedirect(

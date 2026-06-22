@@ -1,6 +1,7 @@
 import { prisma } from "../../lib/prisma.js";
 import { decrypt } from "../../lib/crypto.js";
 import { getGitProvider, toGitProviderName } from "./provider.factory.js";
+import { resolveGithubAccessToken } from "./github/github-token.js";
 
 export async function syncGitRepositories(integrationId: string): Promise<number> {
   const integration = await prisma.integration.findUnique({
@@ -13,11 +14,18 @@ export async function syncGitRepositories(integrationId: string): Promise<number
   const gitName = toGitProviderName(integration.provider);
   if (!gitName) throw new Error("Not a git provider");
 
-  const token = decrypt(integration.accessToken);
+  const token =
+    gitName === "github"
+      ? await resolveGithubAccessToken(integration)
+      : decrypt(integration.accessToken);
+
   const git = getGitProvider(gitName, token);
   const repos = await git.listRepositories();
 
+  const seenExternalIds = new Set<string>();
+
   for (const repo of repos) {
+    seenExternalIds.add(repo.externalId);
     await prisma.repository.upsert({
       where: {
         integrationId_externalId: {
@@ -43,6 +51,16 @@ export async function syncGitRepositories(integrationId: string): Promise<number
         defaultBranch: repo.defaultBranch,
         isPrivate: repo.isPrivate,
       },
+    });
+  }
+
+  if (seenExternalIds.size > 0) {
+    await prisma.repository.updateMany({
+      where: {
+        integrationId: integration.id,
+        externalId: { notIn: [...seenExternalIds] },
+      },
+      data: { isActive: false },
     });
   }
 

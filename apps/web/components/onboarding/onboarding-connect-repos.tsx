@@ -219,8 +219,15 @@ type GitHubConnectInfo = {
   recommendedMethod?: "oauth" | "app" | null;
 };
 
-function GitHubConnectSection({ orgSlug }: { orgSlug: string }) {
+function GitHubConnectSection({
+  orgSlug,
+  clerkOrgId,
+}: {
+  orgSlug: string;
+  clerkOrgId?: string | null;
+}) {
   const [info, setInfo] = useState<GitHubConnectInfo | null>(null);
+  const connectOpts = { from: "onboarding" as const, clerkOrgId };
 
   useEffect(() => {
     apiGet<GitHubConnectInfo>("/api/v1/auth/github/connect-info")
@@ -228,83 +235,68 @@ function GitHubConnectSection({ orgSlug }: { orgSlug: string }) {
       .catch(() => setInfo(null));
   }, []);
 
-  const preferOAuth = info?.recommendedMethod === "oauth";
-  const oauthPrimaryClass =
-    "border-[var(--green-dark)] bg-[var(--green)] text-[var(--green-light)] hover:brightness-110";
-  const oauthSecondaryClass =
-    "border-white/[0.12] bg-white/[0.04] text-comply-text-secondary hover:text-comply-text-primary";
+  const canConnect = info?.oauth || info?.appInstall;
 
   return (
     <div className="relative mt-4 rounded-md border border-white/[0.08] bg-black/20 p-3">
-      {preferOAuth && (
-        <p className="mb-3 rounded-md border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-[11px] leading-relaxed text-amber-100/90">
-          <strong className="text-amber-50">Use Connect with GitHub OAuth</strong> — your GitHub App (
-          <a
-            href={info?.appPublicPageUrl ?? "https://github.com/apps/vikela1"}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="underline"
-          >
-            {info?.appSlug ?? "vikela1"}
-          </a>
-          ) is <strong>private</strong>, so &quot;Install GitHub App&quot; only works for app owners.
-          OAuth lists your repos right after you authorize.
-        </p>
-      )}
+      <p className="mb-3 text-[11px] leading-relaxed text-comply-text-secondary">
+        Authorize read access to your GitHub repos (including <strong className="text-comply-text-primary">private</strong>{" "}
+        repositories). You choose which repos Vikela can scan after connecting.
+      </p>
 
-      <div className="flex flex-col gap-2 sm:flex-row">
-        {info?.oauth && (
+      <div className="flex flex-col gap-2">
+        {canConnect || !info ? (
           <Link
-            href={githubOAuthUrl(orgSlug, { from: "onboarding" })}
+            href={githubConnectUrl(orgSlug, connectOpts)}
             className={cn(
-              "flex flex-1 flex-col items-center justify-center gap-2 rounded-md border py-3.5 text-[11px] font-medium transition-all duration-200",
-              preferOAuth ? oauthPrimaryClass : oauthSecondaryClass
+              "flex flex-col items-center justify-center gap-2 rounded-md border py-3.5 text-sm font-medium transition-all duration-200",
+              ONBOARDING_GIT_PROVIDERS[0]!.className
             )}
           >
             <IconBrandGithub size={22} stroke={1.25} />
-            Connect with GitHub OAuth
+            Connect GitHub
           </Link>
-        )}
-        {(info?.appInstall || !info) && (
-          <Link
-            href={githubConnectUrl(orgSlug, { from: "onboarding" })}
-            className={cn(
-              "flex flex-1 flex-col items-center justify-center gap-2 rounded-md border py-3.5 text-[11px] font-medium transition-all duration-200",
-              preferOAuth ? oauthSecondaryClass : ONBOARDING_GIT_PROVIDERS[0]!.className
-            )}
-          >
-            <IconBrandGithub size={18} stroke={1.25} />
-            Install GitHub App
-          </Link>
-        )}
-        {info && !info.oauth && !info.appInstall && (
+        ) : (
           <p className="text-center text-xs text-red-300">
-            GitHub is not configured on the API — set OAuth client credentials or GitHub App PEM key.
+            GitHub is not configured on the API — set GITHUB_CLIENT_ID + GITHUB_CLIENT_SECRET on Railway.
           </p>
+        )}
+
+        {info?.oauth && info?.appInstall && (
+          <Link
+            href={githubOAuthUrl(orgSlug, connectOpts)}
+            className="text-center text-[10px] text-comply-muted hover:text-comply-text-secondary hover:underline"
+          >
+            Or connect with GitHub OAuth directly
+          </Link>
         )}
       </div>
 
-      {info && !info.oauth && !info.appInstall && (
+      {info && !canConnect && (
         <p className="mt-3 text-[11px] leading-relaxed text-amber-200/90">
-          On Railway API: <code className="font-mono text-[10px]">GITHUB_APP_SLUG=vikela1</code>,{" "}
-          <code className="font-mono text-[10px]">GITHUB_CLIENT_ID</code>,{" "}
-          <code className="font-mono text-[10px]">GITHUB_CLIENT_SECRET</code>. Callback:{" "}
-          <code className="font-mono text-[10px]">https://your-web-url/api/auth/github/callback</code>
+          Railway API needs <code className="font-mono text-[10px]">GITHUB_CLIENT_ID</code>,{" "}
+          <code className="font-mono text-[10px]">GITHUB_CLIENT_SECRET</code>, and{" "}
+          <code className="font-mono text-[10px]">GITHUB_REDIRECT_URI=https://your-web-url/api/auth/github/callback</code>
         </p>
       )}
 
-      {info?.appInstall && !preferOAuth && (
-        <p className="mt-3 text-center text-[11px] leading-relaxed text-comply-muted">
-          On the install screen, choose{" "}
-          <strong className="text-comply-text-secondary">Only select repositories</strong> and check the
-          repos to scan.
+      {info?.appInstall && (
+        <p className="mt-3 text-center text-[10px] leading-relaxed text-comply-muted">
+          GitHub App <code className="font-mono">{info.appSlug}</code> — if install fails (private app),
+          use OAuth above. When installing, choose <strong>Only select repositories</strong>.
         </p>
       )}
     </div>
   );
 }
 
-function GitProviderGrid({ orgSlug }: { orgSlug: string }) {
+function GitProviderGrid({
+  orgSlug,
+  clerkOrgId,
+}: {
+  orgSlug: string;
+  clerkOrgId?: string | null;
+}) {
   const otherProviders = ONBOARDING_GIT_PROVIDERS.filter((p) => p.id !== "github");
 
   return (
@@ -313,7 +305,7 @@ function GitProviderGrid({ orgSlug }: { orgSlug: string }) {
         Connect your git provider. Repository access is granted on GitHub/GitLab/Bitbucket, then you
         choose which repos to scan here.
       </p>
-      <GitHubConnectSection orgSlug={orgSlug} />
+      <GitHubConnectSection orgSlug={orgSlug} clerkOrgId={clerkOrgId} />
       {otherProviders.length > 0 && (
         <div className="mt-3 grid grid-cols-2 gap-2">
           {otherProviders.map((provider) => {
@@ -493,6 +485,7 @@ function ConnectPanel({
   isDev,
   error,
   connectSlug,
+  clerkOrgId,
   needsClerkOrg,
   repos,
   reposLoading,
@@ -512,6 +505,7 @@ function ConnectPanel({
   isDev: boolean;
   error: string | null;
   connectSlug: string | null;
+  clerkOrgId?: string;
   needsClerkOrg: boolean;
   repos: OnboardingRepo[];
   reposLoading: boolean;
@@ -623,7 +617,7 @@ function ConnectPanel({
             <NoReposFromProviderPanel provider={justConnected} />
           ) : null}
 
-          {!hasImportedRepos && <GitProviderGrid orgSlug={connectSlug} />}
+          {!hasImportedRepos && <GitProviderGrid orgSlug={connectSlug} clerkOrgId={clerkOrgId} />}
 
           {hasImportedRepos && (
             <p className="relative mt-4 text-center text-[11px] text-comply-muted">
@@ -959,6 +953,7 @@ function OnboardingConnectReposBody({
         isDev={isDev}
         error={error}
         connectSlug={needsClerkOrg ? null : connectSlug}
+        clerkOrgId={clerkOrgId}
         needsClerkOrg={needsClerkOrg}
         repos={repos}
         reposLoading={reposLoading}

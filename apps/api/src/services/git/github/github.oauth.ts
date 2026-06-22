@@ -1,5 +1,6 @@
 import { prisma } from "../../../lib/prisma.js";
 import { encrypt } from "../../../lib/crypto.js";
+import { resolveOAuthOrganization } from "../../../lib/oauth-org-resolve.js";
 import {
   exchangeGitHubOAuthCode,
   getInstallationAccessToken,
@@ -10,20 +11,44 @@ import { syncGitRepositories } from "../sync-repositories.js";
 
 const DEMO_ORG_SLUG = "demo";
 
+async function deactivateOtherGithubIntegrations(orgId: string, keepId: string): Promise<void> {
+  await prisma.integration.updateMany({
+    where: {
+      orgId,
+      provider: "GITHUB",
+      id: { not: keepId },
+    },
+    data: { isActive: false },
+  });
+}
+
+async function resolveOrg(orgSlug: string | null | undefined, clerkOrgId?: string | null) {
+  const org =
+    (await resolveOAuthOrganization(orgSlug, clerkOrgId)) ??
+    (orgSlug ? await prisma.organization.findFirst({ where: { slug: orgSlug } }) : null);
+  if (!org) {
+    throw new Error(
+      `Organization not found${orgSlug ? `: ${orgSlug}` : ""} — create a workspace in Vikela first`
+    );
+  }
+  return org;
+}
+
 export async function handleGitHubInstallationCallback(
   installationId: string,
-  orgSlug: string = DEMO_ORG_SLUG
+  orgSlug: string | null = DEMO_ORG_SLUG,
+  clerkOrgId?: string | null
 ) {
-  const org = await prisma.organization.findFirst({ where: { slug: orgSlug } });
-  if (!org) throw new Error(`Organization not found: ${orgSlug}`);
+  const org = await resolveOrg(orgSlug, clerkOrgId);
 
-  let accessToken = "pending";
-  let accountLogin = "github";
-
-  if (isGitHubAppConfigured()) {
-    accessToken = await getInstallationAccessToken(installationId);
-    accountLogin = await getInstallationAccountLogin(installationId);
+  if (!isGitHubAppConfigured()) {
+    throw new Error(
+      "GitHub App PEM key is missing on the server — use Connect with GitHub OAuth instead"
+    );
   }
+
+  const accessToken = await getInstallationAccessToken(installationId);
+  const accountLogin = await getInstallationAccountLogin(installationId);
 
   const integration = await prisma.integration.upsert({
     where: {
@@ -36,7 +61,7 @@ export async function handleGitHubInstallationCallback(
     update: {
       isActive: true,
       accessToken: encrypt(accessToken),
-      name: `${accountLogin} (GitHub)`,
+      name: `${accountLogin} (GitHub App)`,
       metadata: { installationId: Number(installationId), accountLogin },
       lastSyncedAt: new Date(),
     },
@@ -44,7 +69,7 @@ export async function handleGitHubInstallationCallback(
       orgId: org.id,
       provider: "GITHUB",
       category: "GIT",
-      name: `${accountLogin} (GitHub)`,
+      name: `${accountLogin} (GitHub App)`,
       externalId: installationId,
       accessToken: encrypt(accessToken),
       scopes: ["repo"],
@@ -52,13 +77,18 @@ export async function handleGitHubInstallationCallback(
     },
   });
 
+  await deactivateOtherGithubIntegrations(org.id, integration.id);
+
   const repoCount = await syncGitRepositories(integration.id);
   return { integration, repoCount };
 }
 
-export async function handleGitHubOAuthCallback(code: string, orgSlug: string = DEMO_ORG_SLUG) {
-  const org = await prisma.organization.findFirst({ where: { slug: orgSlug } });
-  if (!org) throw new Error(`Organization not found: ${orgSlug}`);
+export async function handleGitHubOAuthCallback(
+  code: string,
+  orgSlug: string | null = DEMO_ORG_SLUG,
+  clerkOrgId?: string | null
+) {
+  const org = await resolveOrg(orgSlug, clerkOrgId);
 
   const { accessToken, scope } = await exchangeGitHubOAuthCode(code);
 
@@ -66,8 +96,12 @@ export async function handleGitHubOAuthCallback(code: string, orgSlug: string = 
     headers: {
       Authorization: `Bearer ${accessToken}`,
       Accept: "application/vnd.github+json",
+      "X-GitHub-Api-Version": "2022-11-28",
     },
   });
+  if (!userRes.ok) {
+    throw new Error(`GitHub user lookup failed: ${userRes.status}`);
+  }
   const user = (await userRes.json()) as { id: number; login: string };
 
   const integration = await prisma.integration.upsert({
@@ -81,21 +115,24 @@ export async function handleGitHubOAuthCallback(code: string, orgSlug: string = 
     update: {
       isActive: true,
       accessToken: encrypt(accessToken),
-      name: `${user.login} (GitHub OAuth)`,
+      name: `${user.login} (GitHub)`,
       scopes: scope.split(",").filter(Boolean),
+      metadata: { oauth: true, login: user.login },
       lastSyncedAt: new Date(),
     },
     create: {
       orgId: org.id,
       provider: "GITHUB",
       category: "GIT",
-      name: `${user.login} (GitHub OAuth)`,
+      name: `${user.login} (GitHub)`,
       externalId: String(user.id),
       accessToken: encrypt(accessToken),
       scopes: scope.split(",").filter(Boolean),
       metadata: { oauth: true, login: user.login },
     },
   });
+
+  await deactivateOtherGithubIntegrations(org.id, integration.id);
 
   const repoCount = await syncGitRepositories(integration.id);
   return { integration, repoCount };

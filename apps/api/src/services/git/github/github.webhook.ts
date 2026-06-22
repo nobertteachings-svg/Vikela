@@ -42,10 +42,43 @@ export async function handleGitHubWebhook(
   }
 
   if (event === "installation" && payload.action === "created" && payload.installation) {
+    const integration = await prisma.integration.findFirst({
+      where: {
+        provider: "GITHUB",
+        externalId: String(payload.installation.id),
+        isActive: true,
+      },
+    });
+    if (integration) {
+      const { syncGitRepositories } = await import("../sync-repositories.js");
+      const count = await syncGitRepositories(integration.id);
+      return {
+        handled: true,
+        message: `Installation ${payload.installation.id} synced ${count} repositories`,
+      };
+    }
     return {
       handled: true,
-      message: `Installation ${payload.installation.id} created — complete setup via callback`,
+      message: `Installation ${payload.installation.id} created — complete setup via OAuth callback`,
     };
+  }
+
+  if (event === "installation_repositories" && payload.action === "added" && payload.installation) {
+    const integration = await prisma.integration.findFirst({
+      where: {
+        provider: "GITHUB",
+        externalId: String(payload.installation.id),
+        isActive: true,
+      },
+    });
+    if (integration) {
+      const { syncGitRepositories } = await import("../sync-repositories.js");
+      const count = await syncGitRepositories(integration.id);
+      return {
+        handled: true,
+        message: `Synced ${count} repositories after installation_repositories.added`,
+      };
+    }
   }
 
   const fullName = payload.repository?.full_name;

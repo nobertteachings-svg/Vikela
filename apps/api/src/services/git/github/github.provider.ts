@@ -37,38 +37,64 @@ export class GithubProvider implements IGitProvider {
 
   async listRepositories(): Promise<RemoteRepo[]> {
     try {
-      const installData = await this.fetch<{
-        repositories: Array<{
-          id: number;
-          name: string;
-          full_name: string;
-          clone_url: string;
-          default_branch: string;
-          private: boolean;
-        }>;
-        total_count?: number;
-      }>("/installation/repositories?per_page=100");
-
-      const list = installData.repositories ?? [];
-      if (list.length > 0) {
-        return list.map((r) => this.mapRepo(r));
-      }
-    } catch {
-      // Fall through to user repos (OAuth token)
-    }
-
-    const userRepos = await this.fetch<
-      Array<{
+      const installRepos = await this.fetchAllPages<{
         id: number;
         name: string;
         full_name: string;
         clone_url: string;
         default_branch: string;
         private: boolean;
-      }>
-    >("/user/repos?per_page=100&sort=updated");
+      }>("/installation/repositories?per_page=100", "repositories");
+
+      if (installRepos.length > 0) {
+        return installRepos.map((r) => this.mapRepo(r));
+      }
+    } catch {
+      // Fall through to user repos (OAuth token)
+    }
+
+    const userRepos = await this.fetchAllPages<{
+      id: number;
+      name: string;
+      full_name: string;
+      clone_url: string;
+      default_branch: string;
+      private: boolean;
+    }>("/user/repos?per_page=100&sort=updated&affiliation=owner,collaborator,organization_member");
 
     return userRepos.map((r) => this.mapRepo(r));
+  }
+
+  private async fetchAllPages<T>(initialPath: string, nestedKey?: string): Promise<T[]> {
+    const items: T[] = [];
+    let path: string | null = initialPath;
+
+    while (path) {
+      const pagePath = path;
+      const res: Response = await fetch(`${GITHUB_API}${pagePath}`, { headers: this.headers() });
+      if (!res.ok) {
+        throw new Error(`GitHub API ${pagePath}: ${res.status} ${await res.text()}`);
+      }
+
+      const json = (await res.json()) as T[] | Record<string, T[]>;
+      const pageItems = Array.isArray(json)
+        ? json
+        : nestedKey && nestedKey in json
+          ? (json[nestedKey] ?? [])
+          : [];
+
+      items.push(...pageItems);
+
+      const link: string | null = res.headers.get("link");
+      const nextMatch = link?.match(/<([^>]+)>;\s*rel="next"/);
+      const next: string | undefined = nextMatch?.[1];
+      if (!next) break;
+
+      const nextUrl = new URL(next);
+      path = `${nextUrl.pathname}${nextUrl.search}`;
+    }
+
+    return items;
   }
 
   private mapRepo(r: {
