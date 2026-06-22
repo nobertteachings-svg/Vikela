@@ -35,12 +35,12 @@ export function githubManageInstallationsUrl(): string {
   return "https://github.com/settings/installations";
 }
 
-/** Primary GitHub connect — API prefers OAuth (private repos + private apps). */
+/** Primary GitHub connect — OAuth (required for private GitHub Apps like vikela1). */
 export function githubConnectUrl(
   orgSlug: string | null | undefined,
   opts?: { from?: GitOAuthFrom; clerkOrgId?: string | null }
 ): string {
-  return webGitAuthPath("/api/auth/github/install", orgSlug, opts?.from, opts?.clerkOrgId);
+  return webGitAuthPath("/api/auth/github/oauth", orgSlug, opts?.from, opts?.clerkOrgId);
 }
 
 /** @deprecated Use githubConnectUrl — same install entrypoint with OAuth fallback. */
