@@ -41,8 +41,9 @@ import { prisma } from "../lib/prisma.js";
 import { ok } from "../lib/response.js";
 import { applyOnboardingRepoDefaults } from "../services/onboarding/repository-selection.js";
 import { resolveOAuthOrganization } from "../lib/oauth-org-resolve.js";
+import { getAppUrl } from "../lib/app-url.js";
 
-const APP_URL = process.env.APP_URL ?? "http://localhost:3000";
+const APP_URL = getAppUrl();
 const INTEGRATIONS = `${APP_URL}/integrations`;
 
 function oauthReturnTo(query: { from?: string }): OAuthReturnTo {

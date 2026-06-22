@@ -60,3 +60,27 @@ export async function ensureOrganizationFromSession(
 
   return org;
 }
+
+/** OAuth callbacks have no Clerk session — provision org from state when webhooks lag. */
+export async function ensureOrganizationFromClerkId(
+  clerkOrgId: string,
+  slugHint?: string | null
+): Promise<Organization> {
+  const clerkId = clerkOrgId.trim();
+  const existing = await prisma.organization.findUnique({ where: { clerkOrgId: clerkId } });
+  if (existing) return existing;
+
+  const base = clerkOrgSlugBase(slugHint?.trim() || "organization", slugHint ?? undefined);
+  const slug = `${base}-${clerkId.slice(-6)}`;
+
+  return prisma.organization.upsert({
+    where: { clerkOrgId: clerkId },
+    update: {},
+    create: {
+      clerkOrgId: clerkId,
+      name: slugHint?.trim() || "Organization",
+      slug,
+      plan: "FREE",
+    },
+  });
+}

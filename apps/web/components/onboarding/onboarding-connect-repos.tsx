@@ -247,7 +247,7 @@ function GitHubConnectSection({
       <div className="flex flex-col gap-2">
         {canConnect || !info ? (
           <Link
-            href={githubConnectUrl(orgSlug, connectOpts)}
+            href={githubOAuthUrl(orgSlug, connectOpts)}
             className={cn(
               "flex flex-col items-center justify-center gap-2 rounded-md border py-3.5 text-sm font-medium transition-all duration-200",
               ONBOARDING_GIT_PROVIDERS[0]!.className

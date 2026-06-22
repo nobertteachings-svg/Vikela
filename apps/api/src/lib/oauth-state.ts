@@ -1,4 +1,5 @@
 import { DEMO_ORG_SLUG } from "./org-context.js";
+import { getAppUrl } from "./app-url.js";
 
 export type OAuthReturnTo = "integrations" | "onboarding";
 
@@ -53,7 +54,7 @@ export function oauthSuccessRedirect(
   returnTo: OAuthReturnTo,
   params: Record<string, string>
 ): string {
-  const app = process.env.APP_URL ?? "http://localhost:3000";
+  const app = getAppUrl();
   const base =
     returnTo === "onboarding" ? `${app}/onboarding/connect-repos` : `${app}/integrations`;
   const qs = new URLSearchParams(params).toString();

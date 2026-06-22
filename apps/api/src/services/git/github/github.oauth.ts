@@ -1,6 +1,7 @@
 import { prisma } from "../../../lib/prisma.js";
 import { encrypt } from "../../../lib/crypto.js";
 import { resolveOAuthOrganization } from "../../../lib/oauth-org-resolve.js";
+import { ensureOrganizationFromClerkId } from "../../../lib/clerk-org-provision.js";
 import {
   exchangeGitHubOAuthCode,
   getInstallationAccessToken,
@@ -23,9 +24,14 @@ async function deactivateOtherGithubIntegrations(orgId: string, keepId: string):
 }
 
 async function resolveOrg(orgSlug: string | null | undefined, clerkOrgId?: string | null) {
-  const org =
+  let org =
     (await resolveOAuthOrganization(orgSlug, clerkOrgId)) ??
     (orgSlug ? await prisma.organization.findFirst({ where: { slug: orgSlug } }) : null);
+
+  if (!org && clerkOrgId?.trim()) {
+    org = await ensureOrganizationFromClerkId(clerkOrgId, orgSlug);
+  }
+
   if (!org) {
     throw new Error(
       `Organization not found${orgSlug ? `: ${orgSlug}` : ""} — create a workspace in Vikela first`

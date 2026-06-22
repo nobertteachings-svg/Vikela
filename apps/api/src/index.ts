@@ -40,13 +40,13 @@ import { onboardingRoutes } from "./routes/onboarding.js";
 import { startScanWorker } from "./jobs/scan.worker.js";
 import { scheduleAllCloudAccounts } from "./jobs/cloud-scan.schedule.js";
 import { scheduleAllIdentityIntegrations } from "./jobs/identity-scan.schedule.js";
+import { getAppUrl } from "./lib/app-url.js";
 
 const PORT = Number(process.env.PORT ?? 3001);
-const APP_URL = process.env.APP_URL ?? "http://localhost:3000";
 
 function parseCorsOrigins(): string[] {
   const origins = new Set<string>([
-    process.env.APP_URL ?? "http://localhost:3000",
+    getAppUrl(),
     "http://localhost:3000",
   ]);
   const extra = process.env.CORS_ALLOWED_ORIGINS?.split(",").map((o) => o.trim()).filter(Boolean);
@@ -72,7 +72,7 @@ async function main() {
       req.url.startsWith("/health");
 
     if (isBrowserRequest && !isApiPath) {
-      const target = new URL(req.url, APP_URL);
+      const target = new URL(req.url, getAppUrl());
       return reply.redirect(target.toString(), 302);
     }
 
