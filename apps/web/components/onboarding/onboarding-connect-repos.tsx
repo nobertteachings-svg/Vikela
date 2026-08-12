@@ -430,7 +430,7 @@ function NoReposFromProviderPanel({
   clerkOrgId,
 }: {
   provider: string;
-  authMethod?: "app" | "oauth" | null;
+  authMethod?: "app" | "oauth" | "unknown" | null;
   orgSlug?: string | null;
   clerkOrgId?: string | null;
 }) {

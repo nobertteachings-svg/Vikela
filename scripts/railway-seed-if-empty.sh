@@ -8,9 +8,17 @@ cd "$ROOT/apps/api"
 count="$(npx tsx --eval "
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
-const n = await prisma.framework.count();
-await prisma.\$disconnect();
-process.stdout.write(String(n));
+(async () => {
+  try {
+    const n = await prisma.framework.count();
+    process.stdout.write(String(n));
+  } finally {
+    await prisma.\$disconnect();
+  }
+})().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});
 ")"
 
 if [[ "$count" == "0" ]]; then
