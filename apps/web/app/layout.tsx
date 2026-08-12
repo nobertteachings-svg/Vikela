@@ -27,7 +27,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       signInFallbackRedirectUrl="/dashboard"
       signUpForceRedirectUrl="/onboarding/connect-repos"
       signUpFallbackRedirectUrl="/onboarding/connect-repos"
-      afterSelectOrganizationUrl="/dashboard"
     >
       {body}
     </ClerkProvider>

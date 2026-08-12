@@ -382,7 +382,7 @@ export const membersRoutes: FastifyPluginAsync = async (app) => {
       return reply.status(400).send(err("Cannot change the organization owner role here"));
     }
 
-    const wasAdmin = target.role === "ADMIN" || target.role === "OWNER";
+    const wasAdmin = target.role === "ADMIN";
     const willBeAdmin = role === "ADMIN";
     if (wasAdmin && !willBeAdmin) {
       const admins = await countAdmins(org.id);
