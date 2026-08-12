@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { LogoPill } from "@/components/comply/logo-pill";
+import { MarketingAuthLinks } from "@/components/marketing/marketing-auth-links";
 import { cn } from "@/lib/utils";
 
 const FOOTER_LINKS = [
@@ -48,17 +49,7 @@ export function MarketingShell({
               Pricing
             </Link>
           </nav>
-          <div className="flex items-center gap-3">
-            <Link
-              href="/login"
-              className="hidden text-sm text-comply-text-secondary sm:inline hover:text-comply-text-primary"
-            >
-              Sign in
-            </Link>
-            <Link href="/sign-up" className="btn-purple-cta px-4">
-              Get started
-            </Link>
-          </div>
+          <MarketingAuthLinks compact />
         </div>
       </header>
 

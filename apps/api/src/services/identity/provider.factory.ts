@@ -7,6 +7,7 @@ import { GoogleWorkspaceProvider } from "./google-workspace/google-workspace.pro
 import { Auth0Provider } from "./auth0/auth0.provider.js";
 import { JumpCloudProvider } from "./jumpcloud/jumpcloud.provider.js";
 import { demoIdentityFindings } from "./demo-findings.js";
+import { isDemoConnectAllowed } from "../../lib/auth.js";
 
 class StubIdentityProvider implements IIdentityProvider {
   constructor(private readonly label: string) {}
@@ -33,6 +34,11 @@ class StubIdentityProvider implements IIdentityProvider {
     return [];
   }
   async runComplianceChecks() {
+    if (!isDemoConnectAllowed()) {
+      throw new Error(
+        `Identity provider "${this.label}" is not supported. Connect a supported IdP (Okta, Azure AD, Google Workspace, Auth0, or JumpCloud).`
+      );
+    }
     return demoIdentityFindings(this.label);
   }
 }

@@ -29,6 +29,11 @@ import { handleAzureCloudOAuthCallback } from "../services/cloud/azure/azure.clo
 import { handleGcpCloudOAuthCallback } from "../services/cloud/gcp/gcp.cloud.oauth.js";
 import { getAzureCloudOAuthUrl } from "../services/cloud/azure/azure.cloud.oauth.js";
 import { getGcpCloudOAuthUrl } from "../services/cloud/gcp/gcp.cloud.oauth.js";
+import {
+  getSlackOAuthUrl,
+  handleSlackOAuthCallback,
+  isSlackConfigured,
+} from "../services/communication/slack/slack.oauth.js";
 import { scheduleCloudAccountScan } from "../jobs/cloud-scan.schedule.js";
 import { oauthOrgErrorRedirect, resolveOAuthOrgSlug } from "../lib/oauth-org.js";
 import {
@@ -66,10 +71,10 @@ export const authRoutes: FastifyPluginAsync = async (app) => {
         oauth,
         appSlug: getGitHubAppSlug(),
         appPublicPageUrl: getGitHubAppPublicPageUrl(),
-        installPath: "/api/v1/auth/github/install",
-        oauthPath: "/api/v1/auth/github/oauth",
-        /** OAuth works for private GitHub Apps; App install requires a public app or allowed installers. */
-        recommendedMethod: oauth ? "oauth" : appInstall ? "app" : null,
+        installPath: "/api/auth/github/install",
+        oauthPath: "/api/auth/github/oauth",
+        /** App install is Railway-style primary; OAuth is fallback when App PEM is missing. */
+        recommendedMethod: appInstall ? "app" : oauth ? "oauth" : null,
       })
     );
   });
@@ -81,17 +86,17 @@ export const authRoutes: FastifyPluginAsync = async (app) => {
     if (!orgSlug) return reply.redirect(oauthOrgErrorRedirect(returnTo));
     const state = encodeOAuthState(orgSlug, returnTo, query.clerkOrg);
 
-    // OAuth first — works for private repos and private GitHub Apps (vikela1)
-    if (isGitHubOAuthConfigured()) {
-      return reply.redirect(getGitHubOAuthUrl(state));
-    }
-
+    // App install first (Railway / Vercel / Render model) — requires a public GitHub App
     if (isGitHubAppConfigured()) {
       return reply.redirect(getGitHubAppInstallUrl(state));
     }
 
+    if (isGitHubOAuthConfigured()) {
+      return reply.redirect(getGitHubOAuthUrl(state));
+    }
+
     return reply.redirect(
-      `${oauthErrorRedirect(returnTo)}?error=${encodeURIComponent("GitHub is not configured. Set GITHUB_CLIENT_ID + GITHUB_CLIENT_SECRET (OAuth) or GITHUB_APP_ID + PEM key (App).")}`
+      `${oauthErrorRedirect(returnTo)}?error=${encodeURIComponent("GitHub is not configured. Set GITHUB_APP_ID + PEM key (App) or GITHUB_CLIENT_ID + GITHUB_CLIENT_SECRET (OAuth).")}`
     );
   });
 
@@ -162,22 +167,23 @@ export const authRoutes: FastifyPluginAsync = async (app) => {
 
   app.get("/auth/gitlab/start", async (req, reply) => {
     const query = req.query as { org?: string; from?: string };
+    const returnTo = oauthReturnTo(query);
     const orgSlug = resolveOAuthOrgSlug(query.org);
-    if (!orgSlug) return reply.redirect(oauthOrgErrorRedirect());
+    if (!orgSlug) return reply.redirect(oauthOrgErrorRedirect(returnTo));
     if (!process.env.GITLAB_APP_ID) {
-      return reply.redirect(`${INTEGRATIONS}?error=gitlab_not_configured`);
+      return reply.redirect(`${oauthErrorRedirect(returnTo)}?error=gitlab_not_configured`);
     }
-    return reply.redirect(getGitLabOAuthUrl(encodeOAuthState(orgSlug, oauthReturnTo(query))));
+    return reply.redirect(getGitLabOAuthUrl(encodeOAuthState(orgSlug, returnTo)));
   });
 
   app.get("/auth/gitlab/callback", async (req, reply) => {
     const query = req.query as { code?: string; state?: string };
+    const { orgSlug, returnTo } = parseOAuthState(query.state);
     if (!query.code) {
-      return reply.redirect(`${INTEGRATIONS}?error=gitlab_no_code`);
+      return reply.redirect(`${oauthErrorRedirect(returnTo)}?error=gitlab_no_code`);
     }
     try {
-      const { orgSlug, returnTo } = parseOAuthState(query.state);
-      if (!orgSlug) return reply.redirect(oauthOrgErrorRedirect());
+      if (!orgSlug) return reply.redirect(oauthOrgErrorRedirect(returnTo));
       const { repoCount } = await handleGitLabOAuthCallback(query.code, orgSlug);
       if (returnTo === "onboarding") {
         const org = await prisma.organization.findFirst({ where: { slug: orgSlug } });
@@ -191,28 +197,29 @@ export const authRoutes: FastifyPluginAsync = async (app) => {
       );
     } catch (e) {
       const msg = encodeURIComponent(e instanceof Error ? e.message : "GitLab connect failed");
-      return reply.redirect(`${INTEGRATIONS}?error=${msg}`);
+      return reply.redirect(`${oauthErrorRedirect(returnTo)}?error=${msg}`);
     }
   });
 
   app.get("/auth/bitbucket/start", async (req, reply) => {
     const query = req.query as { org?: string; from?: string };
+    const returnTo = oauthReturnTo(query);
     const orgSlug = resolveOAuthOrgSlug(query.org);
-    if (!orgSlug) return reply.redirect(oauthOrgErrorRedirect());
+    if (!orgSlug) return reply.redirect(oauthOrgErrorRedirect(returnTo));
     if (!process.env.BITBUCKET_CLIENT_ID) {
-      return reply.redirect(`${INTEGRATIONS}?error=bitbucket_not_configured`);
+      return reply.redirect(`${oauthErrorRedirect(returnTo)}?error=bitbucket_not_configured`);
     }
-    return reply.redirect(getBitbucketOAuthUrl(encodeOAuthState(orgSlug, oauthReturnTo(query))));
+    return reply.redirect(getBitbucketOAuthUrl(encodeOAuthState(orgSlug, returnTo)));
   });
 
   app.get("/auth/bitbucket/callback", async (req, reply) => {
     const query = req.query as { code?: string; state?: string };
+    const { orgSlug, returnTo } = parseOAuthState(query.state);
     if (!query.code) {
-      return reply.redirect(`${INTEGRATIONS}?error=bitbucket_no_code`);
+      return reply.redirect(`${oauthErrorRedirect(returnTo)}?error=bitbucket_no_code`);
     }
     try {
-      const { orgSlug, returnTo } = parseOAuthState(query.state);
-      if (!orgSlug) return reply.redirect(oauthOrgErrorRedirect());
+      if (!orgSlug) return reply.redirect(oauthOrgErrorRedirect(returnTo));
       const { repoCount } = await handleBitbucketOAuthCallback(query.code, orgSlug);
       if (returnTo === "onboarding") {
         const org = await prisma.organization.findFirst({ where: { slug: orgSlug } });
@@ -226,7 +233,7 @@ export const authRoutes: FastifyPluginAsync = async (app) => {
       );
     } catch (e) {
       const msg = encodeURIComponent(e instanceof Error ? e.message : "Bitbucket connect failed");
-      return reply.redirect(`${INTEGRATIONS}?error=${msg}`);
+      return reply.redirect(`${oauthErrorRedirect(returnTo)}?error=${msg}`);
     }
   });
 
@@ -324,6 +331,38 @@ export const authRoutes: FastifyPluginAsync = async (app) => {
       const msg = encodeURIComponent(
         e instanceof Error ? e.message : "Google Workspace connect failed"
       );
+      return reply.redirect(`${INTEGRATIONS}?error=${msg}`);
+    }
+  });
+
+  app.get("/auth/slack/start", async (req, reply) => {
+    const query = req.query as { org?: string };
+    const orgSlug = resolveOAuthOrgSlug(query.org);
+    if (!orgSlug) return reply.redirect(oauthOrgErrorRedirect());
+    if (!isSlackConfigured()) {
+      return reply.redirect(`${INTEGRATIONS}?error=slack_not_configured`);
+    }
+    try {
+      return reply.redirect(getSlackOAuthUrl(orgSlug));
+    } catch (e) {
+      const msg = encodeURIComponent(e instanceof Error ? e.message : "Slack start failed");
+      return reply.redirect(`${INTEGRATIONS}?error=${msg}`);
+    }
+  });
+
+  app.get("/auth/slack/callback", async (req, reply) => {
+    const query = req.query as { code?: string; state?: string; error?: string };
+    if (query.error) {
+      return reply.redirect(`${INTEGRATIONS}?error=${encodeURIComponent(query.error)}`);
+    }
+    if (!query.code || !query.state) {
+      return reply.redirect(`${INTEGRATIONS}?error=slack_no_code`);
+    }
+    try {
+      await handleSlackOAuthCallback(query.code, query.state);
+      return reply.redirect(`${INTEGRATIONS}?connected=slack`);
+    } catch (e) {
+      const msg = encodeURIComponent(e instanceof Error ? e.message : "Slack connect failed");
       return reply.redirect(`${INTEGRATIONS}?error=${msg}`);
     }
   });

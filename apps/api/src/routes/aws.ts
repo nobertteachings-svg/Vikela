@@ -6,6 +6,8 @@ import { connectAwsAccount } from "../services/cloud/aws/aws.connect.js";
 import { isVikelaAwsConfigured } from "../lib/aws-session.js";
 import { scheduleCloudAccountScan } from "../jobs/cloud-scan.schedule.js";
 import { requireOrganization } from "../lib/org-context.js";
+import { ensureOrganizationFromSession } from "../lib/clerk-org-provision.js";
+import { ensureMembershipFromSession } from "../lib/membership.js";
 import { requireAdmin } from "../lib/authorization.js";
 import { assertCanConnectIntegration } from "../lib/plan-limits.js";
 import { logAuditEvent } from "../lib/audit-log.js";
@@ -51,6 +53,27 @@ export const awsRoutes: FastifyPluginAsync = async (app) => {
   });
 
   app.post("/integrations/aws/connect", async (req, reply) => {
+    // Provision org/membership before requireAdmin (it resolves org for role checks).
+    try {
+      await ensureOrganizationFromSession(req);
+      await ensureMembershipFromSession(req);
+    } catch {
+      /* header / sole-membership resolution may still succeed below */
+    }
+
+    let org;
+    try {
+      org = await requireOrganization(req);
+    } catch {
+      return reply
+        .status(404)
+        .send(
+          err(
+            "Organization not found — select Optic Inc (or your workspace) in the Clerk org switcher, refresh /integrations, then try again."
+          )
+        );
+    }
+
     let member;
     try {
       member = await requireAdmin(req);
@@ -59,15 +82,8 @@ export const awsRoutes: FastifyPluginAsync = async (app) => {
       return reply.status(status).send(err(e instanceof Error ? e.message : "Forbidden"));
     }
 
-    let org;
     try {
-      org = await requireOrganization(req);
-    } catch {
-      return reply.status(404).send(err("Organization not found"));
-    }
-
-    try {
-      await assertCanConnectIntegration(org.id, org.plan);
+      await assertCanConnectIntegration(org.id, org.plan, { provider: "AWS" });
     } catch (e) {
       const status = (e as { statusCode?: number }).statusCode ?? 402;
       return reply.status(status).send(err(e instanceof Error ? e.message : "Plan limit reached"));

@@ -8,6 +8,7 @@ import {
   filterFindingsForScope,
   getOrgFrameworkScanScope,
 } from "./framework-scope.js";
+import { computeScanScoreFromFindings } from "../../lib/scan-score.js";
 
 export interface CloudScanOptions {
   cloudAccountId: string;
@@ -56,11 +57,9 @@ export async function executeCloudScan(options: CloudScanOptions) {
     replaceExisting: options.replaceExistingGaps,
   });
 
-  const totalChecks = 25;
-  const score = Math.max(
-    0,
-    Math.min(100, Math.round(((totalChecks - gapCount) / totalChecks) * 100))
-  );
+  const { score, totalChecks, passedChecks } = computeScanScoreFromFindings(findings, {
+    baselineChecks: 25,
+  });
 
   await prisma.scan.update({
     where: { id: scan.id },
@@ -68,7 +67,7 @@ export async function executeCloudScan(options: CloudScanOptions) {
       status: "COMPLETED",
       score,
       totalChecks,
-      passedChecks: totalChecks - gapCount,
+      passedChecks,
       completedAt: new Date(),
     },
   });

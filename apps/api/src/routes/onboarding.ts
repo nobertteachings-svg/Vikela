@@ -37,15 +37,15 @@ export const onboardingRoutes: FastifyPluginAsync = async (app) => {
       } catch {
         return reply.status(401).send(err("Unauthorized"));
       }
-
-      const auth = getClerkAuth(req);
-      if (!auth?.orgId) {
-        return reply.status(400).send(err("Select or create a Clerk organization first"));
-      }
     }
 
     await ensureOrganizationFromSession(req);
     const result = await ensureMembershipFromSession(req);
+    if (result.needsClerkOrg) {
+      return reply
+        .status(400)
+        .send(err("Select or create a Clerk organization first"));
+    }
     if (!result.orgReady) {
       return reply.status(202).send(
         ok({

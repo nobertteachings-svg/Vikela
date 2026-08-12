@@ -24,19 +24,46 @@ export class GithubProvider implements IGitProvider {
   }
 
   private async fetch<T>(path: string, init?: RequestInit): Promise<T> {
-    const res = await fetch(`${GITHUB_API}${path}`, {
-      ...init,
-      headers: { ...this.headers(), ...init?.headers },
-    });
-    if (!res.ok) {
-      throw new Error(`GitHub API ${path}: ${res.status} ${await res.text()}`);
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 25_000);
+    try {
+      const res = await fetch(`${GITHUB_API}${path}`, {
+        ...init,
+        signal: controller.signal,
+        headers: { ...this.headers(), ...init?.headers },
+      });
+      if (res.status === 403 || res.status === 429) {
+        const retryAfter = Number(res.headers.get("retry-after") ?? "2");
+        const waitMs = Number.isFinite(retryAfter) ? Math.min(retryAfter * 1000, 10_000) : 2000;
+        await new Promise((r) => setTimeout(r, waitMs));
+        const retry = await fetch(`${GITHUB_API}${path}`, {
+          ...init,
+          headers: { ...this.headers(), ...init?.headers },
+        });
+        if (!retry.ok) {
+          throw new Error(`GitHub API ${path}: ${retry.status} ${await retry.text()}`);
+        }
+        if (retry.status === 204) return {} as T;
+        return retry.json() as Promise<T>;
+      }
+      if (!res.ok) {
+        throw new Error(`GitHub API ${path}: ${res.status} ${await res.text()}`);
+      }
+      if (res.status === 204) return {} as T;
+      return res.json() as Promise<T>;
+    } catch (e) {
+      if (e instanceof Error && e.name === "AbortError") {
+        throw new Error(`GitHub API ${path}: timed out after 25s`);
+      }
+      throw e;
+    } finally {
+      clearTimeout(timeout);
     }
-    if (res.status === 204) return {} as T;
-    return res.json() as Promise<T>;
   }
 
   async listRepositories(): Promise<RemoteRepo[]> {
     try {
+      // Installation tokens: return granted repos even when empty — do not fall through to /user/repos.
       const installRepos = await this.fetchAllPages<{
         id: number;
         name: string;
@@ -46,11 +73,9 @@ export class GithubProvider implements IGitProvider {
         private: boolean;
       }>("/installation/repositories?per_page=100", "repositories");
 
-      if (installRepos.length > 0) {
-        return installRepos.map((r) => this.mapRepo(r));
-      }
+      return installRepos.map((r) => this.mapRepo(r));
     } catch {
-      // Fall through to user repos (OAuth token)
+      // OAuth user tokens cannot call /installation/repositories — list user repos instead.
     }
 
     const userRepos = await this.fetchAllPages<{

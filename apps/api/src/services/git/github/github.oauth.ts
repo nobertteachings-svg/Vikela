@@ -9,6 +9,7 @@ import {
   isGitHubAppConfigured,
 } from "../../../lib/github-app.js";
 import { syncGitRepositories } from "../sync-repositories.js";
+import { gateNewProviderConnection } from "../../../lib/integration-plan-gate.js";
 
 const DEMO_ORG_SLUG = "demo";
 
@@ -49,9 +50,11 @@ export async function handleGitHubInstallationCallback(
 
   if (!isGitHubAppConfigured()) {
     throw new Error(
-      "GitHub App PEM key is missing on the server — use Connect with GitHub OAuth instead"
+      "GitHub App PEM key is missing on the server — set GITHUB_APP_PRIVATE_KEY or use Connect with GitHub OAuth instead"
     );
   }
+
+  await gateNewProviderConnection(org.id, org.plan, "GITHUB");
 
   const accessToken = await getInstallationAccessToken(installationId);
   const accountLogin = await getInstallationAccountLogin(installationId);
@@ -95,6 +98,8 @@ export async function handleGitHubOAuthCallback(
   clerkOrgId?: string | null
 ) {
   const org = await resolveOrg(orgSlug, clerkOrgId);
+
+  await gateNewProviderConnection(org.id, org.plan, "GITHUB");
 
   const { accessToken, scope } = await exchangeGitHubOAuthCode(code);
 

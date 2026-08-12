@@ -1,4 +1,4 @@
-import { createHmac, timingSafeEqual } from "crypto";
+import { timingSafeEqual } from "crypto";
 import type { IGitProvider } from "../provider.interface.js";
 import type {
   BranchProtection,
@@ -168,10 +168,17 @@ export class GitlabProvider implements IGitProvider {
     return mr.changes.map((c) => c.new_path);
   }
 
-  verifyWebhookSignature(payload: string, sig: string, secret: string): boolean {
-    const expected = createHmac("sha256", secret).update(payload).digest("hex");
+  /**
+   * GitLab sends a static shared secret in X-Gitlab-Token (not an HMAC of the body).
+   * `sig` is the header token; `payload` is unused.
+   */
+  verifyWebhookSignature(_payload: string, sig: string, secret: string): boolean {
+    if (!sig || !secret) return false;
+    const a = Buffer.from(sig);
+    const b = Buffer.from(secret);
+    if (a.length !== b.length) return false;
     try {
-      return timingSafeEqual(Buffer.from(sig), Buffer.from(expected));
+      return timingSafeEqual(a, b);
     } catch {
       return false;
     }

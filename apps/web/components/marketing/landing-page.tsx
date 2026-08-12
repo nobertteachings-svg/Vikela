@@ -18,6 +18,8 @@ import {
   IconStack2,
 } from "@tabler/icons-react";
 import { LogoPill } from "@/components/comply/logo-pill";
+import { MarketingAuthLinks } from "@/components/marketing/marketing-auth-links";
+import { enterpriseFooterCopy, landingPlans } from "@/lib/billing-plans";
 import { cn } from "@/lib/utils";
 
 const FRAMEWORKS = [
@@ -102,45 +104,6 @@ const STEPS = [
   },
 ] as const;
 
-const PLANS = [
-  {
-    name: "Free",
-    price: "$0",
-    period: "forever",
-    features: [
-      "One integration connected",
-      "Posture score & gap report",
-      "All frameworks visible",
-    ],
-    cta: "Get started",
-    highlight: false,
-  },
-  {
-    name: "Starter",
-    price: "$299",
-    period: "/month",
-    features: [
-      "Unlimited integrations",
-      "Continuous scanning",
-      "Framework dashboards",
-    ],
-    cta: "Start trial",
-    highlight: false,
-  },
-  {
-    name: "Growth",
-    price: "$799",
-    period: "/month",
-    features: [
-      "AI copilot & policy generator",
-      "Evidence vault & exports",
-      "Questionnaire automation",
-    ],
-    cta: "Start trial",
-    highlight: true,
-  },
-] as const;
-
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
     <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-comply-purple-border">
@@ -207,15 +170,7 @@ export function LandingPage() {
             </a>
           </nav>
           <div className="flex items-center gap-3">
-            <Link
-              href="/login"
-              className="hidden text-sm text-comply-text-secondary sm:inline hover:text-comply-text-primary"
-            >
-              Sign in
-            </Link>
-            <Link href="/sign-up" className="btn-purple-cta px-4">
-              Get started
-            </Link>
+            <MarketingAuthLinks compact />
           </div>
         </div>
       </header>
@@ -234,20 +189,11 @@ export function LandingPage() {
                 ISO 27001, GDPR, PCI DSS, FedRAMP, CMMC, and more—so you run one program,
                 not ten spreadsheets.
               </p>
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
-                <Link href="/sign-up" className="btn-purple-cta h-11 px-6 text-sm">
-                  Start free assessment
-                  <IconArrowRight size={16} className="ml-1 inline" />
-                </Link>
-                <a
-                  href="#how-it-works"
-                  className="inline-flex h-11 items-center justify-center px-4 text-sm text-comply-text-secondary transition-colors hover:text-comply-text-primary"
-                >
-                  See the workflow
-                </a>
+              <div className="mt-8">
+                <MarketingAuthLinks />
               </div>
               <ul className="mt-8 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-x-6">
-                {["All frameworks included", "Git, cloud, and identity sources", "Free assessment tier"].map(
+                {["Framework mapping packs", "Git, cloud, and identity sources", "Free assessment tier"].map(
                   (item) => (
                     <li
                       key={item}
@@ -267,7 +213,7 @@ export function LandingPage() {
                 <span className="text-xs font-medium text-comply-text-secondary">
                   Posture overview
                 </span>
-                <span className="font-mono text-xs text-comply-green">Live</span>
+                <span className="font-mono text-xs text-comply-text-secondary">Example</span>
               </div>
               <div className="mt-4 space-y-3">
                 {[
@@ -307,8 +253,8 @@ export function LandingPage() {
                   Ten frameworks. One control graph.
                 </h2>
                 <p className="mt-2 max-w-xl text-sm leading-relaxed text-comply-text-secondary">
-                  Enable the standards you need today; add FedRAMP, CMMC, or ISO 42001 when
-                  contracts require them—without re-implementing your program.
+                  Enable the mapping packs you need today; add FedRAMP, CMMC, or ISO 42001
+                  control tracking when contracts require them—without re-implementing your program.
                 </p>
               </div>
             </div>
@@ -429,7 +375,7 @@ export function LandingPage() {
               </p>
             </div>
             <div className="mt-12 grid gap-6 md:grid-cols-3">
-              {PLANS.map((plan) => (
+              {landingPlans.map((plan) => (
                 <div
                   key={plan.name}
                   className={cn(
@@ -474,7 +420,7 @@ export function LandingPage() {
               ))}
             </div>
             <p className="mt-10 text-center text-sm text-comply-text-secondary">
-              Enterprise — FedRAMP inheritance, custom controls, auditor portals, and SSO.{" "}
+              {enterpriseFooterCopy}{" "}
               <a href="mailto:hello@vikela.com" className="text-comply-purple-border hover:underline">
                 Contact sales
               </a>

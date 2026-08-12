@@ -19,6 +19,12 @@ import { authRoutes } from "./routes/auth.js";
 import { webhooksRoutes } from "./routes/webhooks.js";
 import { repositoriesRoutes } from "./routes/repositories.js";
 import { awsRoutes } from "./routes/aws.js";
+import { cloudflareRoutes } from "./routes/cloudflare.js";
+import { datadogRoutes } from "./routes/datadog.js";
+import { grafanaRoutes } from "./routes/grafana.js";
+import { pagerdutyRoutes } from "./routes/pagerduty.js";
+import { newrelicRoutes } from "./routes/newrelic.js";
+import { microsoftTeamsRoutes } from "./routes/microsoft-teams.js";
 import { cloudAccountsRoutes } from "./routes/cloud-accounts.js";
 import { identityRoutes } from "./routes/identity.js";
 import { evidenceRoutes } from "./routes/evidence.js";
@@ -37,6 +43,8 @@ import { questionnairesRoutes } from "./routes/questionnaires.js";
 import { stripeWebhookRoutes } from "./routes/stripe-webhook.js";
 import { settingsRoutes } from "./routes/settings.js";
 import { onboardingRoutes } from "./routes/onboarding.js";
+import { trustRoutes } from "./routes/trust.js";
+import { auditRoutes } from "./routes/audit.js";
 import { startScanWorker } from "./jobs/scan.worker.js";
 import { scheduleAllCloudAccounts } from "./jobs/cloud-scan.schedule.js";
 import { scheduleAllIdentityIntegrations } from "./jobs/identity-scan.schedule.js";
@@ -83,9 +91,14 @@ async function main() {
     "application/json",
     { parseAs: "string" },
     (req, body, done) => {
-      (req as { rawBody?: string }).rawBody = body as string;
+      const raw = (body as string) ?? "";
+      (req as { rawBody?: string }).rawBody = raw;
+      if (!raw.trim()) {
+        done(null, {});
+        return;
+      }
       try {
-        done(null, JSON.parse(body as string));
+        done(null, JSON.parse(raw));
       } catch (e) {
         done(e as Error, undefined);
       }
@@ -124,6 +137,12 @@ async function main() {
   await app.register(webhooksRoutes, { prefix: "/api/v1" });
   await app.register(repositoriesRoutes, { prefix: "/api/v1" });
   await app.register(awsRoutes, { prefix: "/api/v1" });
+  await app.register(cloudflareRoutes, { prefix: "/api/v1" });
+  await app.register(datadogRoutes, { prefix: "/api/v1" });
+  await app.register(grafanaRoutes, { prefix: "/api/v1" });
+  await app.register(pagerdutyRoutes, { prefix: "/api/v1" });
+  await app.register(newrelicRoutes, { prefix: "/api/v1" });
+  await app.register(microsoftTeamsRoutes, { prefix: "/api/v1" });
   await app.register(cloudAccountsRoutes, { prefix: "/api/v1" });
   await app.register(identityRoutes, { prefix: "/api/v1" });
   await app.register(evidenceRoutes, { prefix: "/api/v1" });
@@ -142,6 +161,8 @@ async function main() {
   await app.register(stripeWebhookRoutes, { prefix: "/api/v1" });
   await app.register(settingsRoutes, { prefix: "/api/v1" });
   await app.register(onboardingRoutes, { prefix: "/api/v1" });
+  await app.register(trustRoutes, { prefix: "/api/v1" });
+  await app.register(auditRoutes, { prefix: "/api/v1" });
 
   startScanWorker();
   scheduleAllCloudAccounts().catch(() => {});

@@ -46,7 +46,7 @@ export const PROVIDER_DEFINITIONS: ProviderDefinition[] = [
   { id: "AZURE", name: "Azure", category: "CLOUD", brandColor: "#0078d4", description: "AAD, RBAC, Monitor, Defender", connectType: "oauth" },
   { id: "GCP", name: "Google Cloud", category: "CLOUD", brandColor: "#4285f4", description: "IAM, audit logs, Security Command Center", connectType: "oauth" },
   { id: "DIGITALOCEAN", name: "DigitalOcean", category: "CLOUD", brandColor: "#0080ff", description: "Spaces, firewalls, databases", connectType: "oauth" },
-  { id: "CLOUDFLARE", name: "Cloudflare", category: "CLOUD", brandColor: "#f38020", description: "Access, WAF, Zero Trust, SSL", connectType: "oauth" },
+  { id: "CLOUDFLARE", name: "Cloudflare", category: "CLOUD", brandColor: "#f38020", description: "Access, WAF, Zero Trust, SSL", connectType: "api_key" },
   { id: "ORACLE", name: "Oracle Cloud", category: "CLOUD", brandColor: "#c74634", description: "IAM, audit, object storage", connectType: "oauth" },
   { id: "ALIBABA", name: "Alibaba Cloud", category: "CLOUD", brandColor: "#ff6a00", description: "RAM, ActionTrail, OSS", connectType: "oauth" },
   { id: "OKTA", name: "Okta", category: "IDENTITY", brandColor: "#007dc1", description: "MFA, users, groups, audit logs", connectType: "oauth" },
@@ -54,12 +54,12 @@ export const PROVIDER_DEFINITIONS: ProviderDefinition[] = [
   { id: "GOOGLE_WORKSPACE", name: "Google Workspace", category: "IDENTITY", brandColor: "#4285f4", description: "Directory, MFA, admin audit", connectType: "oauth" },
   { id: "AUTH0", name: "Auth0", category: "IDENTITY", brandColor: "#eb5424", description: "Users, roles, attack protection", connectType: "oauth" },
   { id: "JUMPCLOUD", name: "JumpCloud", category: "IDENTITY", brandColor: "#222222", description: "Directory, MFA, system users", connectType: "api_key" },
-  { id: "DATADOG", name: "Datadog", category: "OBSERVABILITY", brandColor: "#632ca6", description: "Monitors, logs, security signals", connectType: "api_key" },
-  { id: "GRAFANA", name: "Grafana", category: "OBSERVABILITY", brandColor: "#f46800", description: "Dashboards, alerts", connectType: "api_key" },
-  { id: "PAGERDUTY", name: "PagerDuty", category: "OBSERVABILITY", brandColor: "#06ac38", description: "Incidents, on-call", connectType: "oauth" },
-  { id: "NEW_RELIC", name: "New Relic", category: "OBSERVABILITY", brandColor: "#008c99", description: "APM, alerts", connectType: "api_key" },
-  { id: "SLACK", name: "Slack", category: "COMMUNICATION", brandColor: "#4a154b", description: "Gap notifications, alerts", connectType: "oauth" },
-  { id: "MICROSOFT_TEAMS", name: "Microsoft Teams", category: "COMMUNICATION", brandColor: "#6264a7", description: "Compliance alerts in Teams", connectType: "oauth" },
+  { id: "DATADOG", name: "Datadog", category: "OBSERVABILITY", brandColor: "#632ca6", description: "Connect for ops context — not included in compliance scans yet", connectType: "api_key" },
+  { id: "GRAFANA", name: "Grafana", category: "OBSERVABILITY", brandColor: "#f46800", description: "Connect for ops context — not included in compliance scans yet", connectType: "api_key" },
+  { id: "PAGERDUTY", name: "PagerDuty", category: "OBSERVABILITY", brandColor: "#06ac38", description: "Connect for ops context — not included in compliance scans yet", connectType: "api_key" },
+  { id: "NEW_RELIC", name: "New Relic", category: "OBSERVABILITY", brandColor: "#008c99", description: "Connect for ops context — not included in compliance scans yet", connectType: "api_key" },
+  { id: "SLACK", name: "Slack", category: "COMMUNICATION", brandColor: "#4a154b", description: "Scan complete and gap alerts to Slack", connectType: "oauth" },
+  { id: "MICROSOFT_TEAMS", name: "Microsoft Teams", category: "COMMUNICATION", brandColor: "#6264a7", description: "Scan complete and gap alerts to Teams", connectType: "api_key" },
 ];
 
 export const PROVIDERS_BY_CATEGORY = {

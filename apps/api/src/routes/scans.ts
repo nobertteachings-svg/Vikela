@@ -136,8 +136,26 @@ export const scansRoutes: FastifyPluginAsync = async (app) => {
     const body = (req.body as { async?: boolean }) ?? {};
 
     if (body.async !== false) {
-      const job = await scanQueue.add("full-scan", { type: "full", orgId: org.id });
-      return reply.send(ok({ queued: true, jobId: job.id }));
+      const parentScan = await prisma.scan.create({
+        data: {
+          orgId: org.id,
+          scanType: "FULL",
+          status: "PENDING",
+        },
+      });
+      const job = await scanQueue.add("full-scan", {
+        type: "full",
+        orgId: org.id,
+        scanId: parentScan.id,
+      });
+      return reply.send(
+        ok({
+          queued: true,
+          jobId: job.id,
+          scanId: parentScan.id,
+          status: parentScan.status,
+        })
+      );
     }
 
     try {

@@ -2,6 +2,7 @@ import { prisma } from "../../lib/prisma.js";
 import { decrypt } from "../../lib/crypto.js";
 import type { LiteScanGitProvider } from "../../lib/product-events.js";
 import { getGitProvider, toGitProviderName, type GitProviderName } from "../git/provider.factory.js";
+import { resolveGithubAccessToken } from "../git/github/github-token.js";
 import { detectRepoStack } from "./detect-repo-stack.js";
 import { executeCodeScan } from "./execute-code-scan.js";
 import { finalizeLiteScan } from "./finalize-lite-scan.js";
@@ -37,7 +38,11 @@ async function detectStackForRepo(
   if (!gitName) return { stack: "generic", listFailed: false };
 
   try {
-    const git = getGitProvider(gitName, decrypt(repo.integration.accessToken));
+    const token =
+      gitName === "github"
+        ? await resolveGithubAccessToken(repo.integration)
+        : decrypt(repo.integration.accessToken);
+    const git = getGitProvider(gitName, token);
     const listing = await git.listFiles(repo.fullName, repo.defaultBranch);
     return {
       stack: detectRepoStack(listing.files, { directoryNames: listing.directoryNames }),

@@ -8,6 +8,7 @@ import {
 import { Card, CardBody, CardHeader } from "@/components/comply/card";
 import { PageHeader } from "@/components/comply/page-header";
 import { VendorDetailActions } from "@/components/vendors/vendor-detail-actions";
+import { VendorEditForm } from "@/components/vendors/vendor-edit-form";
 import { complianceApi } from "@/lib/compliance-api";
 import { cn } from "@/lib/utils";
 
@@ -28,14 +29,14 @@ export default async function VendorDetailPage({ params }: { params: { id: strin
     notFound();
   }
 
-  const status = (vendor as { status?: string }).status ?? "Not reviewed";
-  const risk = (vendor as { risk?: string }).risk ?? vendor.riskLevel;
-  const documents = (vendor as { documents?: string[] }).documents ?? [];
-  const subprocessors = (vendor as { subprocessors?: string[] }).subprocessors ?? [];
-  const score = (vendor as { score?: number | null }).score;
-  const questionnaire =
-    (vendor as { questionnaire?: string | null }).questionnaire ??
-    (vendor as { questionnaireStatus?: string | null }).questionnaireStatus;
+  const status = vendor.status ?? "Not reviewed";
+  const risk = vendor.risk ?? vendor.riskLevel;
+  const documents = vendor.documents ?? [];
+  const subprocessors = vendor.subprocessors ?? [];
+  const score = vendor.score;
+  const questionnaire = vendor.questionnaire ?? vendor.questionnaireStatus;
+  const renewal = vendor.contractRenewal;
+  const website = vendor.website;
 
   return (
     <div className="comply-page max-w-3xl">
@@ -55,7 +56,8 @@ export default async function VendorDetailPage({ params }: { params: { id: strin
       >
         <VendorDetailActions
           vendorId={vendor.id}
-          reviewStatus={(vendor as { reviewStatus?: string }).reviewStatus ?? "PENDING"}
+          reviewStatus={vendor.reviewStatus ?? "PENDING"}
+          questionnaireId={vendor.questionnaireId}
         />
       </PageHeader>
 
@@ -70,23 +72,38 @@ export default async function VendorDetailPage({ params }: { params: { id: strin
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
-            <span className={cn("comply-badge normal-case", STATUS_STYLES[status] ?? STATUS_STYLES["Not reviewed"])}>
+            <span
+              className={cn(
+                "comply-badge normal-case",
+                STATUS_STYLES[status] ?? STATUS_STYLES["Not reviewed"]
+              )}
+            >
               {status}
             </span>
             <span className="comply-badge border-[var(--border-strong)] bg-comply-elevated text-comply-text-secondary normal-case">
               {risk} risk
             </span>
-            {(vendor as { soc2?: boolean }).soc2 && (
+            {vendor.soc2 || vendor.soc2Certified ? (
               <span className="inline-flex items-center gap-1 comply-badge border-comply-green/30 bg-comply-green/10 text-comply-green normal-case">
                 <IconFileCertificate size={14} />
                 SOC 2
               </span>
-            )}
+            ) : null}
           </div>
         </div>
-        {vendor.notes && (
+        {vendor.notes ? (
           <p className="mt-4 text-sm leading-relaxed text-comply-text-secondary">{vendor.notes}</p>
-        )}
+        ) : null}
+        {website ? (
+          <a
+            href={website.startsWith("http") ? website : `https://${website}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-3 inline-block text-sm text-comply-purple-border hover:underline"
+          >
+            {website}
+          </a>
+        ) : null}
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
@@ -95,8 +112,8 @@ export default async function VendorDetailPage({ params }: { params: { id: strin
           <CardBody>
             <dl className="space-y-4">
               {[
-                ["Owner", (vendor as { owner?: string }).owner ?? "—"],
-                ["Data access", (vendor as { dataAccess?: string }).dataAccess ?? "—"],
+                ["Owner", vendor.owner ?? "—"],
+                ["Data access", vendor.dataAccess ?? "—"],
                 [
                   "Last reviewed",
                   vendor.lastReviewed
@@ -105,20 +122,18 @@ export default async function VendorDetailPage({ params }: { params: { id: strin
                 ],
                 [
                   "Contract renewal",
-                  (vendor as { contractRenewal?: string | null }).contractRenewal
-                    ? new Date((vendor as { contractRenewal: string }).contractRenewal).toLocaleDateString("en-US", {
+                  renewal
+                    ? new Date(renewal).toLocaleDateString("en-US", {
                         month: "long",
                         day: "numeric",
                         year: "numeric",
                       })
                     : "—",
                 ],
-                [
-                  "Processes customer data",
-                  (vendor as { dataProcessing?: boolean }).dataProcessing ? "Yes" : "No",
-                ],
+                ["Processes customer data", vendor.dataProcessing ? "Yes" : "No"],
+                ["Questionnaire", questionnaire ?? "Not started"],
               ].map(([label, value]) => (
-                <div key={label}>
+                <div key={String(label)}>
                   <dt className="text-xs font-semibold uppercase tracking-wider text-comply-text-tertiary">
                     {label}
                   </dt>
@@ -132,48 +147,68 @@ export default async function VendorDetailPage({ params }: { params: { id: strin
         <Card elevated>
           <CardHeader title="Questionnaire & documents" />
           <CardBody className="space-y-4">
-            {questionnaire ? (
-              <>
-                <p className="text-sm text-comply-text-secondary">{questionnaire}</p>
-                <ul className="space-y-2">
-                  {documents.length > 0 ? (
-                    documents.map((doc) => (
-                      <li
-                        key={doc}
-                        className="flex items-center gap-2 rounded-md border border-white/[0.06] bg-black/20 px-3 py-2 text-sm text-comply-text-primary"
-                      >
-                        <IconCircleCheck size={16} className="text-comply-green" />
+            <p className="text-sm text-comply-text-secondary">
+              {questionnaire ?? "Questionnaire not started."}
+            </p>
+            <ul className="space-y-2">
+              {documents.length > 0 ? (
+                documents.map((doc) => (
+                  <li
+                    key={doc}
+                    className="flex items-center gap-2 rounded-md border border-white/[0.06] bg-black/20 px-3 py-2 text-sm text-comply-text-primary"
+                  >
+                    <IconCircleCheck size={16} className="text-comply-green" />
+                    {doc.startsWith("http") ? (
+                      <a href={doc} target="_blank" rel="noopener noreferrer" className="hover:underline">
                         {doc}
-                      </li>
-                    ))
-                  ) : (
-                    <li className="text-sm text-comply-muted">No documents uploaded</li>
-                  )}
-                </ul>
-                {subprocessors.length > 0 && (
-                  <div>
-                    <p className="text-xs font-semibold uppercase tracking-wider text-comply-text-tertiary">
-                      Subprocessors
-                    </p>
-                    <div className="mt-2 flex flex-wrap gap-1.5">
-                      {subprocessors.map((s) => (
-                        <span
-                          key={s}
-                          className="rounded-sm border border-white/[0.08] px-2 py-0.5 text-xs text-comply-text-secondary"
-                        >
-                          {s}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </>
-            ) : (
-              <p className="text-sm text-comply-muted">Questionnaire not started.</p>
-            )}
+                      </a>
+                    ) : (
+                      doc
+                    )}
+                  </li>
+                ))
+              ) : (
+                <li className="text-sm text-comply-muted">No documents listed yet — add them below.</li>
+              )}
+            </ul>
+            {subprocessors.length > 0 ? (
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-wider text-comply-text-tertiary">
+                  Subprocessors
+                </p>
+                <div className="mt-2 flex flex-wrap gap-1.5">
+                  {subprocessors.map((s) => (
+                    <span
+                      key={s}
+                      className="rounded-sm border border-white/[0.08] px-2 py-0.5 text-xs text-comply-text-secondary"
+                    >
+                      {s}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ) : null}
           </CardBody>
         </Card>
       </div>
+
+      <VendorEditForm
+        vendorId={vendor.id}
+        initial={{
+          name: vendor.name,
+          category: vendor.category,
+          website: vendor.website ?? "",
+          owner: vendor.owner ?? "",
+          dataAccess: vendor.dataAccess ?? "",
+          riskLevel: vendor.riskLevel,
+          notes: vendor.notes ?? "",
+          contractRenewal: renewal ? renewal.slice(0, 10) : "",
+          dataProcessing: Boolean(vendor.dataProcessing),
+          soc2Certified: Boolean(vendor.soc2 ?? vendor.soc2Certified),
+          documents,
+          subprocessors,
+        }}
+      />
     </div>
   );
 }

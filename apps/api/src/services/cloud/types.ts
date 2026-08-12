@@ -7,6 +7,8 @@ export interface CloudCredentials {
   refreshToken?: string;
   projectId?: string;
   subscriptionId?: string;
+  /** Cloudflare account id */
+  accountId?: string;
 }
 
 export interface AuditEvent {

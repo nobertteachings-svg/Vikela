@@ -9,6 +9,8 @@ import { notifyScanEmails } from "../../lib/notify-scan-emails.js";
 import type { RepoStack } from "./detect-repo-stack.js";
 import { persistGaps } from "./persist-gaps.js";
 import { getSampleFindings, LITE_SCAN_MIN_REAL_FINDINGS } from "./sample-gaps.js";
+import { computeScanScoreFromFindings } from "../../lib/scan-score.js";
+import { isDemoConnectAllowed } from "../../lib/auth.js";
 
 export async function finalizeLiteScan(params: {
   scanId: string;
@@ -46,7 +48,9 @@ export async function finalizeLiteScan(params: {
     noRepo,
   });
 
-  const useSample = realGapCount < LITE_SCAN_MIN_REAL_FINDINGS;
+  // Sample gaps only in explicit local demo mode — never invent findings for real customers.
+  const useSample =
+    isDemoConnectAllowed() && realGapCount < LITE_SCAN_MIN_REAL_FINDINGS;
   let source: "repo" | "sample" | "mixed" = "repo";
 
   if (useSample) {
@@ -77,14 +81,23 @@ export async function finalizeLiteScan(params: {
     }
   }
 
-  const gapCount = await prisma.gap.count({
+  const openGaps = await prisma.gap.findMany({
     where: { scanId, orgId, status: "OPEN" },
+    select: {
+      severity: true,
+      title: true,
+      control: { select: { code: true } },
+    },
   });
+  const gapCount = openGaps.length;
 
-  const totalChecks = 40;
-  const score = Math.max(
-    0,
-    Math.min(100, Math.round(((totalChecks - gapCount) / totalChecks) * 100))
+  const { score, totalChecks, passedChecks } = computeScanScoreFromFindings(
+    openGaps.map((g) => ({
+      severity: g.severity,
+      title: g.title,
+      controlCode: g.control?.code,
+    })),
+    { baselineChecks: 40 }
   );
 
   await prisma.scan.update({
@@ -93,7 +106,7 @@ export async function finalizeLiteScan(params: {
       status: "COMPLETED",
       score,
       totalChecks,
-      passedChecks: totalChecks - gapCount,
+      passedChecks,
       completedAt: new Date(),
       isLiteScan: true,
     },

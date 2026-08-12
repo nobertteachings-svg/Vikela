@@ -12,14 +12,15 @@ export async function connectAwsAccount(params: {
   const org = await prisma.organization.findFirst({ where: { slug: params.orgSlug } });
   if (!org) throw new Error(`Organization not found: ${params.orgSlug}`);
 
-  let accountId = "demo-aws-account";
-  let verified = false;
-
-  if (isVikelaAwsConfigured()) {
-    const identity = await verifyAssumeRole(params.roleArn, params.externalId);
-    accountId = identity.accountId;
-    verified = true;
+  if (!isVikelaAwsConfigured()) {
+    throw new Error(
+      "Vikela AWS credentials are not configured. Set AWS_VIKELA_ACCESS_KEY_ID to an IAM access key (AKIA…), not the account id, plus AWS_VIKELA_SECRET_ACCESS_KEY."
+    );
   }
+
+  const identity = await verifyAssumeRole(params.roleArn, params.externalId);
+  const accountId = identity.accountId;
+  const verified = true;
 
   const metadata = {
     roleArn: params.roleArn,

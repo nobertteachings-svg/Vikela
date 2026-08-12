@@ -2,6 +2,7 @@ import type { Severity } from "@prisma/client";
 import { prisma } from "./prisma.js";
 import { sendGapAlertsEmail, sendScanCompleteEmail } from "./email.js";
 import { getAdminEmails, notificationPrefsFromOrgSettings } from "./notify-helpers.js";
+import { deliverChannelAlerts } from "./notify-channel-alerts.js";
 
 const APP_URL = process.env.APP_URL ?? "http://localhost:3000";
 
@@ -25,12 +26,12 @@ export function notifyScanEmails(
   scan: ScanEmailContext,
   options?: NotifyScanEmailsOptions
 ): void {
-  void deliverScanEmails(orgId, scan, options).catch((err) => {
+  void deliverScanNotifications(orgId, scan, options).catch((err) => {
     console.warn("[notify-scan-emails] failed", { orgId, scanId: scan.scanId, err });
   });
 }
 
-async function deliverScanEmails(
+async function deliverScanNotifications(
   orgId: string,
   scan: ScanEmailContext,
   options?: NotifyScanEmailsOptions
@@ -47,9 +48,6 @@ async function deliverScanEmails(
   const sendAlerts = includeGapAlerts && prefs.gapAlerts;
 
   if (!sendComplete && !sendAlerts) return;
-
-  const adminEmails = await getAdminEmails(orgId);
-  if (adminEmails.length === 0) return;
 
   let alertGaps: Array<{ title: string; severity: Severity }> = [];
   let totalMatching = 0;
@@ -80,6 +78,8 @@ async function deliverScanEmails(
   const scanTypeLabel = formatScanType(scan.scanType, scan.isLiteScan);
   const scansUrl = `${APP_URL}/scans`;
   const gapsUrl = `${APP_URL}/gaps`;
+
+  const adminEmails = await getAdminEmails(orgId);
 
   for (const to of adminEmails) {
     if (sendComplete) {
@@ -120,6 +120,29 @@ async function deliverScanEmails(
         });
       }
     }
+  }
+
+  if (sendComplete) {
+    const scoreLabel = scan.score ?? "—";
+    await deliverChannelAlerts(orgId, {
+      kind: "scan_complete",
+      orgName: org.name,
+      text: `Vikela: ${scanTypeLabel} finished for ${org.name}. Score: ${scoreLabel}. Gaps this scan: ${scan.gapCount ?? 0}.`,
+      scansUrl,
+    });
+  }
+
+  if (sendAlerts && alertGaps.length > 0) {
+    const top = alertGaps
+      .slice(0, 5)
+      .map((g) => `• [${g.severity}] ${g.title}`)
+      .join("\n");
+    await deliverChannelAlerts(orgId, {
+      kind: "gap_alerts",
+      orgName: org.name,
+      text: `Vikela: ${totalMatching} critical/high gap(s) for ${org.name} (${criticalCount} critical, ${highCount} high).\n${top}`,
+      gapsUrl,
+    });
   }
 }
 

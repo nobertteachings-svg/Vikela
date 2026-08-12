@@ -14,16 +14,28 @@ export type TrainingModuleProp = {
   total: number;
   due: string | null;
   duration: string;
+  durationMin?: number;
+  contentKey?: string | null;
+  hasCourse?: boolean;
+  lessonCount?: number;
   status: string;
 };
 
 export default async function TrainingPage() {
   try {
-    const [modules, progress] = await Promise.all([
+    const [modules, progress, mine] = await Promise.all([
       complianceApi.training(),
       complianceApi.trainingProgress(),
+      complianceApi.trainingMine(),
     ]);
-    return <TrainingPageContent modules={modules} progress={progress} />;
+    return (
+      <TrainingPageContent
+        modules={modules}
+        progress={progress.members}
+        currentMemberId={progress.currentMemberId}
+        mine={mine}
+      />
+    );
   } catch (e) {
     return (
       <div className="comply-page">

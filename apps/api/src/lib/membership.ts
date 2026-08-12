@@ -1,10 +1,24 @@
 import type { FastifyRequest } from "fastify";
 import type { Role } from "@prisma/client";
 import { getClerkAuth, isAuthEnforced } from "./auth.js";
-import { ensureOrganizationFromSession } from "./clerk-org-provision.js";
+import {
+  ensureOrganizationFromClerkId,
+  ensureOrganizationFromSession,
+} from "./clerk-org-provision.js";
 import { prisma } from "./prisma.js";
 import { mapClerkRole, resolveMemberRoleFromInvite } from "./clerk-roles.js";
 import { findActivePendingInvite } from "./pending-invite.js";
+
+function headerValue(req: FastifyRequest, name: string): string | undefined {
+  const v = req.headers[name.toLowerCase()];
+  if (Array.isArray(v)) return v[0];
+  return typeof v === "string" ? v : undefined;
+}
+
+function resolveClerkOrgId(req: FastifyRequest): string | undefined {
+  const auth = getClerkAuth(req);
+  return auth?.orgId ?? headerValue(req, "x-clerk-org-id") ?? undefined;
+}
 
 const BOOTSTRAP_PATHS = [
   "/api/v1/onboarding/status",
@@ -46,16 +60,28 @@ export async function ensureMembershipFromSession(req: FastifyRequest): Promise<
   orgReady: boolean;
   memberReady: boolean;
   orgSlug?: string;
+  needsClerkOrg?: boolean;
 }> {
   const auth = getClerkAuth(req);
-  if (!auth?.userId || !auth.orgId) {
+  if (!auth?.userId) {
     return { orgReady: false, memberReady: false };
+  }
+
+  const clerkOrgId = resolveClerkOrgId(req);
+  if (!clerkOrgId) {
+    return { orgReady: false, memberReady: false, needsClerkOrg: true };
   }
 
   const org =
     (await prisma.organization.findUnique({
-      where: { clerkOrgId: auth.orgId },
-    })) ?? (await ensureOrganizationFromSession(req));
+      where: { clerkOrgId },
+    })) ??
+    (auth.orgId
+      ? await ensureOrganizationFromSession(req)
+      : await ensureOrganizationFromClerkId(
+          clerkOrgId,
+          headerValue(req, "x-org-slug")
+        ));
   if (!org) {
     return { orgReady: false, memberReady: false };
   }
@@ -64,6 +90,18 @@ export async function ensureMembershipFromSession(req: FastifyRequest): Promise<
     where: { orgId_clerkId: { orgId: org.id, clerkId: auth.userId } },
   });
   if (existing) {
+    // Keep Vikela role aligned with Clerk org role (admin connects integrations).
+    const mapped = mapClerkRole((auth as { orgRole?: string }).orgRole);
+    if (
+      (mapped === "ADMIN" || mapped === "OWNER") &&
+      existing.role !== "ADMIN" &&
+      existing.role !== "OWNER"
+    ) {
+      await prisma.member.update({
+        where: { id: existing.id },
+        data: { role: "ADMIN" },
+      });
+    }
     return { orgReady: true, memberReady: true, orgSlug: org.slug };
   }
 
@@ -104,6 +142,30 @@ export async function ensureMembershipFromSession(req: FastifyRequest): Promise<
   return { orgReady: true, memberReady: true, orgSlug: org.slug };
 }
 
+async function resolveGitConnection(orgId: string): Promise<{
+  gitConnected: boolean;
+  gitAuthMethod: "app" | "oauth" | null;
+}> {
+  const integration = await prisma.integration.findFirst({
+    where: { orgId, category: "GIT", isActive: true },
+    orderBy: { updatedAt: "desc" },
+    select: { metadata: true, provider: true },
+  });
+  if (!integration) return { gitConnected: false, gitAuthMethod: null };
+
+  const meta =
+    integration.metadata &&
+    typeof integration.metadata === "object" &&
+    !Array.isArray(integration.metadata)
+      ? (integration.metadata as { installationId?: number; oauth?: boolean })
+      : {};
+
+  const gitAuthMethod =
+    meta.installationId != null ? "app" : meta.oauth ? "oauth" : null;
+
+  return { gitConnected: true, gitAuthMethod };
+}
+
 export async function getOnboardingStatus(req: FastifyRequest): Promise<{
   mode: "dev" | "clerk";
   orgReady: boolean;
@@ -111,20 +173,18 @@ export async function getOnboardingStatus(req: FastifyRequest): Promise<{
   orgSlug?: string;
   needsClerkOrg?: boolean;
   gitConnected?: boolean;
+  gitAuthMethod?: "app" | "oauth" | null;
 }> {
   if (!isAuthEnforced()) {
     const slug = process.env.VIKELA_DEV_ORG_SLUG ?? "demo";
     const org = await prisma.organization.findFirst({ where: { slug } });
+    const git = org ? await resolveGitConnection(org.id) : { gitConnected: false, gitAuthMethod: null };
     return {
       mode: "dev",
       orgReady: Boolean(org),
       memberReady: true,
       orgSlug: org?.slug ?? slug,
-      gitConnected: org
-        ? (await prisma.integration.count({
-            where: { orgId: org.id, category: "GIT", isActive: true },
-          })) > 0
-        : false,
+      ...git,
     };
   }
 
@@ -132,7 +192,9 @@ export async function getOnboardingStatus(req: FastifyRequest): Promise<{
   if (!auth?.userId) {
     return { mode: "clerk", orgReady: false, memberReady: false };
   }
-  if (!auth.orgId) {
+
+  const clerkOrgId = resolveClerkOrgId(req);
+  if (!clerkOrgId) {
     return {
       mode: "clerk",
       orgReady: false,
@@ -141,36 +203,29 @@ export async function getOnboardingStatus(req: FastifyRequest): Promise<{
     };
   }
 
-  const org =
-    (await prisma.organization.findUnique({
-      where: { clerkOrgId: auth.orgId },
-    })) ?? (await ensureOrganizationFromSession(req));
-  if (!org) {
-    return { mode: "clerk", orgReady: false, memberReady: false };
+  const ensured = await ensureMembershipFromSession(req);
+  if (!ensured.orgReady || !ensured.orgSlug) {
+    return {
+      mode: "clerk",
+      orgReady: false,
+      memberReady: false,
+      needsClerkOrg: ensured.needsClerkOrg,
+    };
   }
 
-  let member = await prisma.member.findUnique({
-    where: { orgId_clerkId: { orgId: org.id, clerkId: auth.userId } },
+  const org = await prisma.organization.findUnique({
+    where: { slug: ensured.orgSlug },
   });
-
-  if (!member) {
-    await ensureMembershipFromSession(req);
-    member = await prisma.member.findUnique({
-      where: { orgId_clerkId: { orgId: org.id, clerkId: auth.userId } },
-    });
-  }
-
-  const gitConnected =
-    (await prisma.integration.count({
-      where: { orgId: org.id, category: "GIT", isActive: true },
-    })) > 0;
+  const git = org
+    ? await resolveGitConnection(org.id)
+    : { gitConnected: false, gitAuthMethod: null as "app" | "oauth" | null };
 
   return {
     mode: "clerk",
     orgReady: true,
-    memberReady: Boolean(member),
-    orgSlug: org.slug,
-    gitConnected,
+    memberReady: Boolean(ensured.memberReady),
+    orgSlug: ensured.orgSlug,
+    ...git,
   };
 }
 

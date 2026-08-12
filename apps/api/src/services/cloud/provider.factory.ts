@@ -4,6 +4,7 @@ import type { ICloudProvider } from "./provider.interface.js";
 import { AWSProvider } from "./aws/aws.provider.js";
 import { AzureProvider } from "./azure/azure.provider.js";
 import { GCPProvider } from "./gcp/gcp.provider.js";
+import { CloudflareProvider } from "./cloudflare/cloudflare.provider.js";
 
 export function getCloudProvider(
   provider: CloudProvider,
@@ -16,8 +17,9 @@ export function getCloudProvider(
       return new AzureProvider(credentials);
     case "GCP":
       return new GCPProvider(credentials);
-    case "DIGITALOCEAN":
     case "CLOUDFLARE":
+      return new CloudflareProvider(credentials);
+    case "DIGITALOCEAN":
     case "ORACLE":
     case "ALIBABA":
       throw new Error(`${provider} cloud provider coming in Phase 3`);

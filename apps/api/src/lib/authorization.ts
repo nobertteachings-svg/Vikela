@@ -1,6 +1,7 @@
 import type { FastifyRequest } from "fastify";
 import type { Member, Role } from "@prisma/client";
 import { getClerkAuth, isAuthEnforced, verifyInternalApiSecret } from "./auth.js";
+import { ensureMembershipFromSession } from "./membership.js";
 import { prisma } from "./prisma.js";
 import { requireOrganization } from "./org-context.js";
 
@@ -27,9 +28,59 @@ export async function getMemberForRequest(
   const auth = getClerkAuth(req);
   if (!auth?.userId) return null;
 
-  return prisma.member.findUnique({
+  let member = await prisma.member.findUnique({
     where: { orgId_clerkId: { orgId: org.id, clerkId: auth.userId } },
   });
+  if (!member) {
+    // Webhook lag / first request after org select — bootstrap Member row.
+    try {
+      await ensureMembershipFromSession(req);
+    } catch {
+      /* fall through */
+    }
+    member = await prisma.member.findUnique({
+      where: { orgId_clerkId: { orgId: org.id, clerkId: auth.userId } },
+    });
+  }
+
+  // If session user is not linked yet but this is clearly their Clerk org, attach them.
+  if (!member) {
+    const headerOrg =
+      typeof req.headers["x-clerk-org-id"] === "string"
+        ? req.headers["x-clerk-org-id"]
+        : Array.isArray(req.headers["x-clerk-org-id"])
+          ? req.headers["x-clerk-org-id"][0]
+          : undefined;
+    const clerkOrgId = auth.orgId ?? headerOrg;
+    if (clerkOrgId && clerkOrgId === org.clerkOrgId) {
+      const role =
+        String((auth as { orgRole?: string }).orgRole ?? "")
+          .toLowerCase()
+          .includes("admin") ||
+        String((auth as { orgRole?: string }).orgRole ?? "")
+          .toLowerCase()
+          .includes("owner")
+          ? "ADMIN"
+          : "MEMBER";
+      try {
+        member = await prisma.member.create({
+          data: {
+            orgId: org.id,
+            clerkId: auth.userId,
+            email: `${auth.userId}@users.clerk`,
+            name: "Member",
+            role,
+          },
+        });
+      } catch {
+        member = await prisma.member.findUnique({
+          where: { orgId_clerkId: { orgId: org.id, clerkId: auth.userId } },
+        });
+      }
+    }
+  }
+
+  return member;
 }
 
 export async function requireRole(
@@ -55,8 +106,15 @@ export async function requireRole(
   }
 
   const member = await getMemberForRequest(req);
-  if (!member || !allowed.includes(member.role)) {
-    forbidden("Insufficient permissions for this action");
+  if (!member) {
+    forbidden(
+      "You are not a member of this workspace — select Optic Inc in the org switcher, refresh, and try again."
+    );
+  }
+  if (!allowed.includes(member.role)) {
+    forbidden(
+      `Insufficient permissions for this action (need ${allowed.join(" or ")}, you are ${member.role}).`
+    );
   }
   return member;
 }

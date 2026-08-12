@@ -1,6 +1,7 @@
 import { prisma } from "../../../lib/prisma.js";
 import { encrypt } from "../../../lib/crypto.js";
 import { syncGitRepositories } from "../sync-repositories.js";
+import { gateNewProviderConnection } from "../../../lib/integration-plan-gate.js";
 
 const GITLAB_HOST = process.env.GITLAB_HOST ?? "https://gitlab.com";
 const DEMO_ORG_SLUG = "demo";
@@ -17,6 +18,8 @@ export function getGitLabOAuthUrl(state: string): string {
 export async function handleGitLabOAuthCallback(code: string, orgSlug: string = DEMO_ORG_SLUG) {
   const org = await prisma.organization.findFirst({ where: { slug: orgSlug } });
   if (!org) throw new Error(`Organization not found: ${orgSlug}`);
+
+  await gateNewProviderConnection(org.id, org.plan, "GITLAB");
 
   const redirectUri =
     process.env.GITLAB_REDIRECT_URI ??

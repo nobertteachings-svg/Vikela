@@ -2,7 +2,7 @@ import type { FastifyPluginAsync } from "fastify";
 import { verifyWebhook } from "@clerk/fastify/webhooks";
 import { ok, err } from "../lib/response.js";
 import { prisma } from "../lib/prisma.js";
-import { mapClerkRole } from "../lib/clerk-roles.js";
+import { resolveMemberRoleFromInvite } from "../lib/clerk-roles.js";
 import { markPendingInviteAccepted, findActivePendingInvite } from "../lib/pending-invite.js";
 import { captureProductEvent } from "../lib/product-events.js";
 
@@ -49,9 +49,9 @@ async function syncMembership(
   const org = await prisma.organization.findUnique({ where: { clerkOrgId } });
   if (!org) return null;
 
-  const role = mapClerkRole(event.data.role);
   const pending = await findActivePendingInvite(org.id, email);
-  const wasAuditor = pending?.role === "AUDITOR";
+  const role = resolveMemberRoleFromInvite(event.data.role, pending);
+  const wasAuditor = pending?.role === "AUDITOR" || role === "AUDITOR";
 
   const member = await prisma.member.upsert({
     where: { orgId_clerkId: { orgId: org.id, clerkId: clerkUserId } },
@@ -80,7 +80,14 @@ async function syncMembership(
 
 export const clerkWebhookRoutes: FastifyPluginAsync = async (app) => {
   app.post("/webhooks/clerk", async (req, reply) => {
-    const secret = process.env.CLERK_WEBHOOK_SECRET;
+    // @clerk/backend verifyWebhook reads CLERK_WEBHOOK_SIGNING_SECRET;
+    // accept our existing CLERK_WEBHOOK_SECRET alias used across Vikela env docs.
+    const secret =
+      process.env.CLERK_WEBHOOK_SIGNING_SECRET?.trim() ||
+      process.env.CLERK_WEBHOOK_SECRET?.trim();
+    if (secret && !process.env.CLERK_WEBHOOK_SIGNING_SECRET) {
+      process.env.CLERK_WEBHOOK_SIGNING_SECRET = secret;
+    }
     let event: ClerkOrgEvent | ClerkMembershipEvent;
 
     if (secret) {

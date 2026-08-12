@@ -16,6 +16,7 @@ export function buildCloudCredentials(
     externalId: meta.externalId as string | undefined,
     subscriptionId: meta.subscriptionId as string | undefined,
     projectId: meta.projectId as string | undefined,
+    accountId: (meta.accountId as string | undefined) ?? undefined,
   };
 }
 

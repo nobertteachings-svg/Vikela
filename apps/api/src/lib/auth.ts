@@ -16,6 +16,7 @@ export function isPublicApiPath(url: string): boolean {
   if (path.startsWith("/api/v1/webhooks/")) return true;
   if (path.startsWith("/api/v1/auth/")) return true;
   if (path === "/api/v1/aws/cloudformation-template") return true;
+  if (path.startsWith("/api/v1/public/")) return true;
   return false;
 }
 

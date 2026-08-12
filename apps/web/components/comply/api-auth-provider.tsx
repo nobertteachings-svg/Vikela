@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { registerClientApiHeaders } from "@/lib/api-auth-client";
+import { resolveDevOrgSlug } from "@/lib/dev-org-slug";
 import { ClerkApiAuthBridge } from "./clerk-api-auth-bridge";
 
 const hasClerk = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
@@ -11,15 +12,15 @@ export function ApiAuthProvider({ children }: { children: React.ReactNode }) {
     if (hasClerk) return;
 
     registerClientApiHeaders(async () => {
-      const slug =
-        typeof window !== "undefined"
-          ? localStorage.getItem("vikela_org_slug") ?? "demo"
-          : "demo";
+      const stored =
+        typeof window !== "undefined" ? localStorage.getItem("vikela_org_slug") : null;
+      const slug = stored || resolveDevOrgSlug() || undefined;
       const clerkOrgId =
         typeof window !== "undefined"
           ? localStorage.getItem("vikela_clerk_org_id")
           : null;
-      const headers: Record<string, string> = { "X-Org-Slug": slug };
+      const headers: Record<string, string> = {};
+      if (slug) headers["X-Org-Slug"] = slug;
       if (clerkOrgId) headers["X-Clerk-Org-Id"] = clerkOrgId;
       return headers;
     });

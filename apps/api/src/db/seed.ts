@@ -4,6 +4,7 @@ import { COMPLIANCE_FRAMEWORKS } from "@vikela/shared/framework-catalog";
 import { encrypt } from "../lib/crypto.js";
 import { seedFrameworkControlMappings } from "./seed-framework-mappings.js";
 import { seedNativeControls } from "./seed-native-controls.js";
+import { catalogCreateRows } from "../services/questionnaires/catalog.js";
 
 const prisma = new PrismaClient();
 
@@ -166,7 +167,8 @@ async function main() {
         externalId: "inst_demo",
       },
     },
-    update: { isActive: true, accessToken: demoToken },
+    // Seed stubs stay inactive so they never consume plan slots or break Sync with fake tokens.
+    update: { isActive: false, accessToken: demoToken },
     create: {
       orgId: org.id,
       provider: "GITHUB",
@@ -175,6 +177,7 @@ async function main() {
       externalId: "inst_demo",
       accessToken: demoToken,
       scopes: ["repo", "read:org"],
+      isActive: false,
     },
   });
 
@@ -186,7 +189,7 @@ async function main() {
         externalId: "123456789012",
       },
     },
-    update: { isActive: true },
+    update: { isActive: false },
     create: {
       orgId: org.id,
       provider: "AWS",
@@ -196,6 +199,7 @@ async function main() {
       accessToken: encrypt("assume-role-only"),
       scopes: [],
       metadata: { roleArn: "arn:aws:iam::123456789012:role/VikelaScanner" },
+      isActive: false,
     },
   });
 
@@ -207,7 +211,7 @@ async function main() {
         externalId: "tenant_demo",
       },
     },
-    update: { isActive: true },
+    update: { isActive: false },
     create: {
       orgId: org.id,
       provider: "AZURE_AD",
@@ -216,6 +220,7 @@ async function main() {
       externalId: "tenant_demo",
       accessToken: demoToken,
       scopes: ["User.Read.All", "AuditLog.Read.All"],
+      isActive: false,
     },
   });
 
@@ -227,7 +232,7 @@ async function main() {
         externalId: "demo-subscription",
       },
     },
-    update: { isActive: true, accessToken: demoToken },
+    update: { isActive: false, accessToken: demoToken },
     create: {
       orgId: org.id,
       provider: "AZURE",
@@ -236,6 +241,7 @@ async function main() {
       externalId: "demo-subscription",
       accessToken: demoToken,
       metadata: { subscriptionId: "demo-subscription", purpose: "cloud" },
+      isActive: false,
     },
   });
 
@@ -247,7 +253,7 @@ async function main() {
         externalId: "demo-gcp-project",
       },
     },
-    update: { isActive: true, accessToken: demoToken },
+    update: { isActive: false, accessToken: demoToken },
     create: {
       orgId: org.id,
       provider: "GCP",
@@ -256,6 +262,7 @@ async function main() {
       externalId: "demo-gcp-project",
       accessToken: demoToken,
       metadata: { projectId: "demo-gcp-project" },
+      isActive: false,
     },
   });
 
@@ -287,7 +294,7 @@ async function main() {
         accountId: "123456789012",
       },
     },
-    update: {},
+    update: { isActive: false },
     create: {
       orgId: org.id,
       integrationId: awsIntegration.id,
@@ -296,6 +303,7 @@ async function main() {
       accountName: "Acme Production",
       region: "us-east-1",
       environment: "PRODUCTION",
+      isActive: false,
     },
   });
 
@@ -307,7 +315,7 @@ async function main() {
         accountId: "demo-subscription",
       },
     },
-    update: {},
+    update: { isActive: false },
     create: {
       orgId: org.id,
       integrationId: azureCloudIntegration.id,
@@ -315,6 +323,7 @@ async function main() {
       accountId: "demo-subscription",
       accountName: "Acme Azure",
       region: "global",
+      isActive: false,
     },
   });
 
@@ -326,7 +335,7 @@ async function main() {
         accountId: "demo-gcp-project",
       },
     },
-    update: {},
+    update: { isActive: false },
     create: {
       orgId: org.id,
       integrationId: gcpIntegration.id,
@@ -334,6 +343,7 @@ async function main() {
       accountId: "demo-gcp-project",
       accountName: "Acme GCP",
       region: "global",
+      isActive: false,
     },
   });
 
@@ -675,37 +685,45 @@ async function main() {
   });
 
   await prisma.risk.deleteMany({ where: { orgId: org.id } });
+  const riskReview = new Date();
+  riskReview.setUTCDate(riskReview.getUTCDate() + 90);
   await prisma.risk.createMany({
     data: [
       {
         orgId: org.id,
         title: "Customer data breach",
         description: "Unauthorized access to customer PII in production databases or backups.",
+        category: "Security",
         likelihood: 2,
         impact: 3,
-        score: 12,
+        score: 6,
         status: "OPEN",
         mitigation: "Encryption at rest, access controls, monitoring, annual pentest",
+        nextReviewAt: riskReview,
       },
       {
         orgId: org.id,
         title: "Insider threat",
         description: "Malicious or negligent access by employees with production permissions.",
+        category: "Security",
         likelihood: 1,
         impact: 3,
-        score: 9,
+        score: 3,
         status: "MITIGATED",
         mitigation: "Quarterly access reviews, least privilege IAM, offboarding checklist",
+        nextReviewAt: riskReview,
       },
       {
         orgId: org.id,
         title: "Third-party vendor outage",
         description: "Critical SaaS dependency unavailable during audit window.",
+        category: "Third-party",
         likelihood: 2,
         impact: 2,
-        score: 8,
+        score: 4,
         status: "OPEN",
         mitigation: "Vendor SLAs, status page monitoring, backup communication channels",
+        nextReviewAt: riskReview,
       },
     ],
   });
@@ -776,30 +794,24 @@ async function main() {
   }
 
   await prisma.questionnaire.deleteMany({ where: { orgId: org.id } });
-  await prisma.questionnaire.create({
-    data: {
-      orgId: org.id,
-      title: "Enterprise vendor security questionnaire",
-      status: "IN_REVIEW",
-      items: {
-        create: [
-          {
-            question: "Do you encrypt data at rest?",
-            suggestedAnswer:
-              "Yes. All production data stores use AES-256 encryption.",
-            status: "APPROVED",
-            sortOrder: 0,
-          },
-          {
-            question: "How do you manage access to production?",
-            suggestedAnswer: "SSO with MFA and quarterly access reviews.",
-            status: "APPROVED",
-            sortOrder: 1,
-          },
-        ],
+  {
+    const rows = catalogCreateRows();
+    const approvedThrough = Math.floor(rows.length / 3);
+    await prisma.questionnaire.create({
+      data: {
+        orgId: org.id,
+        title: "Enterprise vendor security questionnaire",
+        status: "IN_REVIEW",
+        items: {
+          create: rows.map((row, idx) => ({
+            ...row,
+            status: idx < approvedThrough ? ("APPROVED" as const) : ("PENDING" as const),
+            finalAnswer: idx < approvedThrough ? row.suggestedAnswer : null,
+          })),
+        },
       },
-    },
-  });
+    });
+  }
 
   const { ingestOrgKnowledge } = await import("../services/rag/ingest.js");
   const chunks = await ingestOrgKnowledge(org.id);

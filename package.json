@@ -23,6 +23,9 @@
     "test:mutation": "npm run test:mutation -w @vikela/api",
     "test:security": "npm run test:security -w @vikela/api",
     "test:e2e": "playwright test",
+    "test:e2e:auth": "playwright test --project=setup --project=chromium-authenticated",
+    "env:sync-ngrok": "bash scripts/sync-ngrok-env.sh",
+    "test:smoke": "bash scripts/smoke-api-local.sh",
     "test:a11y": "playwright test",
     "test:performance": "command -v k6 >/dev/null && k6 run performance/load-test.js || echo 'Install k6: https://grafana.com/docs/k6/latest/set-up/install-k6/'",
     "test:all": "npm run lint && npm run test",
@@ -38,6 +41,7 @@
     "start:web": "npm run start -w @vikela/web"
   },
   "devDependencies": {
+    "@clerk/testing": "^2.2.19",
     "@playwright/test": "^1.49.1",
     "turbo": "^2.3.0",
     "typescript": "^5.6.3"
@@ -49,5 +53,8 @@
   "overrides": {
     "next": "14.2.35",
     "eslint-config-next": "14.2.35"
+  },
+  "dependencies": {
+    "@clerk/nextjs": "^7.7.1"
   }
 }

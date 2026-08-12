@@ -66,12 +66,28 @@ export const stripeWebhookRoutes: FastifyPluginAsync = async (app) => {
         const customerId =
           typeof sub.customer === "string" ? sub.customer : sub.customer?.id;
         const priceId = sub.items.data[0]?.price?.id;
-        const plan = priceId ? planFromStripePrice(priceId) : null;
+        const planFromPrice = priceId ? planFromStripePrice(priceId) : null;
+        const planFromMeta = sub.metadata?.plan;
+        const plan =
+          planFromPrice ??
+          (planFromMeta && ["STARTER", "GROWTH", "ENTERPRISE"].includes(planFromMeta)
+            ? (planFromMeta as "STARTER" | "GROWTH" | "ENTERPRISE")
+            : null);
+        const orgId = sub.metadata?.orgId;
 
         if (customerId && plan) {
           await prisma.organization.updateMany({
             where: { stripeCustomerId: customerId },
             data: {
+              stripeSubscriptionId: sub.id,
+              plan,
+            },
+          });
+        } else if (orgId && plan) {
+          await prisma.organization.update({
+            where: { id: orgId },
+            data: {
+              ...(customerId ? { stripeCustomerId: customerId } : {}),
               stripeSubscriptionId: sub.id,
               plan,
             },
@@ -83,9 +99,15 @@ export const stripeWebhookRoutes: FastifyPluginAsync = async (app) => {
         const sub = event.data.object as Stripe.Subscription;
         const customerId =
           typeof sub.customer === "string" ? sub.customer : sub.customer?.id;
+        const orgId = sub.metadata?.orgId;
         if (customerId) {
           await prisma.organization.updateMany({
             where: { stripeCustomerId: customerId },
+            data: { plan: "FREE", stripeSubscriptionId: null },
+          });
+        } else if (orgId) {
+          await prisma.organization.update({
+            where: { id: orgId },
             data: { plan: "FREE", stripeSubscriptionId: null },
           });
         }

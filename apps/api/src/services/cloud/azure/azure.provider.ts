@@ -20,7 +20,7 @@ import type {
   StorageBucket,
   VPC,
 } from "../types.js";
-import { demoCloudFindings, isDemoCloudToken } from "../demo-cloud-findings.js";
+import { isDemoCloudToken, resolveDemoCloudFindings } from "../demo-cloud-findings.js";
 
 type ArmStorage = {
   value?: { id: string; name: string; properties?: { allowBlobPublicAccess?: boolean } }[];
@@ -153,9 +153,8 @@ export class AzureProvider implements ICloudProvider {
   }
 
   async runComplianceChecks(): Promise<ScanFinding[]> {
-    if (isDemoCloudToken(this.token) || this.subscriptionId === "unknown") {
-      return demoCloudFindings("AZURE");
-    }
+    const demo = resolveDemoCloudFindings("AZURE", this.token, this.subscriptionId);
+    if (demo !== null) return demo;
 
     const findings: ScanFinding[] = [];
 
@@ -208,6 +207,7 @@ export class AzureProvider implements ICloudProvider {
       });
     }
 
-    return findings.length > 0 ? findings : demoCloudFindings("AZURE").slice(0, 1);
+    // Live credentials: return real findings only (empty = clean posture for checked controls).
+    return findings;
   }
 }

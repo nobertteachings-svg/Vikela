@@ -23,7 +23,12 @@ export async function resolveGithubAccessToken(integration: Integration): Promis
   const meta = metadata(integration);
   const installationId = meta.installationId;
 
-  if (installationId != null && isGitHubAppConfigured()) {
+  if (installationId != null) {
+    if (!isGitHubAppConfigured()) {
+      throw new Error(
+        "GitHub App PEM is missing — set GITHUB_APP_ID + GITHUB_APP_PRIVATE_KEY on the API, then reconnect GitHub"
+      );
+    }
     return getInstallationAccessToken(installationId);
   }
 
@@ -36,7 +41,7 @@ export async function resolveGithubAccessToken(integration: Integration): Promis
 
   if (!token || token === "pending") {
     throw new Error(
-      "GitHub App is not fully configured — set GITHUB_APP_PRIVATE_KEY on the API or use Connect with GitHub OAuth"
+      "GitHub is not fully configured — set GITHUB_APP_ID + GITHUB_APP_PRIVATE_KEY (public App) or reconnect with GitHub OAuth"
     );
   }
 

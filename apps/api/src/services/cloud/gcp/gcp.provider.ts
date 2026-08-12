@@ -20,7 +20,7 @@ import type {
   StorageBucket,
   VPC,
 } from "../types.js";
-import { demoCloudFindings, isDemoCloudToken } from "../demo-cloud-findings.js";
+import { isDemoCloudToken, resolveDemoCloudFindings } from "../demo-cloud-findings.js";
 
 export class GCPProvider implements ICloudProvider {
   private readonly token: string;
@@ -139,9 +139,8 @@ export class GCPProvider implements ICloudProvider {
   }
 
   async runComplianceChecks(): Promise<ScanFinding[]> {
-    if (isDemoCloudToken(this.token) || this.projectId === "unknown") {
-      return demoCloudFindings("GCP");
-    }
+    const demo = resolveDemoCloudFindings("GCP", this.token, this.projectId);
+    if (demo !== null) return demo;
 
     const findings: ScanFinding[] = [];
 
@@ -208,6 +207,7 @@ export class GCPProvider implements ICloudProvider {
       });
     }
 
-    return findings.length > 0 ? findings : demoCloudFindings("GCP").slice(0, 1);
+    // Live credentials: return real findings only (empty = clean posture for checked controls).
+    return findings;
   }
 }

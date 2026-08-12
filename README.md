@@ -35,7 +35,17 @@ npm run dev -w @vikela/web   # :3000
 ```
 
 - **Dashboard:** http://localhost:3000/dashboard
-- **Integrations:** http://localhost:3000/settings/integrations
+- **Integrations:** http://localhost:3000/integrations
+
+## User guide
+
+End-user documentation for org admins and operators (sign-up, integrations, frameworks, evidence, billing, and more):
+
+- **[docs/user-guide/](./docs/user-guide/README.md)** — index and how Vikela fits together
+- [Getting started](./docs/user-guide/getting-started.md)
+- [Integrations](./docs/user-guide/integrations/README.md) — per-provider connect how-tos
+
+Developer handover and ops docs remain under [`docs/`](./docs/) (e.g. `DEVELOPER_HANDOVER.md`, `PRODUCTION_SETUP.md`).
 
 ## Railway deployment
 
@@ -170,7 +180,7 @@ Connect Azure/GCP: **Settings → Integrations** (demo connect without OAuth, or
 - PR/MR review comments on GitHub
 - BullMQ async scans on `push` and `pull_request`
 
-**GitHub App:** Setup URL → `http://localhost:3001/api/v1/auth/github/callback` · Webhook → `http://localhost:3001/api/v1/webhooks/github` (use ngrok locally)
+**GitHub App:** Setup + Callback URL → `http://localhost:3000/api/auth/github/callback` (web app proxies to the API) · Webhook → `http://localhost:3001/api/v1/webhooks/github` (use ngrok locally). App must be **public** for customer install.
 
 **Scan a repo:** Settings → Repositories → **Scan now**, or:
 

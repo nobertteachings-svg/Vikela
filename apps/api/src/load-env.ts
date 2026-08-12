@@ -11,7 +11,8 @@ const candidates = [
 
 for (const path of candidates) {
   if (existsSync(path)) {
-    config({ path });
+    // Override stale shell exports (e.g. AWS_VIKELA_ACCESS_KEY_ID set to account id).
+    config({ path, override: true });
     break;
   }
 }

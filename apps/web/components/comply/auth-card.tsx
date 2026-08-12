@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { ComplyButton } from "./button";
 
 export function AuthCard({
   title,
@@ -33,11 +32,11 @@ export function AuthCard({
   );
 }
 
-export function GitHubButton() {
+export function GitHubButton({ href = "/api/auth/github/oauth" }: { href?: string }) {
   return (
-    <ComplyButton variant="success" className="w-full py-2.5">
+    <Link href={href} className="comply-btn-success flex w-full items-center justify-center py-2.5">
       Continue with GitHub
-    </ComplyButton>
+    </Link>
   );
 }
 

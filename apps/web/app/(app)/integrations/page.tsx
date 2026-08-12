@@ -6,13 +6,39 @@ import { GitConnectBanner } from "@/components/comply/git-connect-banner";
 import { IntegrationsOAuthFeedback } from "@/components/integrations/integrations-oauth-feedback";
 import { IntegrationsProviderGrid } from "@/components/integrations/integrations-provider-grid";
 import { complianceApi } from "@/lib/compliance-api";
+import { resolveDevOrgSlug } from "@/lib/dev-org-slug";
+import { serverApiPost } from "@/lib/server-api";
 
 const hasClerk = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
 
-async function resolveOrgSlug(): Promise<string | null> {
+type EnsureMembershipResult = {
+  orgReady?: boolean;
+  memberReady?: boolean;
+  orgSlug?: string;
+};
+
+/** Prefer Vikela DB slug (may differ from Clerk slug after provision suffix). */
+async function resolveVikelaOrgSlug(): Promise<string | null> {
   if (!hasClerk) {
-    return process.env.VIKELA_DEV_ORG_SLUG ?? "demo";
+    return resolveDevOrgSlug() ?? null;
   }
+
+  try {
+    const ensured = await serverApiPost<EnsureMembershipResult>(
+      "/api/v1/onboarding/ensure-membership"
+    );
+    if (ensured.orgSlug) return ensured.orgSlug;
+  } catch {
+    // Fall through to /org or Clerk slug
+  }
+
+  try {
+    const org = await complianceApi.org();
+    if (org.slug) return org.slug;
+  } catch {
+    // Fall through
+  }
+
   const session = await auth();
   return session.orgSlug ?? null;
 }
@@ -20,9 +46,10 @@ async function resolveOrgSlug(): Promise<string | null> {
 export default async function IntegrationsPage() {
   let data;
   let repos;
-  const orgSlug = await resolveOrgSlug();
+  let orgSlug: string | null = null;
 
   try {
+    orgSlug = await resolveVikelaOrgSlug();
     [data, repos] = await Promise.all([
       complianceApi.integrations(),
       complianceApi.repositories(),
@@ -45,8 +72,15 @@ export default async function IntegrationsPage() {
       <PageHeader
         eyebrow="Connections"
         title="Integrations"
-        description="GitHub, GitLab, Bitbucket, cloud providers, and identity—evidence from your whole stack."
-      />
+        description="Connect Git, cloud, identity, observability, and chat. Need API keys or AssumeRole steps? Open Help → Integrations."
+      >
+        <a
+          href="/help/integrations"
+          className="comply-btn-ghost text-sm"
+        >
+          Integration how-tos
+        </a>
+      </PageHeader>
 
       <Suspense fallback={null}>
         <IntegrationsOAuthFeedback />

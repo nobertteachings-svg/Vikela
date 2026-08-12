@@ -118,7 +118,7 @@ export function gapsListEmptyState(params: {
   }
   return {
     title: "No open gaps",
-    body: "Scans haven't surfaced open findings. Connect a repo or run a scan to get started.",
+    body: "Connect Git, cloud, or identity under Integrations, run a Full scan from the Dashboard, then return here. See Help → Getting started for the full flow.",
   };
 }
 

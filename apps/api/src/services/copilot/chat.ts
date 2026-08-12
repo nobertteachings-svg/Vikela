@@ -188,7 +188,7 @@ Based on your open gaps, CC6.1 is likely failing due to **IAM/MFA** issues acros
 3. Rotate any exposed secrets found in code scans
 4. Upload access review evidence to the Evidence locker and link to control CC6.1
 
-_Set \`ANTHROPIC_API_KEY\` for live Claude responses._`;
+_Ask your admin to enable AI Copilot for richer answers._`;
   }
 
   if (lower.includes("evidence")) {
@@ -206,5 +206,5 @@ ${gapMatch ? `**Priority:** ${gapMatch[0]}` : "Review open gaps on the Gaps page
 
 **Your question:** ${message}
 
-Answers use RAG over your gaps, controls, policies, and evidence. Add \`ANTHROPIC_API_KEY\` for full Claude reasoning.`;
+Answers use your org's gaps, controls, policies, and evidence. AI-assisted reasoning is unavailable until Copilot is configured for this workspace.`;
 }

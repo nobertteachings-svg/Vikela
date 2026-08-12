@@ -23,7 +23,7 @@ export type ScanJobPayload =
     }
   | { type: "cloud"; cloudAccountId: string }
   | { type: "identity"; integrationId: string }
-  | { type: "full"; orgId: string };
+  | { type: "full"; orgId: string; scanId?: string };
 
 export function registerScanWorker(handler: (job: ScanJobPayload) => Promise<void>) {
   const worker = new Worker<ScanJobPayload>(

@@ -16,6 +16,10 @@ import {
   getOrgFrameworkScanScope,
 } from "./framework-scope.js";
 import { runFrameworkCodeScans } from "./framework-scans.js";
+import { getGitProvider, toGitProviderName } from "../git/provider.factory.js";
+import { resolveGithubAccessToken } from "../git/github/github-token.js";
+import { decrypt } from "../../lib/crypto.js";
+import { computeScanScoreFromFindings } from "../../lib/scan-score.js";
 
 const SCANNABLE_EXT = /\.(ts|tsx|js|jsx|py|go|rb|java|json|ya?ml|env\.example|tf)$/i;
 const MAX_FILE_SIZE = 512_000;
@@ -66,16 +70,13 @@ export async function executeCodeScan(options: CodeScanOptions) {
         },
       });
 
-  const { getGitProvider, toGitProviderName } = await import("../git/provider.factory.js");
-  const { resolveGithubAccessToken } = await import("../git/github/github-token.js");
-
   const gitName = toGitProviderName(repo.integration.provider);
   if (!gitName) throw new Error("Not a git integration");
 
   const token =
     gitName === "github"
       ? await resolveGithubAccessToken(repo.integration)
-      : (await import("../../lib/crypto.js")).decrypt(repo.integration.accessToken);
+      : decrypt(repo.integration.accessToken);
 
   const git = getGitProvider(gitName, token);
 
@@ -113,8 +114,9 @@ export async function executeCodeScan(options: CodeScanOptions) {
     findings,
   });
 
-  const totalChecks = 40;
-  const score = Math.max(0, Math.min(100, Math.round(((totalChecks - gapCount) / totalChecks) * 100)));
+  const { score, totalChecks, passedChecks } = computeScanScoreFromFindings(findings, {
+    baselineChecks: 40,
+  });
 
   await prisma.scan.update({
     where: { id: scan.id },
@@ -122,7 +124,7 @@ export async function executeCodeScan(options: CodeScanOptions) {
       status: "COMPLETED",
       score,
       totalChecks,
-      passedChecks: totalChecks - gapCount,
+      passedChecks,
       completedAt: new Date(),
     },
   });

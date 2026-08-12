@@ -35,22 +35,23 @@ export function githubManageInstallationsUrl(): string {
   return "https://github.com/settings/installations";
 }
 
-/** Primary GitHub connect — OAuth (required for private GitHub Apps like vikela1). */
+/** Primary GitHub connect — App install (Railway-style). Falls back to OAuth on the API if App PEM is missing. */
 export function githubConnectUrl(
   orgSlug: string | null | undefined,
   opts?: { from?: GitOAuthFrom; clerkOrgId?: string | null }
 ): string {
-  return webGitAuthPath("/api/auth/github/oauth", orgSlug, opts?.from, opts?.clerkOrgId);
+  return webGitAuthPath("/api/auth/github/install", orgSlug, opts?.from, opts?.clerkOrgId);
 }
 
-/** @deprecated Use githubConnectUrl — same install entrypoint with OAuth fallback. */
+/** Explicit App install entrypoint (same as githubConnectUrl). */
 export function githubInstallUrl(
   orgSlug: string | null | undefined,
-  opts?: { from?: GitOAuthFrom }
+  opts?: { from?: GitOAuthFrom; clerkOrgId?: string | null }
 ): string {
-  return githubConnectUrl(orgSlug, opts);
+  return webGitAuthPath("/api/auth/github/install", orgSlug, opts?.from, opts?.clerkOrgId);
 }
 
+/** OAuth fallback when App install is unavailable or user prefers classic OAuth. */
 export function githubOAuthUrl(
   orgSlug: string | null | undefined,
   opts?: { from?: GitOAuthFrom; clerkOrgId?: string | null }
@@ -62,20 +63,14 @@ export function gitlabStartUrl(
   orgSlug: string | null | undefined,
   opts?: { from?: GitOAuthFrom }
 ): string {
-  return withFromOnboarding(
-    integrationOAuthUrl("/api/v1/auth/gitlab/start", orgSlug),
-    opts?.from
-  );
+  return webGitAuthPath("/api/auth/gitlab/start", orgSlug, opts?.from);
 }
 
 export function bitbucketStartUrl(
   orgSlug: string | null | undefined,
   opts?: { from?: GitOAuthFrom }
 ): string {
-  return withFromOnboarding(
-    integrationOAuthUrl("/api/v1/auth/bitbucket/start", orgSlug),
-    opts?.from
-  );
+  return webGitAuthPath("/api/auth/bitbucket/start", orgSlug, opts?.from);
 }
 
 export function oktaStartUrl(domain: string, orgSlug: string | null | undefined): string {
@@ -98,4 +93,8 @@ export function googleWorkspaceStartUrl(orgSlug: string | null | undefined): str
 
 export function azureAdStartUrl(orgSlug: string | null | undefined): string {
   return integrationOAuthUrl("/api/v1/auth/azure-ad/start", orgSlug);
+}
+
+export function slackStartUrl(orgSlug: string | null | undefined): string {
+  return integrationOAuthUrl("/api/v1/auth/slack/start", orgSlug);
 }

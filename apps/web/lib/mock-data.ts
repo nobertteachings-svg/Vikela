@@ -1,3 +1,21 @@
+/**
+ * Legacy mock datasets — do not use for production UI structure; prefer product-config / billing-plans.
+ */
+export {
+  navItems,
+  settingsTabs,
+  teamRoles,
+  riskMatrixLabels,
+  type SettingsTab,
+  type TeamRole,
+  type RiskStatus,
+  type VendorStatus,
+} from "./product-config";
+export { billingPlans, type BillingPlanId } from "./billing-plans";
+
+import type { RiskStatus, TeamRole, VendorStatus } from "./product-config";
+import type { BillingPlanId } from "./billing-plans";
+
 export type Severity = "CRITICAL" | "HIGH" | "MEDIUM" | "LOW";
 export type ControlStatus = "passing" | "failing" | "in_progress" | "not_started";
 export type GapStatus = "open" | "in_progress" | "resolved";
@@ -173,8 +191,6 @@ export const remediationPlans = [
   { id: "r4", gap: "log4j CVE-2021-44228", severity: "HIGH" as Severity, steps: ["Upgrade log4j to 2.17.1+", "Run dependency scan", "Deploy patched build"], hours: "~3 hours", status: "Done" },
 ];
 
-export type RiskStatus = "Open" | "Mitigating" | "Accepted" | "Closed";
-
 export const risks = [
   {
     id: "risk-1",
@@ -282,13 +298,6 @@ export const risks = [
     controls: ["ISO 42001 A.8"],
   },
 ];
-
-export const riskMatrixLabels = {
-  likelihood: ["Low", "Medium", "High"],
-  impact: ["Low", "Medium", "High"],
-};
-
-export type VendorStatus = "Approved" | "Review needed" | "Not reviewed" | "Rejected";
 
 export const vendors = [
   {
@@ -442,8 +451,6 @@ export const vendorDetails: Record<
   },
 };
 
-export type TeamRole = "Admin" | "Member" | "Auditor";
-
 export const teamMembers = [
   {
     id: "tm-1",
@@ -511,24 +518,6 @@ export const teamPendingInvites = [
   { email: "new-hire@acme.io", role: "Member" as TeamRole, sent: "2025-05-18", expires: "2025-05-25" },
 ];
 
-export const teamRoles = [
-  {
-    name: "Admin" as TeamRole,
-    desc: "Full access including billing, integrations, team management, and settings.",
-    permissions: ["Manage org", "Billing", "Integrations", "Delete data"],
-  },
-  {
-    name: "Member" as TeamRole,
-    desc: "Manage gaps, evidence, policies, scans, and remediation workflows.",
-    permissions: ["Gaps", "Evidence", "Policies", "Copilot"],
-  },
-  {
-    name: "Auditor" as TeamRole,
-    desc: "Read-only access for external auditors—no source code or secret values.",
-    permissions: ["View controls", "Export evidence", "View gaps (redacted)"],
-  },
-];
-
 export const integrations = {
   connected: { name: "GitHub", repos: ["api-service", "backend", "infra-terraform", "auth-service"], status: "Connected" },
   available: [
@@ -556,17 +545,6 @@ export const settingsOrganization = {
   legalName: "Acme Corp, Inc.",
   employeeCount: "11–50",
 };
-
-export const settingsTabs = [
-  "General",
-  "Notifications",
-  "Security",
-  "API Keys",
-  "Webhooks",
-  "Danger zone",
-] as const;
-
-export type SettingsTab = (typeof settingsTabs)[number];
 
 export const settingsNotifications = [
   {
@@ -695,8 +673,6 @@ export const apiKeys = settingsApiKeys.map(({ name, prefix, created, lastUsed })
   lastUsed,
 }));
 
-export type BillingPlanId = "free" | "starter" | "growth" | "enterprise";
-
 export const billingSubscription = {
   orgName: "Acme Corp",
   planId: "growth" as BillingPlanId,
@@ -707,83 +683,10 @@ export const billingSubscription = {
   renewalDate: "2025-06-01",
   billingEmail: "sarah@acme.io",
   billingContact: "Sarah Chen",
-  seats: { used: 6, included: 10 },
+  seats: { used: 6, licensed: 10 },
   startedAt: "2024-11-01",
   annualSavings: 1598,
 };
-
-export const billingPlans: {
-  id: BillingPlanId;
-  name: string;
-  price: number | null;
-  period: string;
-  description: string;
-  features: string[];
-  highlight?: boolean;
-  cta: string;
-}[] = [
-  {
-    id: "free",
-    name: "Free",
-    price: 0,
-    period: "forever",
-    description: "Assess posture with one integration before you commit.",
-    features: [
-      "1 integration connected",
-      "Posture score & gap report",
-      "All frameworks visible",
-      "Manual scans only",
-    ],
-    cta: "Downgrade",
-  },
-  {
-    id: "starter",
-    name: "Starter",
-    price: 299,
-    period: "/month",
-    description: "Continuous scanning for teams shipping their first SOC 2.",
-    features: [
-      "Unlimited integrations",
-      "Continuous code & cloud scanning",
-      "Framework dashboards",
-      "Email gap alerts",
-      "Up to 5 team seats",
-    ],
-    cta: "Switch to Starter",
-  },
-  {
-    id: "growth",
-    name: "Growth",
-    price: 799,
-    period: "/month",
-    description: "AI-assisted remediation and evidence for audit-ready programs.",
-    features: [
-      "Everything in Starter",
-      "Vikela Copilot & policy generator",
-      "Evidence vault & auditor exports",
-      "Questionnaire automation",
-      "Up to 10 team seats",
-      "Priority support",
-    ],
-    highlight: true,
-    cta: "Current plan",
-  },
-  {
-    id: "enterprise",
-    name: "Enterprise",
-    price: null,
-    period: "custom",
-    description: "FedRAMP inheritance, custom controls, and dedicated success.",
-    features: [
-      "Unlimited seats & frameworks",
-      "FedRAMP / CMMC inheritance",
-      "Custom control mappings",
-      "Auditor portal & SSO",
-      "Dedicated CSM & SLA",
-    ],
-    cta: "Contact sales",
-  },
-];
 
 export const billingUsage = [
   {
@@ -988,24 +891,4 @@ export const trainingMemberProgress = [
   { memberId: "tm-4", name: "Alex Kim", completed: 5, total: 5, overdue: 0 },
   { memberId: "tm-5", name: "Jordan Lee", completed: 3, total: 5, overdue: 0 },
   { memberId: "tm-6", name: "Taylor Brooks", completed: 1, total: 5, overdue: 3 },
-];
-
-export const navItems = [
-  { href: "/dashboard", label: "Dashboard", icon: "dashboard" },
-  { href: "/frameworks", label: "Frameworks", icon: "frameworks" },
-  { href: "/controls", label: "Controls", icon: "controls" },
-  { href: "/gaps", label: "Gaps & findings", icon: "gaps" },
-  { href: "/scans", label: "Scan history", icon: "scans" },
-  { href: "/evidence", label: "Evidence", icon: "evidence" },
-  { href: "/policies", label: "Policies", icon: "policies" },
-  { href: "/copilot", label: "Copilot", icon: "copilot" },
-  { divider: true },
-  { href: "/risks", label: "Risk register", icon: "risks" },
-  { href: "/vendors", label: "Vendors", icon: "vendors" },
-  { href: "/team", label: "Team & access", icon: "team" },
-  { href: "/training", label: "Training", icon: "training" },
-  { divider: true },
-  { href: "/integrations", label: "Integrations", icon: "integrations" },
-  { href: "/settings", label: "Settings", icon: "settings" },
-  { href: "/billing", label: "Billing", icon: "billing" },
 ];

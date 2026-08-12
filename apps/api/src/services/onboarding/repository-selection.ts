@@ -9,7 +9,17 @@ export type OnboardingRepoRow = {
   provider: string;
   isActive: boolean;
   isPrivate: boolean;
+  /** How the parent git integration was authorized. */
+  authMethod: "app" | "oauth" | "unknown";
 };
+
+function integrationAuthMethod(metadata: unknown): "app" | "oauth" | "unknown" {
+  if (!metadata || typeof metadata !== "object" || Array.isArray(metadata)) return "unknown";
+  const meta = metadata as { installationId?: number; oauth?: boolean };
+  if (meta.installationId != null) return "app";
+  if (meta.oauth) return "oauth";
+  return "unknown";
+}
 
 export async function listOnboardingRepositories(orgId: string): Promise<OnboardingRepoRow[]> {
   const repos = await prisma.repository.findMany({
@@ -26,6 +36,7 @@ export async function listOnboardingRepositories(orgId: string): Promise<Onboard
     provider: r.integration.provider,
     isActive: r.isActive,
     isPrivate: r.isPrivate,
+    authMethod: integrationAuthMethod(r.integration.metadata),
   }));
 }
 

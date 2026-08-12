@@ -7,9 +7,6 @@ export const AUDITOR_HIDDEN_NAV_HREFS = new Set([
   "/settings",
   "/billing",
   "/team",
-  "/training",
-  "/risks",
-  "/vendors",
 ]);
 
 export const AUDITOR_BLOCKED_ROUTE_PREFIXES = [
@@ -19,9 +16,6 @@ export const AUDITOR_BLOCKED_ROUTE_PREFIXES = [
   "/settings",
   "/billing",
   "/team",
-  "/training",
-  "/risks",
-  "/vendors",
 ] as const;
 
 export function parseOrgRole(orgRole: string | null | undefined): AppRole {

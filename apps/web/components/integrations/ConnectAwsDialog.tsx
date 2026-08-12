@@ -1,12 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import { useAuth } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Download, X } from "lucide-react";
-import { apiPost, API_URL } from "@/lib/api";
+import { apiPost, API_URL, setOrgContext } from "@/lib/api";
 
 export function ConnectAwsDialog({ onClose, onSuccess }: { onClose: () => void; onSuccess: () => void }) {
+  const { orgId, isLoaded, getToken } = useAuth();
   const [roleArn, setRoleArn] = useState("");
   const [externalId, setExternalId] = useState("");
   const [accountName, setAccountName] = useState("");
@@ -17,10 +19,45 @@ export function ConnectAwsDialog({ onClose, onSuccess }: { onClose: () => void; 
     setLoading(true);
     setError(null);
     try {
+      if (!isLoaded) {
+        throw new Error("Session still loading — wait a moment and try again.");
+      }
+      if (!orgId) {
+        throw new Error(
+          "No workspace selected — use the org switcher (top bar) to select Optic Inc, then try again."
+        );
+      }
+
+      const token = await getToken();
+      if (!token) {
+        throw new Error("Not signed in — refresh the page and sign in again.");
+      }
+
+      // Drop stale demo slug so API resolves Optic via Clerk org id / membership.
+      if (typeof window !== "undefined") {
+        const slug = localStorage.getItem("vikela_org_slug");
+        if (slug === "demo") localStorage.removeItem("vikela_org_slug");
+      }
+
+      const ensured = await apiPost<{
+        orgSlug?: string;
+        orgReady?: boolean;
+        needsClerkOrg?: boolean;
+        memberReady?: boolean;
+      }>("/api/v1/onboarding/ensure-membership");
+      if (ensured.needsClerkOrg || !ensured.orgReady) {
+        throw new Error(
+          "No workspace selected — use the org switcher (top bar) to select Optic Inc, then try again."
+        );
+      }
+      if (ensured.orgSlug) {
+        setOrgContext(ensured.orgSlug, orgId);
+      }
+
       await apiPost("/api/v1/integrations/aws/connect", {
-        roleArn,
-        externalId: externalId || undefined,
-        accountName: accountName || undefined,
+        roleArn: roleArn.trim(),
+        externalId: externalId.trim() || undefined,
+        accountName: accountName.trim() || undefined,
         scheduleDailyScan: true,
       });
       onSuccess();

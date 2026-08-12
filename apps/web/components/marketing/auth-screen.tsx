@@ -125,7 +125,7 @@ function SignupAside() {
         {[
           "GitHub, GitLab, or Bitbucket—not GitHub only",
           "AWS, Azure, GCP, and identity providers after signup",
-          "All frameworks included on every plan",
+          "Framework mapping packs on every plan",
         ].map((line) => (
           <li key={line} className="flex gap-2.5 text-xs leading-relaxed text-comply-text-secondary">
             <IconCircleCheck size={15} className="mt-0.5 shrink-0 text-comply-green" stroke={2} />

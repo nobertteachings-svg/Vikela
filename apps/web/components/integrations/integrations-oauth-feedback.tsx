@@ -5,7 +5,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { IconAlertTriangle, IconCircleCheck, IconX } from "@tabler/icons-react";
 
 const ERROR_LABELS: Record<string, string> = {
-  github_not_configured: "GitHub App is not configured on this server.",
+  github_not_configured:
+    "GitHub is not configured — set a public GitHub App (GITHUB_APP_ID + PEM) or OAuth client credentials.",
   github_missing_params: "GitHub connection was interrupted — try again.",
   gitlab_not_configured: "GitLab OAuth is not configured on this server.",
   gitlab_no_code: "GitLab did not return an authorization code.",
@@ -23,6 +24,8 @@ const ERROR_LABELS: Record<string, string> = {
   gcp_not_configured: "GCP OAuth is not configured on this server.",
   gcp_cloud_no_code: "GCP did not return an authorization code.",
   org_context_required: "Select an organization before connecting integrations.",
+  "Only organization admins can connect integrations.":
+    "Only organization admins can connect integrations.",
 };
 
 const CONNECTED_LABELS: Record<string, string> = {

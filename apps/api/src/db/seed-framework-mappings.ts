@@ -1,5 +1,6 @@
 import { FRAMEWORK_CONTROL_MAPPINGS } from "@vikela/shared/framework-control-mappings";
 import { prisma } from "../lib/prisma.js";
+import { enrollOrgInFramework } from "../lib/enroll-org-framework.js";
 
 /** Seed ControlFramework links for all non-SOC2 frameworks (shared control graph). */
 export async function seedFrameworkControlMappings(): Promise<void> {
@@ -34,7 +35,8 @@ export async function seedFrameworkControlMappings(): Promise<void> {
 
 /** Backfill OrgControl rows for orgs enrolled in frameworks before mappings existed. */
 export async function backfillOrgControlsForEnrolledFrameworks(orgId: string): Promise<number> {
-  const { enrollOrgInFramework } = await import("../lib/enroll-org-framework.js");
+  // Static import — dynamic import() under `tsx watch` intermittently returns
+  // ERR_INVALID_RETURN_PROPERTY_VALUE from the load hook.
   const enrolled = await prisma.orgFramework.findMany({
     where: { orgId },
     select: { frameworkId: true },

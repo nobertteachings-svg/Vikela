@@ -16,6 +16,22 @@ import type { EvidenceSource, EvidenceType } from "@prisma/client";
 
 const MAX_FILE_BYTES = 10 * 1024 * 1024;
 
+const EVIDENCE_TYPES = new Set<string>([
+  "SCREENSHOT",
+  "LOG",
+  "EXPORT",
+  "POLICY",
+  "CONFIG",
+  "CERTIFICATE",
+  "OTHER",
+]);
+
+function parseEvidenceType(value: string | undefined, fallback: EvidenceType = "OTHER"): EvidenceType | null {
+  if (value == null || value === "") return fallback;
+  if (!EVIDENCE_TYPES.has(value)) return null;
+  return value as EvidenceType;
+}
+
 function mapEvidence(e: {
   id: string;
   title: string;
@@ -219,7 +235,13 @@ export const evidenceRoutes: FastifyPluginAsync = async (app) => {
         const value = (part as { value: string }).value;
         if (part.fieldname === "title") title = value;
         if (part.fieldname === "description") description = value;
-        if (part.fieldname === "type") type = value as EvidenceType;
+        if (part.fieldname === "type") {
+          const parsed = parseEvidenceType(value, "OTHER");
+          if (!parsed) {
+            return reply.status(400).send(err("Invalid evidence type"));
+          }
+          type = parsed;
+        }
         if (part.fieldname === "controlId") controlId = value || undefined;
       }
     }
@@ -280,12 +302,17 @@ export const evidenceRoutes: FastifyPluginAsync = async (app) => {
       content?: string;
     };
 
+    const type = parseEvidenceType(body.type, "OTHER");
+    if (!type) {
+      return reply.status(400).send(err("Invalid evidence type"));
+    }
+
     const evidence = await prisma.evidence.create({
       data: {
         orgId: org.id,
         title: body.title,
         description: body.description ?? body.content?.slice(0, 500),
-        type: body.type ?? "OTHER",
+        type,
         source: "MANUAL",
         controlId: body.controlId,
       },

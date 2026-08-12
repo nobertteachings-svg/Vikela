@@ -2,6 +2,7 @@ import { prisma } from "../../lib/prisma.js";
 import { decrypt } from "../../lib/crypto.js";
 import { getGitProvider, toGitProviderName } from "./provider.factory.js";
 import { resolveGithubAccessToken } from "./github/github-token.js";
+import { ensureGitWebhooks } from "./ensure-git-webhooks.js";
 
 export async function syncGitRepositories(integrationId: string): Promise<number> {
   const integration = await prisma.integration.findUnique({
@@ -33,13 +34,13 @@ export async function syncGitRepositories(integrationId: string): Promise<number
           externalId: repo.externalId,
         },
       },
+      // Preserve isActive — user selection / onboarding must not be wiped on refresh or webhook sync.
       update: {
         name: repo.name,
         fullName: repo.fullName,
         cloneUrl: repo.cloneUrl,
         defaultBranch: repo.defaultBranch,
         isPrivate: repo.isPrivate,
-        isActive: true,
       },
       create: {
         orgId: integration.orgId,
@@ -54,20 +55,28 @@ export async function syncGitRepositories(integrationId: string): Promise<number
     });
   }
 
-  if (seenExternalIds.size > 0) {
-    await prisma.repository.updateMany({
-      where: {
-        integrationId: integration.id,
-        externalId: { notIn: [...seenExternalIds] },
-      },
-      data: { isActive: false },
-    });
-  }
+  // Revoke access for repos no longer granted by the provider.
+  await prisma.repository.updateMany({
+    where: {
+      integrationId: integration.id,
+      ...(seenExternalIds.size > 0
+        ? { externalId: { notIn: [...seenExternalIds] } }
+        : {}),
+    },
+    data: { isActive: false },
+  });
 
   await prisma.integration.update({
     where: { id: integrationId },
     data: { lastSyncedAt: new Date() },
   });
+
+  // Best-effort project/repo webhooks for GitLab / Bitbucket (GitHub uses App webhooks).
+  try {
+    await ensureGitWebhooks(integrationId);
+  } catch {
+    /* never fail sync on webhook setup */
+  }
 
   return repos.length;
 }

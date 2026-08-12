@@ -1,10 +1,12 @@
 # Vikela — Production Readiness Audit
 
-**Last updated:** May 23, 2026  
+**Last updated:** August 12, 2026  
 **Scope:** `vikela` monorepo (`apps/web`, `apps/api`, `packages/shared`)  
 **Companion docs:** [DEVELOPER_HANDOVER.md](./DEVELOPER_HANDOVER.md) · [STAGING_SMOKE_CHECKLIST.md](./STAGING_SMOKE_CHECKLIST.md) · [SMOKE_RUN_LOCAL.md](./SMOKE_RUN_LOCAL.md)
 
 This audit tracks what is **implemented**, what **still blocks production**, and what remains for enterprise scale. Use it with the handover doc for file-level detail and the staging checklist as the pre-launch gate.
+
+> **Note (Aug 2026):** Some May 2026 rows below were stale. Trust center and AuditEvent UI are implemented; see updated status in the tables. Local `demo` org seed is for development only — production never silently falls back to the `demo` slug.
 
 ---
 
@@ -27,9 +29,9 @@ This audit tracks what is **implemented**, what **still blocks production**, and
 | Email | **Scaffolded** | Resend for scan complete, gap alerts, member invites when `RESEND_API_KEY` set |
 | Product analytics | **Scaffolded** | PostHog (web + API) when keys set; `lite_scan_completed` and related events |
 | RAG / Copilot | **Hybrid** | OpenAI embeddings + cosine search when `OPENAI_API_KEY` set; else keywords |
-| Immutable audit log | **Started** | `AuditEvent` table + logging on admin actions |
+| Immutable audit log | **Ready** | `AuditEvent` table + `/audit` admin UI + `GET /api/v1/audit-events` |
 | Outbound org webhooks | **Ready** | HMAC-signed `scan.completed` / `gap.created` dispatch |
-| Trust center | **Basic** | In-app `/trust` page; no public subdomain or CDN yet |
+| Trust center | **Ready (basic public)** | In-app `/trust` admin + public `/trust/[slug]`; report requests persisted; no custom subdomain/CDN yet |
 
 **Verdict:** Vikela is **ready for design-partner / paid beta** once Clerk, Stripe, Postgres, Redis, and production env vars are configured and [STAGING_SMOKE_CHECKLIST.md](./STAGING_SMOKE_CHECKLIST.md) passes on staging. **GA** still needs scanner accuracy hardening, gap suppressions, public trust center, full provider coverage, HIPAA, and operational queue metrics.
 
@@ -74,7 +76,7 @@ This audit tracks what is **implemented**, what **still blocks production**, and
 | Plan limits not enforced | `lib/plan-limits.ts` — scans/month, seats, integrations on connect/invite/scan |
 | Training progress mock | `TrainingAssignment` model + `GET /training/progress` |
 | Evidence upload E2E | `EvidenceUpload` component + Playwright multipart test |
-| Demo org confusion | Seed only applies to `demo` slug; new Clerk orgs get empty scaffold |
+| Demo org confusion | Seed only applies to `demo` slug for local/dev; production requires Clerk org context (no silent `demo` fallback) |
 | Team pending invites static | `PendingInvite` table + `GET /members/invites` + Team page wired to API |
 | No onboarding path | Clerk onboarding routes + lite scan API + membership bootstrap paths |
 | No product analytics | PostHog client (web) + server events via `lib/product-events.ts` |
@@ -86,7 +88,7 @@ This audit tracks what is **implemented**, what **still blocks production**, and
 | Deploy pipeline template | `deploy.yml` — Vercel web + Railway API hook + `db:migrate` step |
 | CI E2E limited | `ci.yml` — docker-compose Postgres/Redis, migrate, seed, dev servers, Playwright |
 | CORS allowlist | `CORS_ALLOWED_ORIGINS` env + `parseCorsOrigins()` in API bootstrap |
-| Local regression script | `scripts/smoke-api-local.sh` — 26 API checks against demo org |
+| Local regression script | `scripts/smoke-api-local.sh` — 26 API checks against seeded local org (`VIKELA_DEV_ORG_SLUG`, often `demo`) |
 
 ---
 
@@ -124,10 +126,11 @@ This audit tracks what is **implemented**, what **still blocks production**, and
 | Onboarding | `GET /onboarding/status`, `POST /onboarding/ensure-membership`, lite scan start/status |
 | Lite scan | `services/scanner/lite-scan.ts` — stack detection, sample fallback, `isLiteScan` flag |
 | Scan hierarchy | `Scan.parentScanId` — child scans grouped under full-scan parent |
-| Trust center | `/trust` — org frameworks + published policies (in-app preview) |
+| Trust center | `/trust` admin + public `/trust/[slug]` (publish/scores/tagline); report-request API persists + emails when Resend set |
 | Outbound webhooks | `lib/dispatch-org-webhooks.ts` — signed events to `OrgWebhook` endpoints |
 | Email notifications | `lib/notify-scan-emails.ts` — scan complete + gap alerts via Resend |
 | Product events | `lib/product-events.ts` — PostHog + optional `PRODUCT_EVENTS_WEBHOOK_URL` |
+| Audit trail UI | `/audit` + `GET /api/v1/audit-events` (`routes/audit.ts`) |
 
 ### Infrastructure
 
@@ -147,13 +150,13 @@ This audit tracks what is **implemented**, what **still blocks production**, and
 | Scanner accuracy | **Heuristic** | Document limits; false-positive / suppression workflow |
 | Gap suppressions | **Not started** | Persist accepted false positives; exclude from posture score |
 | Provider catalog | **Many stubs** | Hide or flag unimplemented providers in prod UI |
-| Trust center | **Basic** | Public subdomain, access controls, CDN for published assets |
+| Trust center | **Basic public** | Custom subdomain, CDN, visitor access controls beyond publish flag |
 | Framework content | **SOC-2 heavy** | Content pipeline for HIPAA/ISO packs |
 | Operational metrics | **Partial** | PostHog for product events; queue depth / worker health not exported |
 | HIPAA / BAA | **Not started** | Legal + regional DB docs |
 | Key rotation | **Undocumented** | KMS + rotation runbook |
 | pgvector native | **Optional** | Currently JSON embeddings in Postgres |
-| AuditEvent UI | **Not started** | Admin action log exists in DB; no dedicated settings/audit API page |
+| AuditEvent export | **Partial** | Admin UI + list API done; CSV/JSON export API still open |
 
 ---
 
@@ -163,8 +166,8 @@ This audit tracks what is **implemented**, what **still blocks production**, and
 |------|--------|
 | OpenAPI spec | Generate from Fastify for partners |
 | ~~Legacy Next copilot route~~ | Removed — use API `/copilot/*` only |
-| Sidebar nav | Labels from `mock-data.ts` `navItems` only (harmless) |
-| Trust center report request | `/trust` email capture is UI-only (no backend yet) |
+| Sidebar nav | Labels from `product-config.ts` `navItems` |
+| ~~Trust center report request~~ | Done — `POST /public/trust/:slug/report-request` persists + optional email |
 | Risk owner display | `ownerId` may show "—" in UI (deferred) |
 
 ---
@@ -245,13 +248,13 @@ Required before auditor invites work in each Clerk instance (dev, staging, prod)
 
 ### Phase C — GA / enterprise
 
-- [x] Audit event log (basic — DB only)
+- [x] Audit event log (DB + `/audit` UI + list API)
 - [ ] Scanner accuracy + suppressions
-- [ ] Public trust center hardening
+- [ ] Public trust center hardening (custom subdomain / CDN)
 - [ ] HIPAA / data residency
 - [ ] Full provider coverage or feature flags
 - [ ] Operational metrics (queue depth, worker health)
-- [ ] AuditEvent admin UI / export API
+- [ ] AuditEvent export API (CSV/JSON)
 
 ---
 
@@ -270,7 +273,7 @@ npm run dev
 # Tests
 npm run test                              # 16 API unit test modules
 npm run test:e2e                          # needs web on :3000, API on :3001
-./scripts/smoke-api-local.sh              # 26 local API checks (demo org)
+./scripts/smoke-api-local.sh              # 26 local API checks (set VIKELA_DEV_ORG_SLUG)
 
 # Stripe local webhook
 stripe listen --forward-to localhost:3001/api/v1/webhooks/stripe

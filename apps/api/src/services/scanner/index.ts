@@ -9,13 +9,36 @@ import { runFrameworkCodeScans } from "./framework-scans.js";
 
 const SCANNABLE_EXT = /\.(ts|tsx|js|jsx|py|go|rb|java|json|ya?ml|env\.example|tf)$/i;
 const MAX_FILE_SIZE = 512_000;
-const MAX_FILES = 200;
+const MAX_FILES = 150;
+/** Parallel file fetches — keep modest to avoid GitHub secondary rate limits. */
+const FILE_FETCH_CONCURRENCY = 6;
 
 export type CodeScanRunResult = {
   findings: ScanFinding[];
   listFailed: boolean;
   filesListed: number;
 };
+
+async function mapPool<T, R>(
+  items: T[],
+  concurrency: number,
+  fn: (item: T, index: number) => Promise<R>
+): Promise<R[]> {
+  const results = new Array<R>(items.length);
+  let next = 0;
+  async function worker() {
+    while (next < items.length) {
+      const index = next++;
+      results[index] = await fn(items[index], index);
+    }
+  }
+  const workers = Array.from(
+    { length: Math.min(concurrency, Math.max(items.length, 1)) },
+    () => worker()
+  );
+  await Promise.all(workers);
+  return results;
+}
 
 export async function runCodeScan(
   git: IGitProvider,
@@ -38,28 +61,31 @@ export async function runCodeScan(
 
   const scannable = files.filter((f) => SCANNABLE_EXT.test(f)).slice(0, MAX_FILES);
 
-  for (const filePath of scannable) {
+  const perFileFindings = await mapPool(scannable, FILE_FETCH_CONCURRENCY, async (filePath) => {
     let content: string;
     try {
       content = await git.getFileContent(repoFullName, filePath, ref);
     } catch {
-      continue;
+      return [] as ScanFinding[];
     }
-    if (content.length > MAX_FILE_SIZE) continue;
+    if (content.length > MAX_FILE_SIZE) return [] as ScanFinding[];
 
     const lines = content.split("\n");
-
-    allFindings.push(
+    const findings: ScanFinding[] = [
       ...scanSecrets(filePath, content, lines),
       ...scanEncryption(filePath, content, lines),
       ...scanLogging(filePath, content, lines),
       ...scanAccess(filePath, content, lines),
-      ...scanDependencies(filePath, content)
-    );
-
+      ...scanDependencies(filePath, content),
+    ];
     if (opts?.frameworkSlugs?.length) {
-      allFindings.push(...runFrameworkCodeScans(opts.frameworkSlugs, filePath, content, lines));
+      findings.push(...runFrameworkCodeScans(opts.frameworkSlugs, filePath, content, lines));
     }
+    return findings;
+  });
+
+  for (const batch of perFileFindings) {
+    allFindings.push(...batch);
   }
 
   return {

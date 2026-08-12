@@ -8,6 +8,7 @@ import {
   filterFindingsForScope,
   getOrgFrameworkScanScope,
 } from "./framework-scope.js";
+import { computeScanScoreFromFindings } from "../../lib/scan-score.js";
 
 export interface IdentityScanOptions {
   integrationId: string;
@@ -56,11 +57,9 @@ export async function executeIdentityScan(options: IdentityScanOptions) {
     replaceExisting: options.replaceExistingGaps,
   });
 
-  const totalChecks = 12;
-  const score = Math.max(
-    0,
-    Math.min(100, Math.round(((totalChecks - gapCount) / totalChecks) * 100))
-  );
+  const { score, totalChecks, passedChecks } = computeScanScoreFromFindings(findings, {
+    baselineChecks: 12,
+  });
 
   await prisma.scan.update({
     where: { id: scan.id },
@@ -68,7 +67,7 @@ export async function executeIdentityScan(options: IdentityScanOptions) {
       status: "COMPLETED",
       score,
       totalChecks,
-      passedChecks: totalChecks - gapCount,
+      passedChecks,
       completedAt: new Date(),
     },
   });

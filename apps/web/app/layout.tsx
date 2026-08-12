@@ -21,5 +21,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   );
 
   if (!hasClerk) return body;
-  return <ClerkProvider>{body}</ClerkProvider>;
+  return (
+    <ClerkProvider
+      signInForceRedirectUrl="/dashboard"
+      signInFallbackRedirectUrl="/dashboard"
+      signUpForceRedirectUrl="/onboarding/connect-repos"
+      signUpFallbackRedirectUrl="/onboarding/connect-repos"
+      afterSelectOrganizationUrl="/dashboard"
+    >
+      {body}
+    </ClerkProvider>
+  );
 }

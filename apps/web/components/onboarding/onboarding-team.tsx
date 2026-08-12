@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { BrowserChrome } from "@/components/comply/browser-chrome";
 import { StepIndicator } from "@/components/comply/step-indicator";
-import { apiPost } from "@/lib/api";
+import { apiDelete, apiPost } from "@/lib/api";
 
 type Invite = { id: string; email: string; role: string; initials: string };
 
@@ -13,12 +13,13 @@ export function OnboardingTeam() {
   const [role, setRole] = useState("Member");
   const [invites, setInvites] = useState<Invite[]>([]);
   const [sending, setSending] = useState(false);
+  const [busyId, setBusyId] = useState<string | null>(null);
 
   const addInvite = async () => {
     if (!email.trim()) return;
     setSending(true);
     try {
-      await apiPost("/api/v1/members/invite", {
+      const result = await apiPost<{ id: string; email: string }>("/api/v1/members/invite", {
         email: email.trim(),
         role: role.toUpperCase(),
       });
@@ -28,7 +29,7 @@ export function OnboardingTeam() {
         .replace(/[^A-Z]/g, "X");
       setInvites((list) => [
         ...list,
-        { id: String(Date.now()), email: email.trim(), role, initials },
+        { id: result.id, email: result.email, role, initials },
       ]);
       setEmail("");
     } catch (e) {
@@ -38,8 +39,16 @@ export function OnboardingTeam() {
     }
   };
 
-  const removeInvite = (id: string) => {
-    setInvites((list) => list.filter((i) => i.id !== id));
+  const removeInvite = async (id: string) => {
+    setBusyId(id);
+    try {
+      await apiDelete(`/api/v1/members/invites/${id}`);
+      setInvites((list) => list.filter((i) => i.id !== id));
+    } catch (e) {
+      alert(e instanceof Error ? e.message : "Could not revoke invite");
+    } finally {
+      setBusyId(null);
+    }
   };
 
   return (
@@ -68,7 +77,7 @@ export function OnboardingTeam() {
           <option>Member</option>
           <option>Auditor</option>
         </select>
-        <button type="button" onClick={addInvite} disabled={sending} className="btn-purple-cta w-[60px]">
+        <button type="button" onClick={() => void addInvite()} disabled={sending} className="btn-purple-cta w-[60px]">
           {sending ? "…" : "Add"}
         </button>
       </div>
@@ -88,9 +97,10 @@ export function OnboardingTeam() {
             </span>
             <button
               type="button"
-              onClick={() => removeInvite(inv.id)}
-              className="shrink-0 px-1 text-comply-muted hover:text-comply-text-primary"
-              aria-label="Remove"
+              onClick={() => void removeInvite(inv.id)}
+              disabled={busyId === inv.id}
+              className="shrink-0 px-1 text-comply-muted hover:text-comply-text-primary disabled:opacity-50"
+              aria-label="Revoke invite"
             >
               ×
             </button>

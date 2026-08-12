@@ -96,6 +96,20 @@ export class JumpCloudProvider implements IIdentityProvider {
         },
       ];
     }
-    return demoIdentityFindings("JumpCloud").slice(0, 2);
+    // API list does not include MFA factor state yet — report directory visibility only.
+    return [
+      {
+        title: `JumpCloud: ${users.length} active user(s) listed; MFA factor status not verified`,
+        description:
+          "Vikela connected successfully and listed system users. Per-user MFA enrollment is not available via the current API scope — enforce MFA in JumpCloud policies and confirm in the Admin Portal.",
+        severity: "MEDIUM",
+        source: "IAM",
+        resourceType: "JumpCloudOrg",
+        resourceId: "directory",
+        remediation:
+          "Enable MFA policies in JumpCloud and grant API scopes that expose MFA enrollment if available.",
+        controlCode: "CC6.1",
+      },
+    ];
   }
 }

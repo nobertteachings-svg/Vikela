@@ -4,10 +4,10 @@ export type UiTeamMember = {
   id: string;
   name: string;
   email: string;
+  /** Display role */
   role: "Admin" | "Member" | "Auditor";
-  department: string;
-  mfa: boolean;
-  lastActive: string;
+  /** Raw API role for mutations */
+  apiRole: string;
   joined: string;
 };
 
@@ -16,11 +16,12 @@ export type UiVendor = {
   name: string;
   category: string;
   risk: string;
-  lastReview: string;
+  lastReview: string | null;
   soc2: boolean;
   status: "Approved" | "Review needed" | "Not reviewed" | "Rejected";
   dataAccess: string;
   contractRenewal: string;
+  contractRenewalIso: string | null;
   owner: string;
 };
 
@@ -32,12 +33,12 @@ export type UiRisk = {
   impact: string;
   score: number;
   owner: string;
+  ownerId: string | null;
   mitigation: string;
   status: "Open" | "Mitigating" | "Accepted" | "Closed";
   matrix: { l: number; i: number };
   description: string;
-  nextReview: string;
-  controls: string[];
+  nextReview: string | null;
 };
 
 function mapRole(role: string): UiTeamMember["role"] {
@@ -52,9 +53,7 @@ export function mapMemberRow(m: MemberRow): UiTeamMember {
     name: m.name,
     email: m.email,
     role: mapRole(m.role),
-    department: "—",
-    mfa: true,
-    lastActive: "Active",
+    apiRole: m.role,
     joined: m.createdAt,
   };
 }
@@ -83,11 +82,12 @@ export function mapVendorRow(v: VendorRow): UiVendor {
     name: v.name,
     category: v.category,
     risk: v.risk ?? mapRiskLevel(v.riskLevel),
-    lastReview: v.lastReviewed ? v.lastReviewed.slice(0, 10) : "—",
-    soc2: v.soc2 ?? v.reviewStatus === "APPROVED",
+    lastReview: v.lastReviewed ? v.lastReviewed.slice(0, 10) : null,
+    soc2: Boolean(v.soc2 ?? v.soc2Certified),
     status,
-    dataAccess: v.dataAccess ?? v.notes ?? "—",
+    dataAccess: v.dataAccess ?? "—",
     contractRenewal: v.contractRenewal?.slice(0, 10) ?? "—",
+    contractRenewalIso: v.contractRenewal ?? null,
     owner: v.owner ?? "—",
   };
 }
@@ -109,16 +109,16 @@ export function mapRiskRow(r: RiskRow): UiRisk {
   return {
     id: r.id,
     name: r.title,
-    category: "Operational",
+    category: r.category || "Operational",
     likelihood: likelihoodLabel(r.likelihood),
     impact: likelihoodLabel(r.impact),
     score: r.score,
-    owner: "—",
+    owner: r.ownerName || r.ownerEmail || "—",
+    ownerId: r.ownerId ?? null,
     mitigation: r.mitigation ?? "",
     status: mapRiskStatus(r.status),
     matrix: { l: r.likelihood, i: r.impact },
     description: r.description,
-    nextReview: r.updatedAt.slice(0, 10),
-    controls: [],
+    nextReview: r.nextReviewAt ? r.nextReviewAt.slice(0, 10) : null,
   };
 }

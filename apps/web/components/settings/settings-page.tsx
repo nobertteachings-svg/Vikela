@@ -21,22 +21,10 @@ import { DataTable } from "@/components/comply/data-table";
 import { PageHeader } from "@/components/comply/page-header";
 import { StatCard } from "@/components/comply/stat-card";
 import { apiDelete, apiPatch, apiPost, setOrgContext } from "@/lib/api";
+import { apiGetBlob, downloadBlob } from "@/lib/api-blob";
 import type { OrgInfo, SettingsData } from "@/lib/compliance-api";
-import { settingsTabs, type SettingsTab } from "@/lib/mock-data";
+import { settingsTabs, type SettingsTab } from "@/lib/product-config";
 import { cn } from "@/lib/utils";
-
-function ComingSoonBadge({ className }: { className?: string }) {
-  return (
-    <span
-      className={cn(
-        "rounded-sm border border-amber-500/30 bg-amber-500/10 px-1.5 py-0.5 text-[10px] font-medium text-amber-200/90",
-        className
-      )}
-    >
-      Coming soon
-    </span>
-  );
-}
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
@@ -59,23 +47,17 @@ const NOTIFICATION_ROWS = [
   {
     key: "gapAlerts",
     label: "New compliance gaps",
-    description: "When a scan finds critical or high severity gaps.",
+    description: "Critical/high gaps — emailed to admins and posted to connected Slack/Teams.",
   },
   {
     key: "scanComplete",
     label: "Scan completed",
-    description: "Summary when a repository or cloud scan finishes.",
-  },
-  {
-    key: "weeklyDigest",
-    label: "Weekly digest",
-    description: "Posture summary every Monday morning.",
-    emailComingSoon: true,
+    description: "Scan summary — emailed to admins and posted to connected Slack/Teams.",
   },
   {
     key: "memberInvites",
     label: "Member invites",
-    description: "When someone is invited to your organization.",
+    description: "When someone is invited to your organization (email).",
   },
 ] as const;
 
@@ -98,9 +80,15 @@ export function SettingsPageContent({
   const [webhookName, setWebhookName] = useState("");
   const [webhookUrl, setWebhookUrl] = useState("");
   const [testingWebhookId, setTestingWebhookId] = useState<string | null>(null);
-  const [webhookMessage, setWebhookMessage] = useState<string | null>(null);
+  const [webhookMessage, setWebhookMessage] = useState<{
+    tone: "success" | "warn" | "error";
+    text: string;
+  } | null>(null);
   const [newAllowlistEntry, setNewAllowlistEntry] = useState("");
   const [allowlistError, setAllowlistError] = useState<string | null>(null);
+  const [exportingFormat, setExportingFormat] = useState<string | null>(null);
+  const [deleteConfirm, setDeleteConfirm] = useState("");
+  const [dangerMessage, setDangerMessage] = useState<string | null>(null);
   const org = {
     id: orgInfo.id,
     name: orgInfo.name,
@@ -133,13 +121,21 @@ export function SettingsPageContent({
   };
 
   const handleSaveNotifications = async () => {
-    await apiPatch("/api/v1/settings", { notifications });
+    await apiPatch("/api/v1/settings", {
+      notifications: {
+        gapAlerts: Boolean(notifications.gapAlerts),
+        scanComplete: Boolean(notifications.scanComplete),
+        memberInvites: Boolean(notifications.memberInvites),
+      },
+    });
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
   };
 
   const handleSaveSecurity = async () => {
-    await apiPatch("/api/v1/settings", { security });
+    await apiPatch("/api/v1/settings", {
+      security: { ipAllowlist: security.ipAllowlist },
+    });
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
   };
@@ -204,16 +200,68 @@ export function SettingsPageContent({
     }
   };
 
+  async function handleExport(format: "JSON" | "CSV" | "PDF") {
+    setExportingFormat(format);
+    setDangerMessage(null);
+    try {
+      const q = format === "PDF" ? "pdf" : format.toLowerCase();
+      const { blob, filename } = await apiGetBlob(
+        `/api/v1/settings/export?format=${q}`,
+        `vikela-export.${q === "pdf" ? "html" : q}`
+      );
+      downloadBlob(blob, filename);
+      setDangerMessage(`Exported ${filename}`);
+    } catch (e) {
+      setDangerMessage(e instanceof Error ? e.message : "Export failed");
+    } finally {
+      setExportingFormat(null);
+    }
+  }
+
+  function handleDeleteOrganization() {
+    if (deleteConfirm.trim() !== org.slug) {
+      setDangerMessage(`Type ${org.slug} exactly to enable deletion.`);
+      return;
+    }
+    setDangerMessage(
+      "Organization deletion is managed in Clerk (Organization settings → Delete). Vikela does not hard-delete orgs from this screen yet."
+    );
+  }
+
   async function handleTestWebhook(webhookId: string) {
     setTestingWebhookId(webhookId);
     setWebhookMessage(null);
     try {
-      const result = await apiPost<{ delivered: boolean; scanId: string; httpStatus: number }>(
-        `/api/v1/settings/webhooks/${webhookId}/test`
-      );
-      setWebhookMessage(`Test sent (scan ${result.scanId.slice(0, 8)}…) — HTTP ${result.httpStatus}`);
+      const result = await apiPost<{
+        delivered: boolean;
+        accepted: boolean;
+        scanId: string;
+        httpStatus: number | null;
+        error: string | null;
+        message: string;
+      }>(`/api/v1/settings/webhooks/${webhookId}/test`);
+      const scanBit = result.scanId ? ` (scan ${result.scanId.slice(0, 8)}…)` : "";
+      if (result.accepted) {
+        setWebhookMessage({
+          tone: "success",
+          text: `${result.message}${scanBit}`,
+        });
+      } else if (result.delivered) {
+        setWebhookMessage({
+          tone: "warn",
+          text: `${result.message}${scanBit}`,
+        });
+      } else {
+        setWebhookMessage({
+          tone: "error",
+          text: `${result.message}${scanBit}`,
+        });
+      }
     } catch (e) {
-      setWebhookMessage(e instanceof Error ? e.message : "Test delivery failed");
+      setWebhookMessage({
+        tone: "error",
+        text: e instanceof Error ? e.message : "Test delivery failed",
+      });
     } finally {
       setTestingWebhookId(null);
     }
@@ -287,7 +335,7 @@ export function SettingsPageContent({
           </div>
           <ul className="space-y-2 text-sm text-comply-text-secondary lg:min-w-[220px]">
             {[
-              `Trust center: trust.vikela.co/${org.trustCenterSlug}`,
+              `Trust center: /trust/${org.trustCenterSlug}`,
               `${memberCount} team members`,
               `Plan: ${orgInfo.plan} · ${orgInfo.openGaps} open gaps`,
             ].map((line) => (
@@ -302,7 +350,12 @@ export function SettingsPageContent({
 
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         <StatCard label="Team members" value={String(memberCount)} accent="purple" />
-        <StatCard label="MFA enrolled" value="—" accent="green" hint="Coming soon" />
+        <StatCard
+          label="Help center"
+          value="Docs"
+          accent="green"
+          hint="In-app guide"
+        />
         <StatCard label="API keys" value={String(apiKeys.length)} accent="amber" />
         <StatCard label="Webhooks" value={String(webhooks.filter((w) => w.isActive).length)} accent="purple" hint="active" />
       </div>
@@ -318,6 +371,7 @@ export function SettingsPageContent({
                 <button
                   key={t}
                   type="button"
+                  data-testid={`settings-tab-${t.toLowerCase().replace(/\s+/g, "-")}`}
                   onClick={() => setTab(t)}
                   className={cn(
                     "flex items-center gap-2 whitespace-nowrap rounded-md px-3 py-2.5 text-left text-sm transition-colors",
@@ -424,15 +478,22 @@ export function SettingsPageContent({
                   </label>
                   <label className="block text-sm">
                     <span className="text-comply-text-secondary">Trust center URL</span>
-                    <div className="mt-1.5 flex items-center gap-2 rounded-md border border-white/[0.08] bg-black/25 px-3 py-2.5">
+                    <div className="mt-1.5 flex flex-wrap items-center gap-2 rounded-md border border-white/[0.08] bg-black/25 px-3 py-2.5">
                       <IconWorld size={16} className="text-comply-purple-border" />
                       <span className="font-mono text-xs text-comply-text-secondary">
-                        trust.vikela.co/{org.trustCenterSlug}
+                        /trust/{org.trustCenterSlug}
                       </span>
-                      <Link href="/trust" className="ml-auto text-xs font-medium text-comply-purple-border hover:underline">
-                        Preview
+                      <Link
+                        href="/trust"
+                        className="ml-auto text-xs font-medium text-comply-purple-border hover:underline"
+                      >
+                        Manage &amp; publish
                       </Link>
                     </div>
+                    <p className="mt-2 text-[11px] leading-relaxed text-comply-text-tertiary">
+                      Unpublished by default. Publish from Trust center when you&apos;re ready to share
+                      with customers.
+                    </p>
                   </label>
                   <div className="flex flex-wrap items-center gap-3 pt-2">
                     <ComplyButton variant="primary" className="text-sm" onClick={handleSaveGeneral}>
@@ -453,20 +514,23 @@ export function SettingsPageContent({
               <CardBody className="space-y-3 p-0 sm:p-0">
                 <div className="border-b border-white/[0.06] px-6 py-4">
                   <p className="text-sm text-comply-text-secondary">
-                    Scan complete and gap alert emails go to org owners and admins when enabled.
-                    Preferences are saved to your workspace.
+                    Scan complete and gap alert emails go to org owners and admins. The same events
+                    are also delivered to connected{" "}
+                    <Link href="/integrations" className="text-comply-purple-border hover:underline">
+                      Slack and Microsoft Teams
+                    </Link>{" "}
+                    integrations. Weekly digest email is not available yet.
                   </p>
                 </div>
-                <div className="hidden border-b border-white/[0.06] px-6 py-2 sm:grid sm:grid-cols-[1fr_80px_80px] sm:gap-4">
+                <div className="hidden border-b border-white/[0.06] px-6 py-2 sm:grid sm:grid-cols-[1fr_80px_100px] sm:gap-4">
                   <span className="text-[10px] font-semibold uppercase tracking-wider text-comply-text-tertiary">
                     Event
                   </span>
                   <span className="text-center text-[10px] font-semibold uppercase tracking-wider text-comply-text-tertiary">
                     Email
                   </span>
-                  <span className="flex items-center justify-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-comply-text-tertiary">
-                    Slack
-                    <ComingSoonBadge />
+                  <span className="text-center text-[10px] font-semibold uppercase tracking-wider text-comply-text-tertiary">
+                    Slack / Teams
                   </span>
                 </div>
                 {NOTIFICATION_ROWS.map((n) => (
@@ -474,11 +538,10 @@ export function SettingsPageContent({
                     key={n.key}
                     className="border-b border-white/[0.06] px-6 py-4 last:border-0"
                   >
-                    <div className="grid gap-4 sm:grid-cols-[1fr_80px_80px] sm:items-center">
+                    <div className="grid gap-4 sm:grid-cols-[1fr_80px_100px] sm:items-center">
                       <div>
                         <p className="flex flex-wrap items-center gap-2 text-sm font-medium text-comply-text-primary">
                           {n.label}
-                          {"emailComingSoon" in n && n.emailComingSoon ? <ComingSoonBadge /> : null}
                         </p>
                         <p className="mt-1 text-xs leading-relaxed text-comply-text-secondary">
                           {n.description}
@@ -496,14 +559,20 @@ export function SettingsPageContent({
                         />
                       </label>
                       <div className="flex items-center justify-center">
-                        <span className="text-xs text-comply-muted sm:hidden">Slack</span>
-                        <input
-                          type="checkbox"
-                          disabled
-                          checked={false}
-                          aria-label={`${n.label} Slack alerts (coming soon)`}
-                          className="rounded text-comply-purple opacity-40"
-                        />
+                        <span className="text-xs text-comply-muted sm:hidden">Slack / Teams</span>
+                        {n.key === "memberInvites" ? (
+                          <span className="text-[10px] text-comply-text-tertiary">Email only</span>
+                        ) : (
+                          <input
+                            type="checkbox"
+                            checked={Boolean(notifications[n.key])}
+                            onChange={(e) =>
+                              setNotifications((prev) => ({ ...prev, [n.key]: e.target.checked }))
+                            }
+                            aria-label={`${n.label} Slack and Teams alerts`}
+                            className="rounded text-comply-purple"
+                          />
+                        )}
                       </div>
                     </div>
                   </div>
@@ -521,59 +590,23 @@ export function SettingsPageContent({
             <>
               <Card elevated>
                 <CardHeader title="Authentication" />
-                <CardBody className="space-y-4">
-                  <label className="flex items-center justify-between rounded-md border border-white/[0.06] bg-black/20 px-4 py-3.5">
-                    <div>
-                      <p className="text-sm font-medium text-comply-text-primary">Require MFA for all members</p>
-                      <p className="mt-0.5 flex flex-wrap items-center gap-2 text-xs text-comply-text-secondary">
-                        Saved as a preference — enforcement not active yet
-                        <ComingSoonBadge />
-                      </p>
-                    </div>
-                    <input
-                      type="checkbox"
-                      checked={security.mfaRequired}
-                      onChange={(e) =>
-                        setSecurity((prev) => ({ ...prev, mfaRequired: e.target.checked }))
-                      }
-                      className="rounded text-comply-purple"
-                    />
-                  </label>
-                  <label className="flex items-center justify-between rounded-md border border-white/[0.06] bg-black/20 px-4 py-3.5">
-                    <div>
-                      <p className="text-sm font-medium text-comply-text-primary">Enforce SSO</p>
-                      <p className="mt-0.5 text-xs text-comply-text-secondary">Require sign-in through your identity provider</p>
-                    </div>
-                    <input
-                      type="checkbox"
-                      checked={security.ssoEnforced}
-                      onChange={(e) =>
-                        setSecurity((prev) => ({ ...prev, ssoEnforced: e.target.checked }))
-                      }
-                      className="rounded text-comply-purple"
-                    />
-                  </label>
-                  <div className="flex flex-wrap items-center gap-3 pt-2">
-                    <ComplyButton variant="primary" className="text-sm" onClick={() => void handleSaveSecurity()}>
-                      {saved ? "Saved" : "Save security preferences"}
-                    </ComplyButton>
-                  </div>
-                </CardBody>
-              </Card>
-
-              <Card elevated>
-                <CardHeader
-                  title="SSO / SAML"
-                  action={<ComingSoonBadge />}
-                />
-                <CardBody className="space-y-4">
+                <CardBody className="space-y-3">
                   <p className="text-sm leading-relaxed text-comply-text-secondary">
-                    Connect your identity provider for single sign-on. JIT
-                    provisioning creates Vikela accounts on first login.
+                    Sign-in, MFA, and organization membership are managed in{" "}
+                    <a
+                      href="https://dashboard.clerk.com"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-comply-purple-border hover:underline"
+                    >
+                      Clerk
+                    </a>
+                    . Configure MFA policies and session settings there — Vikela does not override them.
                   </p>
-                  <ComplyButton variant="secondary" className="text-sm" disabled>
-                    Configure SAML
-                  </ComplyButton>
+                  <p className="text-sm leading-relaxed text-comply-text-secondary">
+                    SSO / SAML is available through Clerk for Enterprise organizations. Contact sales if you need
+                    IdP-initiated login for your workspace.
+                  </p>
                 </CardBody>
               </Card>
 
@@ -773,8 +806,17 @@ export function SettingsPageContent({
                   <p className="text-sm text-comply-text-tertiary">No webhooks configured yet.</p>
                 )}
                 {webhookMessage && (
-                  <p className="text-xs text-comply-text-secondary" role="status">
-                    {webhookMessage}
+                  <p
+                    className={cn(
+                      "rounded-md px-3 py-2 text-xs",
+                      webhookMessage.tone === "success" &&
+                        "bg-emerald-500/10 text-emerald-300",
+                      webhookMessage.tone === "warn" && "bg-amber-500/10 text-amber-200",
+                      webhookMessage.tone === "error" && "bg-red-500/10 text-red-300"
+                    )}
+                    role="status"
+                  >
+                    {webhookMessage.text}
                   </p>
                 )}
                 {webhooks.map((wh) => (
@@ -845,20 +887,25 @@ export function SettingsPageContent({
                     mapped frameworks and policy snapshots.
                   </p>
                   <div className="flex flex-wrap gap-2">
-                    {["JSON", "CSV", "PDF"].map((fmt) => (
-                      <ComplyButton key={fmt} variant="secondary" className="text-xs">
-                        Export {fmt}
+                    {(["JSON", "CSV", "PDF"] as const).map((fmt) => (
+                      <ComplyButton
+                        key={fmt}
+                        variant="secondary"
+                        className="text-xs"
+                        data-testid={`settings-export-${fmt.toLowerCase()}`}
+                        disabled={exportingFormat !== null}
+                        onClick={() => void handleExport(fmt)}
+                      >
+                        {exportingFormat === fmt ? "Exporting…" : `Export ${fmt}`}
                       </ComplyButton>
                     ))}
                   </div>
                   <p className="text-xs text-comply-muted">
-                    Last export:{" "}
-                    {new Date().toLocaleDateString("en-US", {
-                      month: "long",
-                      day: "numeric",
-                      year: "numeric",
-                    })}
+                    PDF downloads a printable HTML report (use Print → Save as PDF).
                   </p>
+                  {dangerMessage ? (
+                    <p className="text-xs text-comply-text-secondary">{dangerMessage}</p>
+                  ) : null}
                 </CardBody>
               </Card>
 
@@ -881,13 +928,17 @@ export function SettingsPageContent({
                       Type <span className="font-mono text-comply-red">{org.slug}</span> to confirm
                     </span>
                     <input
+                      value={deleteConfirm}
+                      onChange={(e) => setDeleteConfirm(e.target.value)}
                       placeholder={org.slug}
                       className="comply-input mt-1.5 max-w-xs border-comply-red/30"
                     />
                   </label>
                   <button
                     type="button"
-                    className="mt-4 rounded-md border border-comply-red px-4 py-2 text-sm font-medium text-comply-red transition-colors hover:bg-comply-red/10"
+                    disabled={deleteConfirm.trim() !== org.slug}
+                    onClick={handleDeleteOrganization}
+                    className="mt-4 rounded-md border border-comply-red px-4 py-2 text-sm font-medium text-comply-red transition-colors hover:bg-comply-red/10 disabled:cursor-not-allowed disabled:opacity-40"
                   >
                     Delete organization
                   </button>

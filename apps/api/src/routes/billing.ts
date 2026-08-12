@@ -6,6 +6,7 @@ import { prisma } from "../lib/prisma.js";
 import { getStripe, priceIdForPlan, stripeEnabled } from "../lib/stripe.js";
 import { getOrgUsage, getPlanLimits } from "../lib/plan-limits.js";
 import { requireAdmin, requireRead } from "../lib/authorization.js";
+import { getAppUrl } from "../lib/app-url.js";
 
 const PLAN_LABELS: Record<string, string> = {
   FREE: "Free",
@@ -14,11 +15,20 @@ const PLAN_LABELS: Record<string, string> = {
   ENTERPRISE: "Enterprise",
 };
 
-const APP_URL = process.env.APP_URL ?? "http://localhost:3000";
-
 function defaultBillingStatus(plan: Plan, stripeSubscriptionId: string | null): string {
   if (stripeSubscriptionId) return "active";
-  return plan === "FREE" ? "free" : "active";
+  // Plan may be seeded/comped without a Stripe subscription — don't imply payment is live.
+  return plan === "FREE" ? "free" : "comped";
+}
+
+/** Prefer browser Origin so local checkout returns to localhost, not a stale APP_URL tunnel. */
+function billingReturnBase(req: { headers: { origin?: string | string[] } }): string {
+  const originHeader = req.headers.origin;
+  const origin = Array.isArray(originHeader) ? originHeader[0] : originHeader;
+  if (origin && /^https?:\/\//i.test(origin)) {
+    return origin.replace(/\/+$/, "");
+  }
+  return getAppUrl();
 }
 
 export const billingRoutes: FastifyPluginAsync = async (app) => {
@@ -53,10 +63,22 @@ export const billingRoutes: FastifyPluginAsync = async (app) => {
         const stripe = await getStripe();
 
         if (org.stripeSubscriptionId) {
-          const sub = await stripe.subscriptions.retrieve(org.stripeSubscriptionId);
+          const sub = await stripe.subscriptions.retrieve(org.stripeSubscriptionId, {
+            expand: ["default_payment_method"],
+          });
           subscriptionStatus = sub.status;
           renewalDate = new Date(sub.current_period_end * 1000).toISOString();
           renewalAmountCents = sub.items.data[0]?.price?.unit_amount ?? null;
+
+          const subPm = sub.default_payment_method;
+          if (subPm && typeof subPm !== "string" && subPm.type === "card" && subPm.card) {
+            paymentMethod = {
+              brand: subPm.card.brand,
+              last4: subPm.card.last4 ?? "****",
+              expMonth: subPm.card.exp_month,
+              expYear: subPm.card.exp_year,
+            };
+          }
 
           const customerRef = sub.customer;
           if (customerRef) {
@@ -90,13 +112,36 @@ export const billingRoutes: FastifyPluginAsync = async (app) => {
             if (!billingEmail && customer.email) {
               billingEmail = customer.email;
             }
-            const pm = customer.invoice_settings?.default_payment_method;
-            if (pm && typeof pm !== "string" && pm.type === "card" && pm.card) {
+            const defaultPm = customer.invoice_settings?.default_payment_method;
+            if (
+              !paymentMethod &&
+              defaultPm &&
+              typeof defaultPm !== "string" &&
+              defaultPm.type === "card" &&
+              defaultPm.card
+            ) {
               paymentMethod = {
-                brand: pm.card.brand,
-                last4: pm.card.last4 ?? "****",
-                expMonth: pm.card.exp_month,
-                expYear: pm.card.exp_year,
+                brand: defaultPm.card.brand,
+                last4: defaultPm.card.last4 ?? "****",
+                expMonth: defaultPm.card.exp_month,
+                expYear: defaultPm.card.exp_year,
+              };
+            }
+          }
+
+          if (!paymentMethod) {
+            const cards = await stripe.paymentMethods.list({
+              customer: org.stripeCustomerId,
+              type: "card",
+              limit: 1,
+            });
+            const cardPm = cards.data[0];
+            if (cardPm?.card) {
+              paymentMethod = {
+                brand: cardPm.card.brand,
+                last4: cardPm.card.last4 ?? "****",
+                expMonth: cardPm.card.exp_month,
+                expYear: cardPm.card.exp_year,
               };
             }
           }
@@ -121,6 +166,7 @@ export const billingRoutes: FastifyPluginAsync = async (app) => {
         paymentMethod,
         stripeConfigured: stripeEnabled(),
         stripeCustomerId: org.stripeCustomerId,
+        hasStripeSubscription: Boolean(org.stripeSubscriptionId),
         usage: {
           integrations: usage.integrations,
           scans: usage.scans,
@@ -174,17 +220,38 @@ export const billingRoutes: FastifyPluginAsync = async (app) => {
       });
     }
 
+    const returnBase = billingReturnBase(req);
+
+    // Existing subscribers should change plans in the Customer Portal (avoids duplicate subs).
+    if (org.stripeSubscriptionId) {
+      const portal = await stripe.billingPortal.sessions.create({
+        customer: customerId,
+        return_url: `${returnBase}/billing`,
+      });
+      return reply.send(
+        ok({
+          url: portal.url,
+          sessionId: null,
+          via: "portal" as const,
+          message: "Opened billing portal to change your existing subscription.",
+        })
+      );
+    }
+
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
       customer: customerId,
       line_items: [{ price: priceId, quantity: 1 }],
-      success_url: `${APP_URL}/billing?checkout=success`,
-      cancel_url: `${APP_URL}/billing?checkout=cancelled`,
+      success_url: `${returnBase}/billing?checkout=success&plan=${encodeURIComponent(plan)}`,
+      cancel_url: `${returnBase}/billing?checkout=cancelled`,
       metadata: { orgId: org.id, plan },
       subscription_data: { metadata: { orgId: org.id, plan } },
+      allow_promotion_codes: true,
     });
 
-    return reply.send(ok({ url: session.url, sessionId: session.id }));
+    return reply.send(
+      ok({ url: session.url, sessionId: session.id, via: "checkout" as const })
+    );
   });
 
   app.post("/billing/portal", async (req, reply) => {
@@ -202,16 +269,46 @@ export const billingRoutes: FastifyPluginAsync = async (app) => {
       return reply.status(404).send(err("Organization not found"));
     }
 
-    if (!stripeEnabled() || !org.stripeCustomerId) {
-      return reply.status(400).send(err("No billing account on file"));
+    if (!stripeEnabled()) {
+      return reply.status(503).send(err("Stripe is not configured"));
     }
 
     const stripe = await getStripe();
+    let customerId = org.stripeCustomerId;
+    if (!customerId) {
+      const customer = await stripe.customers.create({
+        name: org.name,
+        metadata: { orgId: org.id, slug: org.slug },
+      });
+      customerId = customer.id;
+      await prisma.organization.update({
+        where: { id: org.id },
+        data: { stripeCustomerId: customerId },
+      });
+    }
+
+    const body = (req.body as { flow?: string }) ?? {};
+    const returnUrl = `${billingReturnBase(req)}/billing`;
+
+    // Deep-link into payment method update when requested (Stripe Customer Portal).
+    if (body.flow === "payment_method_update") {
+      try {
+        const session = await stripe.billingPortal.sessions.create({
+          customer: customerId,
+          return_url: returnUrl,
+          flow_data: { type: "payment_method_update" },
+        });
+        return reply.send(ok({ url: session.url, flow: "payment_method_update" as const }));
+      } catch {
+        // Portal configuration may not enable this flow — fall through to default portal.
+      }
+    }
+
     const session = await stripe.billingPortal.sessions.create({
-      customer: org.stripeCustomerId,
-      return_url: `${APP_URL}/billing`,
+      customer: customerId,
+      return_url: returnUrl,
     });
 
-    return reply.send(ok({ url: session.url }));
+    return reply.send(ok({ url: session.url, flow: "portal" as const }));
   });
 };

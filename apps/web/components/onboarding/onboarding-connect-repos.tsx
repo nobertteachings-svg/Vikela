@@ -33,6 +33,7 @@ type OnboardingStatus = {
   orgSlug?: string;
   needsClerkOrg?: boolean;
   gitConnected?: boolean;
+  gitAuthMethod?: "app" | "oauth" | null;
 };
 
 type OnboardingRepo = {
@@ -43,6 +44,7 @@ type OnboardingRepo = {
   provider: string;
   isActive: boolean;
   isPrivate: boolean;
+  authMethod?: "app" | "oauth" | "unknown";
 };
 
 const hasClerk = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
@@ -236,18 +238,24 @@ function GitHubConnectSection({
   }, []);
 
   const canConnect = info?.oauth || info?.appInstall;
+  const primaryHref =
+    info?.recommendedMethod === "oauth"
+      ? githubOAuthUrl(orgSlug, connectOpts)
+      : githubConnectUrl(orgSlug, connectOpts);
+  const showOAuthFallback = Boolean(info?.oauth && info?.appInstall);
 
   return (
     <div className="relative mt-4 rounded-md border border-white/[0.08] bg-black/20 p-3">
       <p className="mb-3 text-[11px] leading-relaxed text-comply-text-secondary">
-        Authorize read access to your GitHub repos (including <strong className="text-comply-text-primary">private</strong>{" "}
-        repositories). You choose which repos Vikela can scan after connecting.
+        Install the Vikela GitHub App and pick which repositories to grant (including{" "}
+        <strong className="text-comply-text-primary">private</strong> ones). Same flow as Railway /
+        Vercel — choose <strong>Only select repositories</strong> on GitHub.
       </p>
 
       <div className="flex flex-col gap-2">
         {canConnect || !info ? (
           <Link
-            href={githubOAuthUrl(orgSlug, connectOpts)}
+            href={primaryHref}
             className={cn(
               "flex flex-col items-center justify-center gap-2 rounded-md border py-3.5 text-sm font-medium transition-all duration-200",
               ONBOARDING_GIT_PROVIDERS[0]!.className
@@ -258,32 +266,43 @@ function GitHubConnectSection({
           </Link>
         ) : (
           <p className="text-center text-xs text-red-300">
-            GitHub is not configured on the API — set GITHUB_CLIENT_ID + GITHUB_CLIENT_SECRET on Railway.
+            GitHub is not configured on the API — set GITHUB_APP_ID + GITHUB_APP_PRIVATE_KEY (or
+            OAuth client credentials) on Railway.
           </p>
         )}
 
-        {info?.oauth && info?.appInstall && (
+        {showOAuthFallback && (
           <Link
             href={githubOAuthUrl(orgSlug, connectOpts)}
             className="text-center text-[10px] text-comply-muted hover:text-comply-text-secondary hover:underline"
           >
-            Or connect with GitHub OAuth directly
+            Or connect with GitHub OAuth instead
           </Link>
         )}
       </div>
 
       {info && !canConnect && (
         <p className="mt-3 text-[11px] leading-relaxed text-amber-200/90">
-          Railway API needs <code className="font-mono text-[10px]">GITHUB_CLIENT_ID</code>,{" "}
-          <code className="font-mono text-[10px]">GITHUB_CLIENT_SECRET</code>, and{" "}
+          Railway API needs a <strong>public</strong> GitHub App:{" "}
+          <code className="font-mono text-[10px]">GITHUB_APP_ID</code>,{" "}
+          <code className="font-mono text-[10px]">GITHUB_APP_PRIVATE_KEY</code> (full PEM),{" "}
+          <code className="font-mono text-[10px]">GITHUB_APP_SLUG</code>, and{" "}
           <code className="font-mono text-[10px]">GITHUB_REDIRECT_URI=https://your-web-url/api/auth/github/callback</code>
         </p>
       )}
 
       {info?.appInstall && (
         <p className="mt-3 text-center text-[10px] leading-relaxed text-comply-muted">
-          GitHub App <code className="font-mono">{info.appSlug}</code> — if install fails (private app),
-          use OAuth above. When installing, choose <strong>Only select repositories</strong>.
+          GitHub App <code className="font-mono">{info.appSlug}</code> must be{" "}
+          <strong>public</strong> so customers can install it. On GitHub, choose{" "}
+          <strong>Only select repositories</strong>.
+        </p>
+      )}
+
+      {info && !info.appInstall && info.oauth && (
+        <p className="mt-3 text-center text-[10px] leading-relaxed text-amber-200/80">
+          App install unavailable (missing PEM) — using OAuth fallback. Add{" "}
+          <code className="font-mono">GITHUB_APP_PRIVATE_KEY</code> for Railway-style install.
         </p>
       )}
     </div>
@@ -404,12 +423,23 @@ function RepoPickerList({
   );
 }
 
-function NoReposFromProviderPanel({ provider }: { provider: string }) {
+function NoReposFromProviderPanel({
+  provider,
+  authMethod,
+  orgSlug,
+  clerkOrgId,
+}: {
+  provider: string;
+  authMethod?: "app" | "oauth" | null;
+  orgSlug?: string | null;
+  clerkOrgId?: string | null;
+}) {
   const label = PROVIDER_LABELS[provider.toUpperCase()] ?? provider;
+  const isOauth = authMethod === "oauth";
   return (
     <div className="relative mt-5 rounded-md border border-amber-500/30 bg-amber-500/10 px-4 py-4 text-xs leading-relaxed text-amber-100/90">
       <p className="font-medium text-amber-50">{label} is connected, but no repositories were shared yet.</p>
-      {provider === "github" && (
+      {provider === "github" && !isOauth && (
         <p className="mt-2">
           Open{" "}
           <a
@@ -421,7 +451,27 @@ function NoReposFromProviderPanel({ provider }: { provider: string }) {
             GitHub installed apps
           </a>
           , select <strong>Vikela</strong>, click <strong>Configure</strong>, and grant access to the
-          repositories you want scanned. Then return here and click <strong>Refresh repositories</strong>.
+          repositories you want scanned. Then return here and click <strong>Refresh</strong>.
+        </p>
+      )}
+      {provider === "github" && isOauth && (
+        <p className="mt-2">
+          Re-authorize GitHub with the <code className="font-mono text-[10px]">repo</code> scope so
+          Vikela can list your repositories
+          {orgSlug ? (
+            <>
+              :{" "}
+              <a
+                href={githubOAuthUrl(orgSlug, { from: "onboarding", clerkOrgId })}
+                className="font-medium text-comply-purple-light underline"
+              >
+                Connect with GitHub OAuth again
+              </a>
+            </>
+          ) : (
+            ", then refresh."
+          )}
+          . Or install the GitHub App for Railway-style repo selection.
         </p>
       )}
       {provider !== "github" && (
@@ -490,6 +540,7 @@ function ConnectPanel({
   repos,
   reposLoading,
   justConnected,
+  gitAuthMethod,
   connected,
   selectedIds,
   scanRepoId,
@@ -510,6 +561,7 @@ function ConnectPanel({
   repos: OnboardingRepo[];
   reposLoading: boolean;
   justConnected: string | null;
+  gitAuthMethod?: "app" | "oauth" | null;
   connected: Set<string>;
   selectedIds: Set<string>;
   scanRepoId: string | null;
@@ -524,6 +576,10 @@ function ConnectPanel({
 }) {
   const hasImportedRepos = repos.length > 0;
   const canContinue = isDev ? connected.size > 0 : selectedIds.size > 0;
+  const resolvedAuthMethod =
+    gitAuthMethod ??
+    repos.find((r) => r.authMethod && r.authMethod !== "unknown")?.authMethod ??
+    null;
 
   if (needsClerkOrg) {
     return <NeedsWorkspacePanel />;
@@ -614,7 +670,12 @@ function ConnectPanel({
               />
             </div>
           ) : justConnected ? (
-            <NoReposFromProviderPanel provider={justConnected} />
+            <NoReposFromProviderPanel
+              provider={justConnected}
+              authMethod={resolvedAuthMethod}
+              orgSlug={connectSlug}
+              clerkOrgId={clerkOrgId}
+            />
           ) : null}
 
           {!hasImportedRepos && <GitProviderGrid orgSlug={connectSlug} clerkOrgId={clerkOrgId} />}
@@ -622,14 +683,23 @@ function ConnectPanel({
           {hasImportedRepos && (
             <p className="relative mt-4 text-center text-[11px] text-comply-muted">
               Need more repos?{" "}
-              <a
-                href={githubManageInstallationsUrl()}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-comply-purple-light hover:underline"
-              >
-                Update GitHub app access
-              </a>{" "}
+              {resolvedAuthMethod === "oauth" ? (
+                <a
+                  href={githubOAuthUrl(connectSlug, { from: "onboarding", clerkOrgId })}
+                  className="text-comply-purple-light hover:underline"
+                >
+                  Re-authorize GitHub OAuth
+                </a>
+              ) : (
+                <a
+                  href={githubManageInstallationsUrl()}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-comply-purple-light hover:underline"
+                >
+                  Update GitHub app access
+                </a>
+              )}{" "}
               or connect another provider, then refresh.
             </p>
           )}
@@ -787,18 +857,19 @@ function OnboardingConnectReposBody({
 
   const syncAndLoadRepos = useCallback(async () => {
     setReposLoading(true);
+    setError(null);
     try {
       const result = await apiPost<{ synced: number; repositories: OnboardingRepo[] }>(
         "/api/v1/onboarding/sync-repositories"
       );
       applyRepoList(result.repositories);
     } catch (e) {
+      const syncMessage = e instanceof Error ? e.message : "Could not sync repositories";
       try {
         await loadRepos();
-      } catch (loadErr) {
-        const message =
-          loadErr instanceof Error ? loadErr.message : "Could not sync repositories";
-        setError(message);
+        setError(`${syncMessage} — showing last imported list.`);
+      } catch {
+        setError(syncMessage);
       }
     } finally {
       setReposLoading(false);
@@ -966,6 +1037,7 @@ function OnboardingConnectReposBody({
         repos={repos}
         reposLoading={reposLoading}
         justConnected={justConnected}
+        gitAuthMethod={status?.gitAuthMethod}
         connected={connected}
         selectedIds={selectedIds}
         scanRepoId={scanRepoId}

@@ -79,11 +79,20 @@ export function ApiError({
           <p className="font-medium text-comply-red">{message}</p>
           {hint && <p className="mt-1 text-sm text-comply-text-secondary">{hint}</p>}
           <RecoverySteps />
-          <Link href="/dashboard" className="mt-4 inline-block">
-            <ComplyButton variant="ghost" className="text-xs px-3 py-1.5">
+          <div className="mt-4 flex flex-wrap gap-2">
+            <ComplyButton
+              variant="ghost"
+              className="text-xs px-3 py-1.5"
+              onClick={() => {
+                if (typeof window !== "undefined") window.location.reload();
+              }}
+            >
               Retry
             </ComplyButton>
-          </Link>
+            <Link href="/dashboard" className="comply-btn-ghost text-xs px-3 py-1.5">
+              Dashboard
+            </Link>
+          </div>
         </div>
       </CardBody>
     </Card>

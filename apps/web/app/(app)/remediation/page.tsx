@@ -14,7 +14,10 @@ export default async function RemediationPage() {
   } catch (e) {
     return (
       <div className="comply-page">
-        <PageHeader title="Remediation plans" description="Action plans for critical and high severity gaps." />
+        <PageHeader
+          title="Gap remediation"
+          description="Actionable steps attached to open critical and high gaps. Open Copilot for deeper guidance."
+        />
         <ApiError message={e instanceof Error ? e.message : "Failed to load gaps"} />
       </div>
     );
@@ -34,15 +37,15 @@ export default async function RemediationPage() {
     <div className="comply-page">
       <PageHeader
         eyebrow="Findings"
-        title="Remediation plans"
-        description="Step-by-step remediation from open critical and high severity gaps."
+        title="Gap remediation"
+        description="Actionable steps attached to open critical and high gaps. Open Copilot for deeper guidance."
       />
 
       {plans.length === 0 ? (
         <div className="comply-empty">
-          <p className="text-sm font-medium text-comply-text-primary">No remediation plans yet</p>
+          <p className="text-sm font-medium text-comply-text-primary">No gap remediation steps yet</p>
           <p className="mt-1 max-w-sm text-sm text-comply-text-secondary">
-            Critical and high gaps with remediation text will appear here.
+            Open critical and high gaps that include a remediation field will list those steps here.
           </p>
         </div>
       ) : (

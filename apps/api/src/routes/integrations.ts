@@ -8,6 +8,10 @@ import { isDemoConnectAllowed } from "../lib/auth.js";
 import { requireAdmin, requireRead } from "../lib/authorization.js";
 import { assertCanConnectIntegration } from "../lib/plan-limits.js";
 import { logAuditEvent } from "../lib/audit-log.js";
+import {
+  awsPlatformReady,
+  getProviderConnectAvailability,
+} from "../lib/integration-availability.js";
 import type { IntegrationCategory, IntegrationProvider, Prisma } from "@prisma/client";
 
 export const integrationsRoutes: FastifyPluginAsync = async (app) => {
@@ -22,8 +26,8 @@ export const integrationsRoutes: FastifyPluginAsync = async (app) => {
       include: {
         integrations: {
           include: {
-            repositories: true,
-            cloudAccounts: true,
+            repositories: { where: { isActive: true } },
+            cloudAccounts: { where: { isActive: true } },
           },
         },
       },
@@ -47,24 +51,35 @@ export const integrationsRoutes: FastifyPluginAsync = async (app) => {
           : i.category === "CLOUD"
             ? i.cloudAccounts.length
             : i.category === "IDENTITY"
-              ? 1
+              ? i.isActive
+                ? 1
+                : 0
               : 0,
     }));
 
     const statuses = PROVIDER_DEFINITIONS.map((def) => {
       const match = connected.find((c) => c.provider === def.id);
+      const availability = getProviderConnectAvailability(def.id as IntegrationProviderId);
       return {
         ...def,
         connected: Boolean(match?.isActive),
         integrationId: match?.integrationId,
-        name: match?.name,
+        name: match?.name ?? def.name,
         externalId: match?.externalId,
         resourceCount: match?.resourceCount ?? 0,
         lastSyncedAt: match?.lastSyncedAt,
+        connectable: availability.connectable,
+        unavailableReason: availability.reason ?? null,
+        awsPlatformReady: def.id === "AWS" ? awsPlatformReady() : undefined,
       };
     });
 
-    return reply.send(ok({ providers: statuses, connectedCount: connected.filter((c) => c.isActive).length }));
+    return reply.send(
+      ok({
+        providers: statuses,
+        connectedCount: connected.filter((c) => c.isActive).length,
+      })
+    );
   });
 
   app.post("/integrations/:provider/connect", async (req, reply) => {
@@ -95,18 +110,33 @@ export const integrationsRoutes: FastifyPluginAsync = async (app) => {
         isActive: true,
       },
     });
+    const providerId = provider.toUpperCase() as IntegrationProviderId;
+    const def = PROVIDER_DEFINITIONS.find((d) => d.id === providerId);
+    if (!def) return reply.status(400).send(err("Unknown provider"));
+
     if (!existing) {
       try {
-        await assertCanConnectIntegration(org.id, org.plan);
+        await assertCanConnectIntegration(org.id, org.plan, {
+          provider: providerId as IntegrationProvider,
+        });
       } catch (e) {
         const status = (e as { statusCode?: number }).statusCode ?? 402;
         return reply.status(status).send(err(e instanceof Error ? e.message : "Plan limit reached"));
       }
     }
 
-    const providerId = provider.toUpperCase() as IntegrationProviderId;
-    const def = PROVIDER_DEFINITIONS.find((d) => d.id === providerId);
-    if (!def) return reply.status(400).send(err("Unknown provider"));
+    const availability = getProviderConnectAvailability(providerId);
+    if (!availability.connectable) {
+      return reply
+        .status(400)
+        .send(
+          err(
+            availability.reason === "not_configured"
+              ? `${def.name} is not configured on this server`
+              : `${def.name} is coming soon`
+          )
+        );
+    }
 
     if (!body.accessToken && !body.roleArn) {
       if (!isDemoConnectAllowed()) {
@@ -174,13 +204,42 @@ export const integrationsRoutes: FastifyPluginAsync = async (app) => {
     const org = await resolveOrganization(req);
     if (!org) return reply.status(404).send(err("Organization not found"));
 
-    const updated = await prisma.integration.updateMany({
+    const existing = await prisma.integration.findFirst({
       where: { id, orgId: org.id },
-      data: { isActive: false },
     });
-    if (updated.count === 0) {
+    if (!existing) {
       return reply.status(404).send(err("Integration not found"));
     }
+
+    const meta =
+      existing.metadata && typeof existing.metadata === "object" && !Array.isArray(existing.metadata)
+        ? { ...(existing.metadata as Record<string, unknown>) }
+        : {};
+    delete meta.roleArn;
+    meta.disconnectedAt = new Date().toISOString();
+
+    await prisma.integration.update({
+      where: { id: existing.id },
+      data: {
+        isActive: false,
+        accessToken: encrypt("revoked"),
+        refreshToken: null,
+        tokenExpiry: null,
+        metadata: meta as Prisma.InputJsonValue,
+      },
+    });
+
+    // Soft-disable linked cloud accounts / repos so scans stop immediately.
+    await Promise.all([
+      prisma.cloudAccount.updateMany({
+        where: { integrationId: existing.id, orgId: org.id },
+        data: { isActive: false },
+      }),
+      prisma.repository.updateMany({
+        where: { integrationId: existing.id, orgId: org.id },
+        data: { isActive: false },
+      }),
+    ]);
 
     await logAuditEvent({
       orgId: org.id,

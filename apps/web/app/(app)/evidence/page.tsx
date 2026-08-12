@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { Suspense } from "react";
-import { IconPhoto, IconFile, IconDatabase } from "@tabler/icons-react";
+import { IconPhoto, IconFile, IconDatabase, IconFolder } from "@tabler/icons-react";
 import { ApiError } from "@/components/comply/api-error";
 import { PageHeader } from "@/components/comply/page-header";
 import { Card, CardBody } from "@/components/comply/card";
+import { EmptyState } from "@/components/shared/empty-state";
 import { AuditPeriodToolbar } from "@/components/evidence/audit-period-toolbar";
 import { CollectFromGapsButton } from "@/components/evidence/collect-from-gaps-button";
 import { EvidenceCoverageWidget } from "@/components/evidence/evidence-coverage-widget";
@@ -105,10 +106,14 @@ export default async function EvidencePage({
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {items.length === 0 ? (
-          <div className="comply-empty col-span-full">
-            <p className="text-sm text-comply-text-secondary">
-              No evidence in this period. Adjust the date range or collect from open gaps after a scan.
-            </p>
+          <div className="col-span-full">
+            <EmptyState
+              icon={IconFolder}
+              title="No evidence yet"
+              description="Upload files, collect from open gaps after a scan, or adjust the audit period filters."
+              primaryAction={{ href: "/gaps", label: "Review gaps" }}
+              secondaryAction={{ href: "/help/evidence", label: "Evidence how-to" }}
+            />
           </div>
         ) : (
           items.map((e) => {

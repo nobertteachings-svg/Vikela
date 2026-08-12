@@ -31,12 +31,21 @@ export function dispatchOrgWebhooks(
   });
 }
 
+export type WebhookPostResult = {
+  /** True when the remote endpoint returned 2xx. */
+  ok: boolean;
+  /** True when Vikela reached the host and got an HTTP response (any status). */
+  reached: boolean;
+  status?: number;
+  error?: string;
+};
+
 async function postWebhook(
   hook: { id: string; url: string; secret: string },
   orgId: string,
   event: OrgWebhookEvent,
   payload: OrgWebhookPayload
-): Promise<{ ok: boolean; status?: number; error?: string }> {
+): Promise<WebhookPostResult> {
   const envelope = {
     id: deliveryId(),
     event,
@@ -62,12 +71,18 @@ async function postWebhook(
       signal,
     });
     if (!res.ok) {
-      return { ok: false, status: res.status, error: `HTTP ${res.status}` };
+      return {
+        ok: false,
+        reached: true,
+        status: res.status,
+        error: `Remote rejected with HTTP ${res.status}`,
+      };
     }
-    return { ok: true, status: res.status };
+    return { ok: true, reached: true, status: res.status };
   } catch (err) {
     return {
       ok: false,
+      reached: false,
       error: err instanceof Error ? err.message : "Delivery failed",
     };
   }
@@ -157,12 +172,18 @@ export function emitScanCompleted(
 export async function sendTestWebhookScanCompleted(
   orgId: string,
   webhookId: string
-): Promise<{ ok: boolean; scanId?: string; status?: number; error?: string }> {
+): Promise<{
+  ok: boolean;
+  reached: boolean;
+  scanId?: string;
+  status?: number;
+  error?: string;
+}> {
   const hook = await prisma.orgWebhook.findFirst({
     where: { id: webhookId, orgId, isActive: true },
   });
   if (!hook) {
-    return { ok: false, error: "Webhook not found" };
+    return { ok: false, reached: false, error: "Webhook not found" };
   }
 
   const scan = await prisma.scan.findFirst({
@@ -170,7 +191,7 @@ export async function sendTestWebhookScanCompleted(
     orderBy: { completedAt: "desc" },
   });
   if (!scan) {
-    return { ok: false, error: "No completed scan yet — run a scan first" };
+    return { ok: false, reached: false, error: "No completed scan yet — run a scan first" };
   }
 
   const gapCount = await prisma.gap.count({
@@ -194,6 +215,7 @@ export async function sendTestWebhookScanCompleted(
 
   return {
     ok: result.ok,
+    reached: result.reached,
     scanId: scan.id,
     status: result.status,
     error: result.error,

@@ -1,7 +1,14 @@
 import type { ScanFinding } from "@vikela/shared";
 import type { CloudProvider } from "@prisma/client";
+import { isDemoConnectAllowed } from "../../lib/auth.js";
 
+/**
+ * Demo cloud findings — only when ALLOW_DEMO_INTEGRATIONS=true and not production.
+ * Production / normal staging never invent compliance results.
+ */
 export function demoCloudFindings(provider: CloudProvider): ScanFinding[] {
+  if (!isDemoConnectAllowed()) return [];
+
   const label = provider === "AZURE" ? "Azure" : provider === "GCP" ? "GCP" : provider;
   return [
     {
@@ -46,4 +53,16 @@ export function demoCloudFindings(provider: CloudProvider): ScanFinding[] {
 
 export function isDemoCloudToken(token?: string): boolean {
   return !token || token === "demo" || token === "demo-token" || token.startsWith("pending");
+}
+
+/** Use demo findings only when token/account is demo-shaped AND demo mode is explicitly allowed. */
+export function resolveDemoCloudFindings(
+  provider: CloudProvider,
+  token?: string,
+  accountId?: string
+): ScanFinding[] | null {
+  const demoShaped = isDemoCloudToken(token) || accountId === "unknown";
+  if (!demoShaped) return null;
+  if (!isDemoConnectAllowed()) return [];
+  return demoCloudFindings(provider);
 }

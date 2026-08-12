@@ -6,7 +6,7 @@ This guide explains how to deploy Vikela to Railway.
 
 - Railway account ([railway.app](https://railway.app))
 - GitHub repository with your Vikela code
-- Clerk account for authentication (or set `ALLOW_DEMO_INTEGRATIONS=true` for testing)
+- Clerk account for authentication (`ALLOW_DEMO_INTEGRATIONS` is local-dev only — keep `false` on Railway)
 
 ## Architecture on Railway
 
@@ -58,16 +58,16 @@ REDIS_URL={{RAILWAY_REDIS_REDIS_URL}}
 ENCRYPTION_KEY={{generate with: openssl rand -hex 32}}
 
 # App URLs (replace with your Railway domain)
-APP_URL=https://web-production-1c70bf.up.railway.app
-API_URL=https://api-production-eec4.up.railway.app
+APP_URL=https://YOUR_WEB.up.railway.app
+API_URL=https://YOUR_API.up.railway.app
 
 # Auth (required for production)
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
-CLERK_PUBLISHABLE_KEY=pk_test_...
-CLERK_SECRET_KEY=sk_test_...
-CLERK_WEBHOOK_SECRET=whsec_...
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_REPLACE_ME
+CLERK_PUBLISHABLE_KEY=pk_test_REPLACE_ME
+CLERK_SECRET_KEY=sk_test_REPLACE_ME
+CLERK_WEBHOOK_SECRET=whsec_REPLACE_ME
 
-# Optional: Demo mode (for testing without Clerk)
+# Local-dev only — keep false in production. Never enable demo integrations on Railway.
 ALLOW_DEMO_INTEGRATIONS=false
 VIKELA_DEV_ORG_SLUG=demo
 
@@ -75,19 +75,23 @@ VIKELA_DEV_ORG_SLUG=demo
 API_RATE_LIMIT_MAX=300
 
 # CORS (add your Railway web app domain)
-CORS_ALLOWED_ORIGINS=https://web-production-1c70bf.up.railway.app
+CORS_ALLOWED_ORIGINS=https://YOUR_WEB.up.railway.app
 
 # Disable scan worker if needed
 DISABLE_SCAN_WORKER=false
 
 # AI (optional)
-ANTHROPIC_API_KEY=sk-ant-...
+ANTHROPIC_API_KEY=sk-ant-api03-REPLACE_ME
 
-# Git providers (optional - for GitHub App integration)
-GITHUB_APP_ID=
-GITHUB_APP_PRIVATE_KEY=
-GITHUB_WEBHOOK_SECRET=
-GITHUB_APP_SLUG=vikela
+# GitHub — public App required for customer install (Railway/Vercel-style)
+# See "GitHub App setup" section below.
+GITHUB_APP_ID=YOUR_GITHUB_APP_ID
+GITHUB_APP_PRIVATE_KEY=-----BEGIN RSA PRIVATE KEY-----\nREPLACE_WITH_GITHUB_APP_PEM\n-----END RSA PRIVATE KEY-----\n
+GITHUB_APP_SLUG=YOUR_GITHUB_APP_SLUG
+GITHUB_WEBHOOK_SECRET=replace-me
+GITHUB_CLIENT_ID=YOUR_GITHUB_CLIENT_ID
+GITHUB_CLIENT_SECRET=replace-me
+GITHUB_REDIRECT_URI=https://YOUR_WEB.up.railway.app/api/auth/github/callback
 
 # Cloud scanning (optional)
 AWS_VIKELA_ACCOUNT_ID=
@@ -130,11 +134,11 @@ STRIPE_WEBHOOK_SECRET=
 ```bash
 # Required
 NODE_ENV=production
-NEXT_PUBLIC_API_URL=https://api-production-eec4.up.railway.app
+NEXT_PUBLIC_API_URL=https://YOUR_API.up.railway.app
 
 # Auth (same Clerk application as API — both keys required on Web)
-CLERK_SECRET_KEY=sk_test_...
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
+CLERK_SECRET_KEY=sk_test_REPLACE_ME
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_REPLACE_ME
 NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
 NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
 NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/dashboard
@@ -146,8 +150,32 @@ NEXT_PUBLIC_POSTHOG_KEY=
 NEXT_PUBLIC_POSTHOG_HOST=https://app.posthog.com
 
 # AI (optional)
-ANTHROPIC_API_KEY=sk-ant-...
+ANTHROPIC_API_KEY=sk-ant-api03-REPLACE_ME
+
+# Server-side proxy to API (optional; private Railway domain is fine)
+API_URL=https://YOUR_API.up.railway.app
 ```
+
+### 5b. GitHub App setup (required for repo connect)
+
+Vikela uses a **public GitHub App** install flow (same model as Railway / Vercel / Render). A **private** App blocks non-owners with “This is a private GitHub App” and repos never sync.
+
+1. GitHub → **Settings** → **Developer settings** → **GitHub Apps** → your app (e.g. `vikela1`)
+2. **Make public** (Advanced → Make public). Without this, customer install keeps failing.
+3. Permissions (read): **Contents**, **Metadata**, **Pull requests** (optional: Commit statuses)
+4. **Setup URL** and **Callback URL**:  
+   `https://<your-web-domain>/api/auth/github/callback`
+5. **Webhook URL**:  
+   `https://<your-api-domain>/api/v1/webhooks/github`  
+   Set a webhook secret → `GITHUB_WEBHOOK_SECRET` on the API
+6. Generate a private key → paste the full PEM into `GITHUB_APP_PRIVATE_KEY` on the API  
+   (must include `BEGIN … PRIVATE KEY`, not a SHA256 fingerprint). On Railway, escape newlines as `\n`.
+7. Copy **App ID** → `GITHUB_APP_ID`, slug → `GITHUB_APP_SLUG`, and the App’s **Client ID / Client secret** → `GITHUB_CLIENT_ID` / `GITHUB_CLIENT_SECRET` (OAuth fallback).
+8. Set `GITHUB_REDIRECT_URI` to the same Setup/Callback URL as above.
+
+**Connect flow:** user clicks Connect GitHub → GitHub install wizard → **Only select repositories** → callback with `installation_id` → Vikela syncs granted repos → user picks which to scan.
+
+OAuth (`/api/auth/github/oauth`) remains a fallback when the App PEM is missing.
 
 ### 6. Run Database Migrations
 
@@ -170,7 +198,7 @@ npm run db:seed
 1. Go to your API service settings
 2. Click "Networking"
 3. Enable "Publicly accessible" if not already enabled
-4. Copy the generated domain (e.g., `api-production-eec4.up.railway.app`)
+4. Copy the generated domain (e.g., `YOUR_API.up.railway.app`)
 
 5. Go to your Web service settings
 6. Click "Networking"
@@ -185,12 +213,12 @@ npm run db:seed
 
 1. Go to your Clerk dashboard
 2. Add webhook endpoint:
-   - `https://api-production-eec4.up.railway.app/api/v1/webhooks/clerk`
+   - `https://YOUR_API.up.railway.app/api/v1/webhooks/clerk`
 3. Update the `CLERK_WEBHOOK_SECRET` in Railway with the secret from Clerk
 
 ### 9. Test the Deployment
 
-1. Visit your web app URL: `https://web-production-1c70bf.up.railway.app`
+1. Visit your web app URL: `https://YOUR_WEB.up.railway.app`
 2. You should see the Vikela interface
 3. Test authentication flow
 4. Try connecting an integration or running a scan

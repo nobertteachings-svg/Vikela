@@ -66,7 +66,7 @@ export function getGitHubAppSlug(): string {
   return process.env.GITHUB_APP_SLUG ?? "vikela1";
 }
 
-/** Install wizard (repo selection happens on GitHub). Requires a public app or allowed private install. */
+/** Install wizard (repo selection happens on GitHub). App must be public for customer installs. */
 export function getGitHubAppInstallUrl(state?: string): string {
   const slug = getGitHubAppSlug();
   const base = `https://github.com/apps/${slug}/installations/new`;

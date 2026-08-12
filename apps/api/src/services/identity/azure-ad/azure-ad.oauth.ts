@@ -1,5 +1,6 @@
 import { prisma } from "../../../lib/prisma.js";
 import { encrypt } from "../../../lib/crypto.js";
+import { gateNewProviderConnection } from "../../../lib/integration-plan-gate.js";
 
 const DEMO_ORG_SLUG = "demo";
 const APP_URL = process.env.APP_URL ?? "http://localhost:3000";
@@ -101,6 +102,8 @@ export async function handleAzureAdOAuthCallback(
 ): Promise<{ integrationId: string }> {
   const org = await prisma.organization.findFirst({ where: { slug: orgSlug } });
   if (!org) throw new Error(`Organization not found: ${orgSlug}`);
+
+  await gateNewProviderConnection(org.id, org.plan, "AZURE_AD");
 
   const tokens = await exchangeAzureAdCode(code);
 

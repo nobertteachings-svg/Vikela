@@ -2,6 +2,7 @@ import "server-only";
 import type { ApiResponse } from "@vikela/shared";
 import { auth } from "@clerk/nextjs/server";
 import { assertProductionApiUrl, getServerApiUrl } from "./api-url";
+import { resolveDevOrgSlug } from "./dev-org-slug";
 
 const API_URL = getServerApiUrl();
 
@@ -39,9 +40,9 @@ function devInternalSecret(): string | undefined {
 /** Headers for server-side API calls (RSC, route handlers). */
 export async function getServerApiHeaders(): Promise<Record<string, string>> {
   if (!hasClerk) {
-    const headers: Record<string, string> = {
-      "X-Org-Slug": process.env.VIKELA_DEV_ORG_SLUG ?? "demo",
-    };
+    const headers: Record<string, string> = {};
+    const devSlug = resolveDevOrgSlug();
+    if (devSlug) headers["X-Org-Slug"] = devSlug;
     const internalSecret = devInternalSecret();
     if (internalSecret) {
       headers["X-Vikela-Internal-Secret"] = internalSecret;
@@ -68,11 +69,14 @@ export async function getServerApiHeaders(): Promise<Record<string, string>> {
     headers.Authorization = `Bearer ${token}`;
   }
 
-  // Dev fallback: use seeded demo org when Clerk org is not in Vikela yet (webhook not forwarded).
+  // Dev: allow internal secret for local API, but never overwrite Clerk org slug/id.
   const internalSecret = devInternalSecret();
   if (internalSecret) {
     headers["X-Vikela-Internal-Secret"] = internalSecret;
-    headers["X-Org-Slug"] = process.env.VIKELA_DEV_ORG_SLUG ?? "demo";
+    if (!session.orgId && !session.orgSlug) {
+      const devSlug = resolveDevOrgSlug();
+      if (devSlug) headers["X-Org-Slug"] = devSlug;
+    }
   }
 
   return headers;

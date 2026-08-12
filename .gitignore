@@ -45,3 +45,6 @@ coverage
 .cache
 .prisma-cache
 apps/api/uploads
+
+playwright/.clerk
+clerk-nextjs

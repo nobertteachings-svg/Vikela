@@ -5,6 +5,7 @@ import { GithubProvider } from "./github.provider.js";
 export interface GitHubWebhookPayload {
   action?: string;
   installation?: { id: number };
+  repositories_removed?: Array<{ id: number; full_name?: string }>;
   repository?: {
     id: number;
     full_name: string;
@@ -63,7 +64,11 @@ export async function handleGitHubWebhook(
     };
   }
 
-  if (event === "installation_repositories" && payload.action === "added" && payload.installation) {
+  if (
+    event === "installation_repositories" &&
+    payload.installation &&
+    (payload.action === "added" || payload.action === "removed")
+  ) {
     const integration = await prisma.integration.findFirst({
       where: {
         provider: "GITHUB",
@@ -71,14 +76,34 @@ export async function handleGitHubWebhook(
         isActive: true,
       },
     });
-    if (integration) {
-      const { syncGitRepositories } = await import("../sync-repositories.js");
-      const count = await syncGitRepositories(integration.id);
+    if (!integration) {
       return {
         handled: true,
-        message: `Synced ${count} repositories after installation_repositories.added`,
+        message: `No active integration for installation ${payload.installation.id}`,
       };
     }
+
+    if (payload.action === "removed" && payload.repositories_removed?.length) {
+      const removedIds = payload.repositories_removed.map((r) => String(r.id));
+      const result = await prisma.repository.updateMany({
+        where: {
+          integrationId: integration.id,
+          externalId: { in: removedIds },
+        },
+        data: { isActive: false },
+      });
+      return {
+        handled: true,
+        message: `Deactivated ${result.count} repositories after installation_repositories.removed`,
+      };
+    }
+
+    const { syncGitRepositories } = await import("../sync-repositories.js");
+    const count = await syncGitRepositories(integration.id);
+    return {
+      handled: true,
+      message: `Synced ${count} repositories after installation_repositories.${payload.action}`,
+    };
   }
 
   const fullName = payload.repository?.full_name;

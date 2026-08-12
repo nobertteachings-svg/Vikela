@@ -135,3 +135,26 @@ export async function sendCriticalGapAlert(params: {
     `,
   });
 }
+
+export async function sendTrainingReminderEmail(params: {
+  to: string;
+  name: string;
+  orgName: string;
+  modules: string[];
+  trainingUrl: string;
+}) {
+  const list = params.modules
+    .map((m) => `<li>${escapeHtml(m)}</li>`)
+    .join("");
+  return sendEmail({
+    to: params.to,
+    subject: `Training reminder — ${params.orgName}`,
+    html: `
+      <p>Hi ${escapeHtml(params.name)},</p>
+      <p>You have overdue security training for <strong>${escapeHtml(params.orgName)}</strong>:</p>
+      <ul>${list}</ul>
+      <p><a href="${params.trainingUrl}">Complete training in Vikela</a></p>
+      <p style="color:#666;font-size:12px">Vikela — Universal Compliance Engine</p>
+    `,
+  });
+}

@@ -133,6 +133,28 @@ export default async function GapsPage({
             <div className="px-6 py-12 text-center">
               <p className="text-sm font-medium text-comply-text-primary">{empty.title}</p>
               <p className="mx-auto mt-2 max-w-md text-sm text-comply-text-secondary">{empty.body}</p>
+              {!isResolved && !hasFilters ? (
+                <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
+                  <Link
+                    href="/integrations"
+                    className="rounded-lg bg-comply-purple px-4 py-2 text-sm font-medium text-white hover:opacity-90"
+                  >
+                    Connect integrations
+                  </Link>
+                  <Link
+                    href="/dashboard"
+                    className="rounded-lg border border-white/[0.1] px-4 py-2 text-sm text-comply-text-secondary hover:bg-white/[0.04]"
+                  >
+                    Run a scan
+                  </Link>
+                  <Link
+                    href="/help/getting-started"
+                    className="text-sm text-comply-purple-border hover:underline"
+                  >
+                    Getting started guide
+                  </Link>
+                </div>
+              ) : null}
             </div>
           ) : (
             <DataTable>

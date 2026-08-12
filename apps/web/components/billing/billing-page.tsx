@@ -2,7 +2,6 @@
 
 import {
   IconAlertTriangle,
-  IconArrowUpRight,
   IconCircleCheck,
   IconCreditCard,
   IconReceipt,
@@ -11,9 +10,15 @@ import { Card, CardBody, CardHeader } from "@/components/comply/card";
 import { DataTable } from "@/components/comply/data-table";
 import { PageHeader } from "@/components/comply/page-header";
 import { StatCard } from "@/components/comply/stat-card";
-import { billingPlans, type BillingPlanId } from "@/lib/mock-data";
+import { billingPlans, type BillingPlanId } from "@/lib/billing-plans";
 import { cn } from "@/lib/utils";
-import { BillingStripeActions } from "./billing-stripe-actions";
+import { BillingCheckoutBanner } from "./billing-checkout-banner";
+import {
+  BillingPlanCheckoutButton,
+  BillingPortalButton,
+  BillingStripeActions,
+} from "./billing-stripe-actions";
+import { ContactSalesButton } from "./contact-sales-button";
 
 export type BillingSubscriptionProp = {
   orgName: string;
@@ -22,6 +27,7 @@ export type BillingSubscriptionProp = {
   status: string;
   seats: { used: number; limit: number; included?: number };
   stripeConfigured?: boolean;
+  hasStripeSubscription?: boolean;
   renewalDate?: string | null;
   nextInvoiceDate?: string | null;
   renewalAmountCents?: number | null;
@@ -57,6 +63,7 @@ function usagePercent(used: number, limit: number | null): number {
 }
 
 function formatStatusLabel(status: string): string {
+  if (status === "comped") return "Complimentary";
   return status.replace(/_/g, " ");
 }
 
@@ -72,6 +79,9 @@ function statusBadgeClass(status: string): string {
   }
   if (status === "free") {
     return "border-white/[0.12] bg-white/[0.04] text-comply-text-secondary";
+  }
+  if (status === "comped") {
+    return "border-comply-amber/30 bg-comply-amber/10 text-comply-amber-text";
   }
   return "border-comply-amber/30 bg-comply-amber/10 text-comply-amber-text";
 }
@@ -137,7 +147,9 @@ export function BillingPageContent({
   const invoices = subscription.invoices ?? [];
   const paymentMethod = subscription.paymentMethod;
   const status = subscription.status;
+  const hasStripeSubscription = subscription.hasStripeSubscription ?? false;
   const isPaymentIssue = status === "past_due" || status === "unpaid";
+  const isComped = status === "comped" && !hasStripeSubscription;
   const renewalDate = subscription.renewalDate ?? subscription.nextInvoiceDate;
   const renewalLabel = renewalDate
     ? new Date(renewalDate).toLocaleDateString("en-US", {
@@ -197,17 +209,39 @@ export function BillingPageContent({
         <BillingStripeActions
           stripeConfigured={subscription.stripeConfigured ?? false}
           currentPlan={subscription.plan}
+          hasStripeSubscription={hasStripeSubscription}
         />
       </PageHeader>
+
+      <BillingCheckoutBanner />
 
       {isPaymentIssue ? (
         <div className="flex items-start gap-3 rounded-lg border border-comply-red/40 bg-comply-red/10 px-4 py-3">
           <IconAlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-comply-red" />
-          <div>
+          <div className="min-w-0 flex-1">
             <p className="text-sm font-medium text-comply-red">Payment required</p>
             <p className="mt-1 text-sm text-comply-text-secondary">
               Your subscription is <strong>{formatStatusLabel(status)}</strong>. Update your
-              payment method in the billing portal to avoid service interruption.
+              payment method in the Stripe billing portal as soon as possible. Scans and new
+              integrations may be limited until payment succeeds. Invoices remain available below.
+            </p>
+            <p className="mt-2 text-xs text-comply-text-tertiary">
+              After updating the card, refresh this page — status usually clears within a minute of
+              Stripe confirming payment.
+            </p>
+          </div>
+        </div>
+      ) : null}
+
+      {isComped && subscription.stripeConfigured ? (
+        <div className="flex items-start gap-3 rounded-lg border border-comply-amber/30 bg-comply-amber/10 px-4 py-3">
+          <IconAlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-comply-amber-text" />
+          <div>
+            <p className="text-sm font-medium text-comply-amber-text">No Stripe subscription yet</p>
+            <p className="mt-1 text-sm text-comply-text-secondary">
+              You&apos;re on {subscription.planLabel} without an active Stripe billing subscription.
+              Use <strong>Activate {subscription.planLabel}</strong> above to start checkout, or
+              open the billing portal to manage payment methods.
             </p>
           </div>
         </div>
@@ -326,7 +360,7 @@ export function BillingPageContent({
           <p className="mt-1 text-sm text-comply-text-secondary">
             Feature comparison by tier.{" "}
             {subscription.stripeConfigured
-              ? "Use the upgrade buttons at the top of this page to change plans."
+              ? "Choose a plan below or use the actions at the top of this page."
               : "Contact sales for paid plans in this environment."}
           </p>
         </div>
@@ -343,6 +377,13 @@ export function BillingPageContent({
               : plan.price === 0
                 ? "$0"
                 : `$${plan.price}`;
+            const checkoutPlan =
+              plan.id === "starter" ? "STARTER" : plan.id === "growth" ? "GROWTH" : null;
+            const needsActivation = isCurrent && !hasStripeSubscription && checkoutPlan != null;
+            const canCheckout =
+              Boolean(subscription.stripeConfigured) &&
+              checkoutPlan != null &&
+              (!isCurrent || needsActivation);
 
             return (
               <div
@@ -377,14 +418,23 @@ export function BillingPageContent({
                   ))}
                 </ul>
                 {plan.id === "enterprise" ? (
-                  <a
-                    href="mailto:hello@vikela.com"
-                    className="mt-5 inline-flex h-9 w-full items-center justify-center rounded-md border border-[var(--border)] text-xs font-medium text-comply-text-primary transition-colors hover:border-comply-purple-border"
-                  >
-                    Contact sales
-                  </a>
+                  <ContactSalesButton variant="card" />
+                ) : canCheckout && checkoutPlan ? (
+                  <BillingPlanCheckoutButton
+                    plan={checkoutPlan}
+                    label={
+                      needsActivation
+                        ? `Activate ${plan.name}`
+                        : hasStripeSubscription
+                          ? `Switch to ${plan.name}`
+                          : `Upgrade to ${plan.name}`
+                    }
+                    stripeConfigured={subscription.stripeConfigured ?? false}
+                  />
                 ) : isCurrent ? (
-                  <p className="mt-5 text-center text-xs text-comply-text-tertiary">Your current plan</p>
+                  <p className="mt-5 text-center text-xs text-comply-text-tertiary">
+                    {hasStripeSubscription ? "Your current plan" : "Activate via Stripe above"}
+                  </p>
                 ) : null}
               </div>
             );
@@ -394,38 +444,81 @@ export function BillingPageContent({
 
       <div className="grid gap-6 lg:grid-cols-2">
         <Card elevated>
-          <CardHeader title="Payment method" />
+          <CardHeader
+            title="Payment method"
+            action={
+              subscription.stripeConfigured ? (
+                <BillingPortalButton
+                  stripeConfigured
+                  flow="payment_method_update"
+                  label={paymentMethod ? "Update" : "Add card"}
+                  className="comply-btn-secondary h-8 px-3 text-xs"
+                />
+              ) : undefined
+            }
+          />
           <CardBody className="space-y-4">
-            <div className="marketing-panel flex items-center gap-4 p-4">
-              <span className="flex h-12 w-12 items-center justify-center rounded-md border border-white/[0.1] bg-black/30">
-                <IconCreditCard size={24} className="text-comply-purple-border" stroke={1.5} />
-              </span>
-              <div>
-                {paymentMethod ? (
-                  <>
-                    <p className="font-medium text-comply-text-primary">
-                      {paymentMethod.brand} ···· {paymentMethod.last4}
-                    </p>
-                    <p className="text-sm text-comply-text-secondary">
-                      Expires {paymentMethod.expMonth}/{paymentMethod.expYear}
-                    </p>
-                  </>
-                ) : (
-                  <p className="text-sm text-comply-text-secondary">
-                    {subscription.stripeConfigured
-                      ? "No card on file — use Manage subscription above to add one."
-                      : "Stripe not configured in this environment."}
-                  </p>
-                )}
+            <div className="marketing-panel flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex items-center gap-4">
+                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md border border-white/[0.1] bg-black/30">
+                  <IconCreditCard size={24} className="text-comply-purple-border" stroke={1.5} />
+                </span>
+                <div>
+                  {paymentMethod ? (
+                    <>
+                      <p className="font-medium capitalize text-comply-text-primary">
+                        {paymentMethod.brand} ···· {paymentMethod.last4}
+                      </p>
+                      <p className="text-sm text-comply-text-secondary">
+                        Expires {String(paymentMethod.expMonth).padStart(2, "0")}/
+                        {paymentMethod.expYear}
+                      </p>
+                    </>
+                  ) : (
+                    <>
+                      <p className="font-medium text-comply-text-primary">No card on file</p>
+                      <p className="mt-0.5 text-sm text-comply-text-secondary">
+                        {subscription.stripeConfigured
+                          ? "Add a payment method in Stripe to keep invoices and renewals current."
+                          : "Stripe is not configured in this environment."}
+                      </p>
+                    </>
+                  )}
+                </div>
               </div>
+              {subscription.stripeConfigured ? (
+                <BillingPortalButton
+                  stripeConfigured
+                  flow="payment_method_update"
+                  label={paymentMethod ? "Update card" : "Add payment method"}
+                  className="comply-btn-primary h-9 shrink-0 px-4 text-sm"
+                />
+              ) : null}
             </div>
+            {subscription.stripeConfigured ? (
+              <p className="text-xs text-comply-text-tertiary">
+                You&apos;ll be redirected to the secure Stripe customer portal to add or change your
+                card, then return here.
+              </p>
+            ) : null}
           </CardBody>
         </Card>
 
-        {billingEmail ? (
-          <Card elevated>
-            <CardHeader title="Billing contact" />
-            <CardBody className="space-y-4">
+        <Card elevated>
+          <CardHeader
+            title="Billing contact"
+            action={
+              subscription.stripeConfigured ? (
+                <BillingPortalButton
+                  stripeConfigured
+                  label="Edit"
+                  className="comply-btn-secondary h-8 px-3 text-xs"
+                />
+              ) : undefined
+            }
+          />
+          <CardBody className="space-y-4">
+            {billingEmail ? (
               <label className="block text-sm">
                 <span className="text-comply-text-secondary">Invoice email</span>
                 <input
@@ -435,26 +528,26 @@ export function BillingPageContent({
                   className="comply-input mt-1.5"
                 />
               </label>
-              <p className="text-xs text-comply-text-tertiary">
-                From your Stripe customer record. Update via the billing portal.
+            ) : (
+              <p className="text-sm text-comply-text-secondary">
+                {subscription.stripeConfigured
+                  ? "No billing email on file yet. Set one in the Stripe portal."
+                  : "Billing contact is available when Stripe is configured."}
               </p>
-            </CardBody>
-          </Card>
-        ) : null}
+            )}
+            {subscription.stripeConfigured ? (
+              <p className="text-xs text-comply-text-tertiary">
+                Invoice emails come from your Stripe customer record.
+              </p>
+            ) : null}
+          </CardBody>
+        </Card>
       </div>
 
       <Card elevated>
         <CardHeader
           title="Invoice history"
-          action={
-            <a
-              href="mailto:hello@vikela.com"
-              className="flex items-center gap-1 text-xs font-medium text-comply-purple-border hover:underline"
-            >
-              Billing support
-              <IconArrowUpRight size={14} />
-            </a>
-          }
+          action={<ContactSalesButton variant="link" label="Billing support" />}
         />
         <CardBody className="p-0 pb-1">
           {invoices.length === 0 ? (
@@ -522,9 +615,7 @@ export function BillingPageContent({
             one business day.
           </p>
         </div>
-        <a href="mailto:hello@vikela.com" className="btn-purple-cta inline-flex h-9 items-center px-4 text-sm">
-          Contact sales
-        </a>
+        <ContactSalesButton variant="cta" />
       </div>
     </div>
   );

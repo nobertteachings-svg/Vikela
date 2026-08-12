@@ -1,0 +1,16 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "AllowAssumeCustomerVikelaScannerRoles",
+      "Effect": "Allow",
+      "Action": "sts:AssumeRole",
+      "Resource": "arn:aws:iam::*:role/VikelaScanner",
+      "Condition": {
+        "StringEquals": {
+          "sts:ExternalId": "vikela-scanner"
+        }
+      }
+    }
+  ]
+}

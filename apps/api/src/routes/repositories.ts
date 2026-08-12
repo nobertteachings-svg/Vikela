@@ -68,7 +68,19 @@ export const repositoriesRoutes: FastifyPluginAsync = async (app) => {
       const count = await syncGitRepositories(id);
       return reply.send(ok({ synced: count }));
     } catch (e) {
-      return reply.status(500).send(err(e instanceof Error ? e.message : "Sync failed"));
+      const message = e instanceof Error ? e.message : "Sync failed";
+      const authFailed = /401|bad credentials|unauthorized|token is invalid|reconnect/i.test(
+        message
+      );
+      return reply
+        .status(authFailed ? 401 : 500)
+        .send(
+          err(
+            authFailed
+              ? `${message}. Disconnect and reconnect ${integration.provider} to refresh credentials.`
+              : message
+          )
+        );
     }
   });
 

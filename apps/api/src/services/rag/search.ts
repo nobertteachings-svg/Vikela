@@ -4,6 +4,7 @@ import {
   embedText,
   parseStoredEmbedding,
 } from "../../lib/embeddings.js";
+import { ingestOrgKnowledge } from "./ingest.js";
 
 function scoreChunkKeyword(content: string, title: string, query: string): number {
   const q = query.toLowerCase();
@@ -24,7 +25,6 @@ export async function searchKnowledge(
 ): Promise<{ id: string; title: string; content: string; source: string }[]> {
   let count = await prisma.knowledgeChunk.count({ where: { orgId } });
   if (count === 0) {
-    const { ingestOrgKnowledge } = await import("./ingest.js");
     await ingestOrgKnowledge(orgId);
     count = await prisma.knowledgeChunk.count({ where: { orgId } });
   }

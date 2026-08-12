@@ -105,6 +105,7 @@ export type PolicyDetail = PolicyListItem & { content: string };
 export type VendorRow = {
   id: string;
   name: string;
+  website?: string | null;
   category: string;
   riskLevel: string;
   risk?: string;
@@ -118,10 +119,12 @@ export type VendorRow = {
   score?: number | null;
   questionnaire?: string | null;
   questionnaireStatus?: string | null;
+  questionnaireId?: string | null;
   documents?: string[];
   subprocessors?: string[];
   dataProcessing?: boolean;
   soc2?: boolean;
+  soc2Certified?: boolean;
 };
 
 export type SettingsData = {
@@ -131,6 +134,11 @@ export type SettingsData = {
       mfaRequired: boolean;
       ssoEnforced: boolean;
       ipAllowlist: string[];
+    };
+    trust?: {
+      published: boolean;
+      showScores: boolean;
+      tagline: string;
     };
   };
   apiKeys: Array<{
@@ -150,6 +158,15 @@ export type SettingsData = {
   }>;
 };
 
+export type TrainingAssignmentRow = {
+  id: string;
+  moduleId: string;
+  moduleName?: string;
+  status: string;
+  completedAt: string | null;
+  due?: string | null;
+};
+
 export type TrainingProgressRow = {
   id: string;
   name: string;
@@ -161,11 +178,31 @@ export type TrainingProgressRow = {
   inProgress: number;
   progress: number;
   status: string;
-  assignments?: Array<{
+  assignments?: TrainingAssignmentRow[];
+};
+
+export type TrainingProgressResponse = {
+  currentMemberId: string | null;
+  members: TrainingProgressRow[];
+};
+
+export type TrainingMineResponse = {
+  memberId: string | null;
+  assignments: Array<{
     id: string;
-    moduleId: string;
     status: string;
     completedAt: string | null;
+    module: {
+      id: string;
+      name: string;
+      description: string;
+      framework: string | null;
+      contentKey?: string | null;
+      hasCourse?: boolean;
+      lessonCount?: number;
+      duration: string;
+      due: string | null;
+    };
   }>;
 };
 
@@ -173,11 +210,17 @@ export type RiskRow = {
   id: string;
   title: string;
   description: string;
+  category: string;
   likelihood: number;
   impact: number;
   score: number;
   status: string;
   mitigation: string | null;
+  ownerId: string | null;
+  ownerName: string | null;
+  ownerEmail: string | null;
+  nextReviewAt: string | null;
+  createdAt: string;
   updatedAt: string;
 };
 
@@ -186,6 +229,7 @@ export type MemberRow = {
   name: string;
   email: string;
   role: string;
+  clerkId?: string;
   createdAt: string;
 };
 
@@ -217,6 +261,9 @@ export type IntegrationsResponse = {
     integrationId?: string;
     resourceCount?: number;
     lastSyncedAt?: string;
+    connectable?: boolean;
+    unavailableReason?: "coming_soon" | "not_configured" | null;
+    awsPlatformReady?: boolean;
   }>;
   connectedCount: number;
 };
@@ -238,6 +285,18 @@ export const complianceApi = {
     return { stats, frameworks, gaps, org, evidenceCoverage };
   },
   org: () => serverApiGet<OrgInfo>("/api/v1/org"),
+  trust: () =>
+    serverApiGet<{
+      name: string;
+      slug: string;
+      tagline: string | null;
+      updatedAt: string;
+      shareUrl: string;
+      frameworks: Array<{ id: string; name: string; slug?: string; score?: number }>;
+      policies: Array<{ id: string; title: string }>;
+      settings: { published: boolean; showScores: boolean; tagline: string };
+      recentRequests: unknown[];
+    }>("/api/v1/trust", NO_STORE),
   settings: () => serverApiGet<SettingsData>("/api/v1/settings", NO_STORE),
   frameworks: () => serverApiGet<FrameworkRow[]>("/api/v1/frameworks"),
   controls: (params?: { framework?: string; status?: string; category?: string }) => {
@@ -315,21 +374,45 @@ export const complianceApi = {
         total: number;
         due: string | null;
         duration: string;
+        durationMin?: number;
+        contentKey?: string | null;
+        hasCourse?: boolean;
+        lessonCount?: number;
         status: string;
       }>
     >("/api/v1/training", NO_STORE),
   trainingProgress: () =>
-    serverApiGet<TrainingProgressRow[]>("/api/v1/training/progress", NO_STORE),
-  questionnaires: () =>
+    serverApiGet<TrainingProgressResponse>("/api/v1/training/progress", NO_STORE),
+  trainingMine: () =>
+    serverApiGet<TrainingMineResponse>("/api/v1/training/mine", NO_STORE),
+  questionnaires: (vendorId?: string) =>
     serverApiGet<
       Array<{
         id: string;
         title: string;
         status: string;
+        vendorId?: string | null;
         itemCount: number;
-        items: Array<{ id: string; q: string; answer: string; status: string }>;
+        approvedCount?: number;
+        progressPercent?: number;
+        createdAt?: string;
+        updatedAt?: string;
+        items: Array<{
+          id: string;
+          q: string;
+          category?: string;
+          suggestedAnswer?: string;
+          answer: string;
+          status: string;
+          sortOrder?: number;
+        }>;
       }>
-    >("/api/v1/questionnaires", NO_STORE),
+    >(
+      vendorId
+        ? `/api/v1/questionnaires?vendorId=${encodeURIComponent(vendorId)}`
+        : "/api/v1/questionnaires",
+      NO_STORE
+    ),
   billing: () =>
     serverApiGet<{
       orgName: string;
@@ -345,6 +428,7 @@ export const complianceApi = {
       paymentMethod: { brand: string; last4: string; expMonth: number; expYear: number } | null;
       stripeConfigured: boolean;
       stripeCustomerId?: string | null;
+      hasStripeSubscription?: boolean;
       usage: {
         integrations: { used: number; limit: number };
         scans: { used: number; limit: number };
@@ -361,6 +445,17 @@ export const complianceApi = {
       }>;
     }>("/api/v1/billing", NO_STORE),
   integrations: () => serverApiGet<IntegrationsResponse>("/api/v1/integrations"),
+  auditEvents: () =>
+    serverApiGet<{
+      events: Array<{
+        id: string;
+        action: string;
+        target: string | null;
+        metadata: unknown;
+        createdAt: string;
+        actor: { id: string; name: string | null; email: string | null } | null;
+      }>;
+    }>("/api/v1/audit-events", NO_STORE),
   repositories: () =>
     serverApiGet<Array<{ id: string; fullName: string; defaultBranch: string; lastScannedAt: string | null }>>(
       "/api/v1/repositories"

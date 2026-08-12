@@ -1,6 +1,7 @@
 import { prisma } from "../../../lib/prisma.js";
 import { encrypt } from "../../../lib/crypto.js";
 import { syncGitRepositories } from "../sync-repositories.js";
+import { gateNewProviderConnection } from "../../../lib/integration-plan-gate.js";
 
 const DEMO_ORG_SLUG = "demo";
 
@@ -15,6 +16,8 @@ export function getBitbucketOAuthUrl(state: string): string {
 export async function handleBitbucketOAuthCallback(code: string, orgSlug: string = DEMO_ORG_SLUG) {
   const org = await prisma.organization.findFirst({ where: { slug: orgSlug } });
   if (!org) throw new Error(`Organization not found: ${orgSlug}`);
+
+  await gateNewProviderConnection(org.id, org.plan, "BITBUCKET");
 
   const redirectUri =
     process.env.BITBUCKET_REDIRECT_URI ??
@@ -50,7 +53,20 @@ export async function handleBitbucketOAuthCallback(code: string, orgSlug: string
   const userRes = await fetch("https://api.bitbucket.org/2.0/user", {
     headers: { Authorization: `Bearer ${tokenData.access_token}` },
   });
-  const user = (await userRes.json()) as { uuid: string; username: string };
+  if (!userRes.ok) {
+    throw new Error(`Bitbucket API: ${userRes.status} — failed to load user profile`);
+  }
+  const user = (await userRes.json()) as {
+    uuid: string;
+    username?: string;
+    nickname?: string;
+    display_name?: string;
+  };
+  if (!user.uuid) {
+    throw new Error("Bitbucket user profile missing uuid");
+  }
+  const displayName =
+    user.username || user.nickname || user.display_name || user.uuid.slice(0, 8);
 
   const integration = await prisma.integration.upsert({
     where: {
@@ -64,19 +80,28 @@ export async function handleBitbucketOAuthCallback(code: string, orgSlug: string
       isActive: true,
       accessToken: encrypt(tokenData.access_token),
       refreshToken: tokenData.refresh_token ? encrypt(tokenData.refresh_token) : undefined,
-      name: `${user.username} (Bitbucket)`,
+      name: `${displayName} (Bitbucket)`,
       lastSyncedAt: new Date(),
+      metadata: {
+        username: user.username,
+        nickname: user.nickname,
+        displayName: user.display_name,
+      },
     },
     create: {
       orgId: org.id,
       provider: "BITBUCKET",
       category: "GIT",
-      name: `${user.username} (Bitbucket)`,
+      name: `${displayName} (Bitbucket)`,
       externalId: user.uuid,
       accessToken: encrypt(tokenData.access_token),
       refreshToken: tokenData.refresh_token ? encrypt(tokenData.refresh_token) : undefined,
       scopes: ["repository"],
-      metadata: { username: user.username },
+      metadata: {
+        username: user.username,
+        nickname: user.nickname,
+        displayName: user.display_name,
+      },
     },
   });
 

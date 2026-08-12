@@ -2,14 +2,22 @@ import { ApiError } from "@/components/comply/api-error";
 import { PageHeader } from "@/components/comply/page-header";
 import { RisksPageContent } from "@/components/risks/risks-page";
 import { complianceApi } from "@/lib/compliance-api";
-import { mapRiskRow } from "@/lib/ui-mappers";
+import { mapMemberRow, mapRiskRow } from "@/lib/ui-mappers";
 
 export const dynamic = "force-dynamic";
 
 export default async function RisksPage() {
   try {
-    const risks = await complianceApi.risks();
-    return <RisksPageContent risks={risks.map(mapRiskRow)} />;
+    const [risks, members] = await Promise.all([
+      complianceApi.risks(),
+      complianceApi.members().catch(() => []),
+    ]);
+    return (
+      <RisksPageContent
+        risks={risks.map(mapRiskRow)}
+        members={members.map(mapMemberRow)}
+      />
+    );
   } catch (e) {
     return (
       <div className="comply-page">

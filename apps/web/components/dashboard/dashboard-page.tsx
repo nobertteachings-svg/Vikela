@@ -280,16 +280,6 @@ export function DashboardPageContent({
           label="Integrations"
           value={String(stats.connectedIntegrations)}
           accent="amber"
-          hint={
-            org.slug === "demo" ? (
-              <>
-                Includes sample integrations —{" "}
-                <Link href="/integrations" className="comply-link">
-                  connect yours on Integrations
-                </Link>
-              </>
-            ) : undefined
-          }
         />
       </div>
 
@@ -449,9 +439,9 @@ export function DashboardPageContent({
           {topGaps.length === 0 ? (
             <div className="comply-empty border-0 bg-transparent">
               <p className="text-sm text-comply-text-secondary">
-                {stats.postureScore === 0
-                  ? "No findings yet — connect a repository and run a scan to see your posture."
-                  : "No open gaps — great posture."}
+                {stats.recentScans?.some((s) => s.status === "COMPLETED")
+                  ? "No open gaps in this list — great posture, or check Gaps for the full inventory."
+                  : "No findings yet — connect a repository and run a scan to see your posture."}
               </p>
             </div>
           ) : (

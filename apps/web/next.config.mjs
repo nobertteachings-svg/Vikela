@@ -9,6 +9,12 @@ const nextConfig = {
   transpilePackages: ["@vikela/shared"],
   experimental: {
     instrumentationHook: true,
+    // Long Anthropic/copilot calls via rewrite; default proxy is ~30s.
+    proxyTimeout: 180_000,
+    outputFileTracingIncludes: {
+      "/help/**": ["./content/user-guide/**/*"],
+      "/help": ["./content/user-guide/**/*"],
+    },
   },
   async rewrites() {
     return [

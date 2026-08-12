@@ -20,6 +20,20 @@ type BitbucketSrcPage = {
   values: BitbucketSrcEntry[];
 };
 
+type BitbucketRepo = {
+  uuid: string;
+  name: string;
+  full_name: string;
+  links: { clone: Array<{ href: string }> };
+  mainbranch?: { name: string };
+  is_private: boolean;
+};
+
+type BitbucketPage<T> = {
+  values: T[];
+  next?: string;
+};
+
 export class BitbucketProvider implements IGitProvider {
   constructor(private readonly token: string) {}
 
@@ -32,23 +46,65 @@ export class BitbucketProvider implements IGitProvider {
         ...init?.headers,
       },
     });
-    if (!res.ok) throw new Error(`Bitbucket API: ${res.status}`);
+    if (!res.ok) {
+      let detail = "";
+      try {
+        const body = (await res.json()) as {
+          error?: { message?: string; detail?: string };
+        };
+        detail = body.error?.message ?? body.error?.detail ?? "";
+      } catch {
+        /* ignore */
+      }
+      throw new Error(
+        detail
+          ? `Bitbucket API: ${res.status} — ${detail}`
+          : `Bitbucket API: ${res.status}`
+      );
+    }
     return res.json() as Promise<T>;
   }
 
-  async listRepositories(): Promise<RemoteRepo[]> {
-    const data = await this.fetch<{
-      values: Array<{
-        uuid: string;
-        name: string;
-        full_name: string;
-        links: { clone: Array<{ href: string }> };
-        mainbranch?: { name: string };
-        is_private: boolean;
-      }>;
-    }>("https://api.bitbucket.org/2.0/repositories?role=member&pagelen=100");
+  /** Paginate a Bitbucket collection endpoint. */
+  private async fetchAllPages<T>(startUrl: string): Promise<T[]> {
+    const out: T[] = [];
+    let nextUrl: string | null = startUrl;
+    while (nextUrl) {
+      const page: BitbucketPage<T> = await this.fetch<BitbucketPage<T>>(nextUrl);
+      out.push(...(page.values ?? []));
+      nextUrl = page.next ?? null;
+    }
+    return out;
+  }
 
-    return data.values.map((r) => ({
+  /**
+   * Cross-workspace GET /2.0/repositories?role=… was removed (CHANGE-2770 → HTTP 410).
+   * Discover workspaces, then list repos per workspace.
+   */
+  async listRepositories(): Promise<RemoteRepo[]> {
+    const workspaces = await this.fetchAllPages<{
+      slug?: string;
+      uuid?: string;
+      workspace?: { slug?: string; uuid?: string };
+    }>("https://api.bitbucket.org/2.0/user/workspaces?pagelen=100");
+
+    const workspaceSlugs = workspaces
+      .map((w) => w.workspace?.slug ?? w.slug)
+      .filter((s): s is string => Boolean(s));
+
+    if (workspaceSlugs.length === 0) {
+      return [];
+    }
+
+    const repos: BitbucketRepo[] = [];
+    for (const slug of workspaceSlugs) {
+      const pageRepos = await this.fetchAllPages<BitbucketRepo>(
+        `https://api.bitbucket.org/2.0/repositories/${encodeURIComponent(slug)}?pagelen=100`
+      );
+      repos.push(...pageRepos);
+    }
+
+    return repos.map((r) => ({
       externalId: r.uuid,
       name: r.name,
       fullName: r.full_name,
@@ -70,41 +126,49 @@ export class BitbucketProvider implements IGitProvider {
   async listFiles(repoFullName: string, ref: string): Promise<GitFileListing> {
     const [workspace, slug] = repoFullName.split("/");
     const encodedRef = encodeURIComponent(ref);
-    let nextUrl: string | null =
-      `https://api.bitbucket.org/2.0/repositories/${workspace}/${slug}/src/${encodedRef}/?pagelen=${ROOT_PAGE_SIZE}`;
+    const base = `https://api.bitbucket.org/2.0/repositories/${workspace}/${slug}/src/${encodedRef}`;
 
     const files: string[] = [];
     const directoryNames: string[] = [];
-    let page = 1;
+    const dirQueue: string[] = [""];
 
-    while (nextUrl && files.length < GIT_MAX_LIST_FILES) {
-      const data: BitbucketSrcPage = await this.fetch<BitbucketSrcPage>(nextUrl);
+    while (dirQueue.length > 0 && files.length < GIT_MAX_LIST_FILES) {
+      const dir = dirQueue.shift()!;
+      if (dir) directoryNames.push(dir);
 
-      if (page === 1 && data.values.length === ROOT_PAGE_SIZE && !data.next) {
-        console.warn(
-          JSON.stringify({
-            event: "bitbucket_list_truncated_no_next",
-            repoFullName,
-            ref,
-            entriesOnPage: data.values.length,
-          })
-        );
-      }
+      const dirPath = dir ? `${dir.replace(/^\/+|\/+$/g, "")}/` : "";
+      let nextUrl: string | null = `${base}/${dirPath}?pagelen=${ROOT_PAGE_SIZE}`;
+      let page = 1;
 
-      for (const entry of data.values) {
-        if (entry.type === "commit_file") {
-          files.push(entry.path);
-          if (files.length >= GIT_MAX_LIST_FILES) break;
-        } else if (entry.type === "commit_directory") {
-          directoryNames.push(entry.path);
+      while (nextUrl && files.length < GIT_MAX_LIST_FILES) {
+        const data: BitbucketSrcPage = await this.fetch<BitbucketSrcPage>(nextUrl);
+
+        if (page === 1 && !dir && data.values.length === ROOT_PAGE_SIZE && !data.next) {
+          console.warn(
+            JSON.stringify({
+              event: "bitbucket_list_truncated_no_next",
+              repoFullName,
+              ref,
+              entriesOnPage: data.values.length,
+            })
+          );
         }
-      }
 
-      nextUrl = data.next ?? null;
-      page += 1;
+        for (const entry of data.values) {
+          if (entry.type === "commit_file") {
+            files.push(entry.path);
+            if (files.length >= GIT_MAX_LIST_FILES) break;
+          } else if (entry.type === "commit_directory") {
+            dirQueue.push(entry.path);
+          }
+        }
+
+        nextUrl = data.next ?? null;
+        page += 1;
+      }
     }
 
-    return { files, directoryNames };
+    return { files: files.slice(0, GIT_MAX_LIST_FILES), directoryNames };
   }
 
   async getCommits(repoFullName: string, limit: number): Promise<CommitInfo[]> {
