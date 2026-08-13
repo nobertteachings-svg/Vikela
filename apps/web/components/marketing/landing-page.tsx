@@ -1,3 +1,6 @@
+"use client";
+
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import {
   IconBrandAws,
@@ -19,16 +22,16 @@ import { enterpriseFooterCopy, landingPlans } from "@/lib/billing-plans";
 import { cn } from "@/lib/utils";
 
 const FRAMEWORKS = [
-  "SOC 2",
-  "SOC 1",
-  "SOC 3",
-  "HIPAA",
-  "ISO 27001",
-  "ISO 42001",
-  "GDPR",
-  "PCI DSS",
-  "FedRAMP",
-  "CMMC",
+  { id: "soc2", name: "SOC 2", weight: 28 },
+  { id: "soc1", name: "SOC 1", weight: 18 },
+  { id: "soc3", name: "SOC 3", weight: 16 },
+  { id: "hipaa", name: "HIPAA", weight: 24 },
+  { id: "iso27001", name: "ISO 27001", weight: 26 },
+  { id: "iso42001", name: "ISO 42001", weight: 20 },
+  { id: "gdpr", name: "GDPR", weight: 22 },
+  { id: "pci", name: "PCI DSS", weight: 25 },
+  { id: "fedramp", name: "FedRAMP", weight: 30 },
+  { id: "cmmc", name: "CMMC", weight: 27 },
 ] as const;
 
 const INTEGRATION_GROUPS = [
@@ -64,18 +67,21 @@ const STEPS = [
     title: "Connect your stack",
     description:
       "Link GitHub, GitLab, or Bitbucket with AWS, Azure, GCP, and identity. Most teams finish the first connection in under 10 minutes.",
+    demo: "GitHub connected · AWS AssumeRole ready · Okta synced",
   },
   {
     icon: IconShieldCheck,
     title: "See mapped gaps",
     description:
       "Findings map to SOC 2, ISO 27001, HIPAA, and the rest, with context so you know what to fix first.",
+    demo: "12 open gaps · 4 critical · mapped across selected frameworks",
   },
   {
     icon: IconFileCertificate,
     title: "Close the questionnaire",
     description:
       "Draft answers from live posture, generate policies, and export evidence when you are ready for review.",
+    demo: "48 of 62 answers drafted from live controls",
   },
 ] as const;
 
@@ -106,15 +112,35 @@ const FAQ_ITEMS = [
   },
 ] as const;
 
-function FrameworkPill({ name }: { name: string }) {
-  return (
-    <span className="inline-flex items-center rounded-sm border border-white/[0.1] bg-white/[0.03] px-2.5 py-1 font-mono text-[11px] font-medium tracking-tight text-comply-text-secondary">
-      {name}
-    </span>
-  );
-}
+const GREEN_CTA =
+  "inline-flex h-10 items-center justify-center rounded-md bg-comply-green px-5 text-sm font-medium text-comply-green-light transition-opacity hover:opacity-90";
 
 export function LandingPage() {
+  const [selected, setSelected] = useState<string[]>(["soc2", "hipaa", "iso27001"]);
+  const [activeStep, setActiveStep] = useState(0);
+  const [openFaq, setOpenFaq] = useState<string | null>(FAQ_ITEMS[0]?.q ?? null);
+
+  const readiness = useMemo(() => {
+    if (selected.length === 0) return 42;
+    const total = selected.reduce((sum, id) => {
+      const fw = FRAMEWORKS.find((f) => f.id === id);
+      return sum + (fw?.weight ?? 20);
+    }, 0);
+    const avg = total / selected.length;
+    return Math.min(92, Math.round(38 + avg * 1.4 + selected.length * 3));
+  }, [selected]);
+
+  const gapCount = useMemo(() => {
+    if (selected.length === 0) return 0;
+    return Math.max(4, 22 - selected.length * 2 + (100 - readiness) / 4);
+  }, [selected.length, readiness]);
+
+  function toggleFramework(id: string) {
+    setSelected((prev) =>
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
+    );
+  }
+
   return (
     <div className="relative min-h-screen bg-[var(--bg-app)] text-comply-text-primary antialiased">
       <header className="relative z-10 border-b border-white/[0.08] bg-[var(--bg-app)]/90 backdrop-blur-sm">
@@ -123,6 +149,9 @@ export function LandingPage() {
             <LogoPill />
           </Link>
           <nav className="hidden items-center gap-6 text-sm text-comply-text-secondary md:flex">
+            <a href="#frameworks" className="hover:text-comply-text-primary">
+              Frameworks
+            </a>
             <a href="#how" className="hover:text-comply-text-primary">
               How it works
             </a>
@@ -139,40 +168,79 @@ export function LandingPage() {
 
       <main>
         <section className="mx-auto max-w-5xl px-6 pb-14 pt-16 sm:pt-20">
-          <p className="text-xs font-medium uppercase tracking-wide text-comply-text-tertiary">
-            Vikela
-          </p>
-          <h1 className="mt-3 max-w-xl text-2xl font-semibold tracking-tight text-comply-text-primary sm:text-3xl">
-            Get audit ready in weeks, not months
-          </h1>
-          <p className="mt-4 max-w-lg text-sm leading-relaxed text-comply-text-secondary">
-            Map code, cloud, and identity into the frameworks buyers ask for. Answer the security
-            questionnaire from live controls, not a blank spreadsheet.
-          </p>
-          <div className="mt-7">
-            <MarketingAuthLinks />
+          <div className="grid items-start gap-10 lg:grid-cols-[1.1fr_0.9fr]">
+            <div>
+              <h1 className="max-w-xl text-2xl font-semibold tracking-tight text-comply-text-primary sm:text-3xl">
+                Get audit ready in weeks, not months
+              </h1>
+              <p className="mt-4 max-w-lg text-sm leading-relaxed text-comply-text-secondary">
+                Map code, cloud, and identity into the frameworks buyers ask for. Answer the
+                security questionnaire from live controls, not a blank spreadsheet.
+              </p>
+              <div className="mt-7">
+                <MarketingAuthLinks />
+              </div>
+            </div>
+
+            <div className="rounded-md border border-white/[0.1] bg-black/25 p-5">
+              <div className="flex items-center justify-between gap-3">
+                <p className="text-xs font-medium text-comply-text-secondary">
+                  Try a readiness preview
+                </p>
+                <span className="font-mono text-xs text-comply-green">
+                  {selected.length} frameworks
+                </span>
+              </div>
+              <p className="mt-4 font-mono text-4xl font-semibold tabular-nums text-comply-text-primary">
+                {readiness}
+                <span className="text-lg text-comply-text-tertiary">%</span>
+              </p>
+              <div className="mt-3 h-2 overflow-hidden rounded-full bg-white/[0.06]">
+                <div
+                  className="h-full rounded-full bg-comply-green transition-all duration-500 ease-out"
+                  style={{ width: `${readiness}%` }}
+                />
+              </div>
+              <p className="mt-3 text-xs text-comply-text-tertiary">
+                About {Math.round(gapCount)} illustrative gaps after a first scan. Click frameworks
+                below to reshape the preview.
+              </p>
+              <Link href="/sign-up" className={cn(GREEN_CTA, "mt-5 w-full")}>
+                Start with these frameworks
+              </Link>
+            </div>
           </div>
-          <p className="mt-5 text-xs text-comply-text-tertiary">
-            Free to start. Published prices. No sales call required.
-          </p>
         </section>
 
-        <section
-          id="frameworks"
-          className="border-y border-white/[0.08] bg-black/20 py-10"
-        >
+        <section id="frameworks" className="border-y border-white/[0.08] bg-black/20 py-10">
           <div className="mx-auto max-w-5xl px-6">
             <h2 className="text-sm font-medium text-comply-text-primary">
-              Frameworks on one control graph
+              Pick the frameworks your deal asks for
             </h2>
             <p className="mt-2 max-w-2xl text-sm text-comply-text-secondary">
-              SOC 2, ISO, HIPAA, GDPR, PCI, FedRAMP, CMMC, and more. Enable what the deal asks for
-              without rebuilding the program for each RFP.
+              Toggle packs on one control graph. Enable more later without rebuilding the program.
             </p>
             <div className="mt-6 flex flex-wrap gap-2">
-              {FRAMEWORKS.map((fw) => (
-                <FrameworkPill key={fw} name={fw} />
-              ))}
+              {FRAMEWORKS.map((fw) => {
+                const on = selected.includes(fw.id);
+                return (
+                  <button
+                    key={fw.id}
+                    type="button"
+                    onClick={() => toggleFramework(fw.id)}
+                    aria-pressed={on}
+                    className={cn(
+                      "inline-flex items-center rounded-sm border px-2.5 py-1.5 font-mono text-[11px] font-medium tracking-tight transition-colors",
+                      on
+                        ? "border-comply-green/50 bg-comply-green/20 text-comply-green-light"
+                        : "border-white/[0.1] bg-white/[0.03] text-comply-text-secondary hover:border-white/20 hover:text-comply-text-primary"
+                    )}
+                  >
+                    {on ? "✓ " : ""}
+                    {fw.name}
+                  </button>
+                );
+              })}
             </div>
           </div>
         </section>
@@ -181,25 +249,77 @@ export function LandingPage() {
           <h2 className="text-lg font-semibold tracking-tight text-comply-text-primary">
             How it works
           </h2>
-          <ol className="mt-10 grid gap-10 md:grid-cols-3">
-            {STEPS.map((step, i) => {
-              const Icon = step.icon;
-              return (
-                <li key={step.title}>
-                  <span className="font-mono text-xs text-comply-text-tertiary">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <span className="mt-3 flex h-9 w-9 items-center justify-center rounded-md border border-white/[0.1] bg-black/25 text-comply-purple-border">
-                    <Icon size={18} stroke={1.5} />
-                  </span>
-                  <h3 className="mt-4 text-sm font-medium">{step.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-comply-text-secondary">
-                    {step.description}
-                  </p>
-                </li>
-              );
-            })}
-          </ol>
+          <p className="mt-2 text-sm text-comply-text-secondary">
+            Click a step to see what shows up in the product.
+          </p>
+          <div className="mt-8 grid gap-6 lg:grid-cols-[1fr_1.1fr]">
+            <ol className="space-y-2">
+              {STEPS.map((step, i) => {
+                const Icon = step.icon;
+                const active = activeStep === i;
+                return (
+                  <li key={step.title}>
+                    <button
+                      type="button"
+                      onClick={() => setActiveStep(i)}
+                      className={cn(
+                        "flex w-full items-start gap-3 rounded-md border px-4 py-3 text-left transition-colors",
+                        active
+                          ? "border-comply-green/40 bg-comply-green/10"
+                          : "border-white/[0.08] bg-black/15 hover:border-white/20"
+                      )}
+                    >
+                      <span
+                        className={cn(
+                          "mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-md border",
+                          active
+                            ? "border-comply-green/40 text-comply-green"
+                            : "border-white/[0.1] text-comply-text-tertiary"
+                        )}
+                      >
+                        <Icon size={16} stroke={1.5} />
+                      </span>
+                      <span>
+                        <span className="block text-sm font-medium text-comply-text-primary">
+                          {String(i + 1).padStart(2, "0")}. {step.title}
+                        </span>
+                        <span className="mt-1 block text-xs leading-relaxed text-comply-text-secondary">
+                          {step.description}
+                        </span>
+                      </span>
+                    </button>
+                  </li>
+                );
+              })}
+            </ol>
+            <div className="rounded-md border border-white/[0.1] bg-black/25 p-5">
+              <p className="text-xs font-medium uppercase tracking-wide text-comply-text-tertiary">
+                Live product cue
+              </p>
+              <p className="mt-3 text-sm font-medium text-comply-text-primary">
+                {STEPS[activeStep].title}
+              </p>
+              <p className="mt-2 font-mono text-xs leading-relaxed text-comply-green">
+                {STEPS[activeStep].demo}
+              </p>
+              <div className="mt-6 space-y-2">
+                {[72, 54, 81].map((w, i) => (
+                  <div key={i} className="h-2 overflow-hidden rounded-full bg-white/[0.06]">
+                    <div
+                      className={cn(
+                        "h-full rounded-full transition-all duration-500",
+                        activeStep === i ? "bg-comply-green" : "bg-white/20"
+                      )}
+                      style={{ width: `${activeStep === i ? w + 12 : w}%` }}
+                    />
+                  </div>
+                ))}
+              </div>
+              <Link href="/sign-up" className={cn(GREEN_CTA, "mt-6")}>
+                Run your first check
+              </Link>
+            </div>
+          </div>
         </section>
 
         <section id="integrations" className="border-t border-white/[0.08] py-20">
@@ -210,9 +330,12 @@ export function LandingPage() {
             <p className="mt-2 max-w-2xl text-sm text-comply-text-secondary">
               IAM, branch protection, MFA, and cloud config, not only application code.
             </p>
-            <div className="mt-10 grid gap-8 sm:grid-cols-3">
+            <div className="mt-10 grid gap-4 sm:grid-cols-3">
               {INTEGRATION_GROUPS.map((group) => (
-                <div key={group.label}>
+                <div
+                  key={group.label}
+                  className="rounded-md border border-white/[0.08] bg-black/20 p-4 transition-colors hover:border-comply-green/30"
+                >
                   <div className="flex items-center gap-2 text-comply-text-tertiary">
                     {group.label === "Source control" && <IconCode size={16} stroke={1.5} />}
                     {group.label === "Cloud" && <IconCloud size={16} stroke={1.5} />}
@@ -221,16 +344,15 @@ export function LandingPage() {
                       {group.label}
                     </span>
                   </div>
-                  <ul className="mt-4 space-y-3">
+                  <ul className="mt-4 space-y-2">
                     {group.items.map((item) => {
                       const Icon = item.icon;
                       return (
-                        <li
-                          key={item.name}
-                          className="flex items-center gap-3 text-sm text-comply-text-primary"
-                        >
-                          <Icon size={16} className="text-comply-text-secondary" stroke={1.5} />
-                          {item.name}
+                        <li key={item.name}>
+                          <span className="flex items-center gap-3 rounded-sm px-1 py-1.5 text-sm text-comply-text-primary transition-colors hover:bg-white/[0.04]">
+                            <Icon size={16} className="text-comply-text-secondary" stroke={1.5} />
+                            {item.name}
+                          </span>
                         </li>
                       );
                     })}
@@ -254,8 +376,8 @@ export function LandingPage() {
                 <div
                   key={plan.name}
                   className={cn(
-                    "flex flex-col rounded-md border border-white/[0.1] bg-black/20 p-5",
-                    plan.highlight && "border-comply-purple-border/50 bg-comply-purple/10"
+                    "flex flex-col rounded-md border border-white/[0.1] bg-black/20 p-5 transition-colors hover:border-comply-green/35",
+                    plan.highlight && "border-comply-green/45 bg-comply-green/10"
                   )}
                 >
                   <h3 className="text-sm font-medium text-comply-text-secondary">{plan.name}</h3>
@@ -277,15 +399,7 @@ export function LandingPage() {
                       </li>
                     ))}
                   </ul>
-                  <Link
-                    href="/sign-up"
-                    className={cn(
-                      "mt-6 inline-flex h-10 w-full items-center justify-center rounded-md text-sm font-medium",
-                      plan.highlight
-                        ? "btn-purple-cta max-w-none"
-                        : "border border-[var(--border)] text-comply-text-primary hover:border-comply-purple-border"
-                    )}
-                  >
+                  <Link href="/sign-up" className={cn(GREEN_CTA, "mt-6 w-full")}>
                     {plan.cta}
                   </Link>
                 </div>
@@ -296,7 +410,10 @@ export function LandingPage() {
             </p>
             <p className="mt-3 text-center text-sm text-comply-text-secondary">
               {enterpriseFooterCopy}{" "}
-              <a href="mailto:hello@vikela.com" className="text-comply-purple-border hover:underline">
+              <a
+                href="mailto:hello@vikela.com"
+                className="font-medium text-comply-green hover:underline"
+              >
                 Contact sales
               </a>
             </p>
@@ -306,26 +423,35 @@ export function LandingPage() {
         <section id="faq" className="border-t border-white/[0.08] py-20">
           <div className="mx-auto max-w-3xl px-6">
             <h2 className="text-lg font-semibold tracking-tight text-comply-text-primary">FAQ</h2>
-            <dl className="mt-10 space-y-2">
-              {FAQ_ITEMS.map((item) => (
-                <details
-                  key={item.q}
-                  className="group rounded-md border border-white/[0.1] bg-black/15 open:border-comply-purple-border/30"
-                >
-                  <summary className="cursor-pointer list-none px-4 py-3.5 text-sm font-medium text-comply-text-primary marker:content-none [&::-webkit-details-marker]:hidden">
-                    <span className="flex items-center justify-between gap-4">
+            <div className="mt-10 space-y-2">
+              {FAQ_ITEMS.map((item) => {
+                const open = openFaq === item.q;
+                return (
+                  <div
+                    key={item.q}
+                    className={cn(
+                      "rounded-md border bg-black/15",
+                      open ? "border-comply-green/35" : "border-white/[0.1]"
+                    )}
+                  >
+                    <button
+                      type="button"
+                      className="flex w-full items-center justify-between gap-4 px-4 py-3.5 text-left text-sm font-medium text-comply-text-primary"
+                      aria-expanded={open}
+                      onClick={() => setOpenFaq(open ? null : item.q)}
+                    >
                       {item.q}
-                      <span className="shrink-0 font-mono text-comply-text-tertiary transition-transform group-open:rotate-45">
-                        +
-                      </span>
-                    </span>
-                  </summary>
-                  <dd className="border-t border-white/[0.06] px-4 pb-4 pt-3 text-sm leading-relaxed text-comply-text-secondary">
-                    {item.a}
-                  </dd>
-                </details>
-              ))}
-            </dl>
+                      <span className="font-mono text-comply-text-tertiary">{open ? "−" : "+"}</span>
+                    </button>
+                    {open ? (
+                      <p className="border-t border-white/[0.06] px-4 pb-4 pt-3 text-sm leading-relaxed text-comply-text-secondary">
+                        {item.a}
+                      </p>
+                    ) : null}
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </section>
 
@@ -335,11 +461,8 @@ export function LandingPage() {
               <h2 className="text-lg font-semibold text-comply-text-primary">
                 Got the questionnaire? See your gaps today.
               </h2>
-              <p className="mt-1 text-sm text-comply-text-secondary">
-                Free to start. No sales call.
-              </p>
             </div>
-            <Link href="/sign-up" className="btn-purple-cta px-6">
+            <Link href="/sign-up" className={cn(GREEN_CTA, "px-6")}>
               Start free
             </Link>
           </div>
