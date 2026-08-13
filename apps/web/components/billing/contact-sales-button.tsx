@@ -59,8 +59,8 @@ export function ContactSalesButton({
     variant === "cta"
       ? "btn-purple-cta inline-flex h-9 items-center px-4 text-sm"
       : variant === "link"
-        ? "flex items-center gap-1 text-xs font-medium text-comply-purple-border hover:underline"
-        : "mt-5 inline-flex h-9 w-full items-center justify-center rounded-md border border-[var(--border)] text-xs font-medium text-comply-text-primary transition-colors hover:border-comply-purple-border";
+        ? "flex items-center gap-1 text-xs font-medium text-comply-green-border hover:underline"
+        : "mt-5 inline-flex h-9 w-full items-center justify-center rounded-md border border-[var(--border)] text-xs font-medium text-comply-text-primary transition-colors hover:border-comply-green-border";
 
   return (
     <div ref={rootRef} className={cn("relative", variant === "card" && "w-full", className)}>
@@ -103,7 +103,7 @@ export function ContactSalesButton({
             </button>
           </div>
 
-          <p className="mt-3 break-all font-mono text-xs text-comply-purple-border">{SALES_EMAIL}</p>
+          <p className="mt-3 break-all font-mono text-xs text-comply-green-border">{SALES_EMAIL}</p>
 
           <div className="mt-3 flex flex-col gap-1.5">
             <button

@@ -65,7 +65,7 @@ export default async function FrameworksPage() {
                     </div>
                   </div>
                   {!catalogOnly && (
-                    <span className="font-mono text-2xl font-semibold text-comply-purple">{fw.score}%</span>
+                    <span className="font-mono text-2xl font-semibold text-comply-green">{fw.score}%</span>
                   )}
                 </div>
                 {fw.description && (

@@ -104,7 +104,7 @@ export function OnboardingScan() {
 
       {!done && !failed && (
         <div className="mx-auto mt-10 flex max-w-md flex-col items-center gap-3">
-          <div className="h-8 w-8 animate-spin rounded-full border-2 border-comply-purple-border border-t-transparent" />
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-comply-green-border border-t-transparent" />
           <p className="text-xs text-comply-text-tertiary">
             {scan?.repoFullName ? `Scanning ${scan.repoFullName}…` : "Starting scan…"}
           </p>
@@ -114,7 +114,7 @@ export function OnboardingScan() {
       {failed && (
         <p className="mx-auto mt-6 max-w-md text-center text-xs text-comply-text-secondary">
           {scan?.error ?? "Scan failed."}{" "}
-          <Link href="/dashboard" className="text-comply-purple-border hover:underline">
+          <Link href="/dashboard" className="text-comply-green-border hover:underline">
             Continue to dashboard
           </Link>
         </p>
@@ -126,7 +126,7 @@ export function OnboardingScan() {
             <p className="text-[10px] font-semibold uppercase tracking-wider text-comply-text-tertiary">
               Posture score
             </p>
-            <p className="mt-1 font-mono text-4xl font-semibold text-comply-purple">{scan.score ?? "—"}</p>
+            <p className="mt-1 font-mono text-4xl font-semibold text-comply-green">{scan.score ?? "—"}</p>
             <p className="mt-2 text-xs text-comply-text-secondary">
               {scan.findingCount ?? 0} open finding{(scan.findingCount ?? 0) === 1 ? "" : "s"}
             </p>

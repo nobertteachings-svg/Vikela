@@ -9,12 +9,12 @@
   --bg-cream: #f1efe8;
   --bg-cream-dark: #d3d1c7;
 
-  /* Teal secondary accent (legacy --purple* names kept for compatibility) */
-  --purple: #0f766e;
-  --purple-dark: #0d5c56;
-  --purple-light: #ccfbf1;
-  --purple-border: #2dd4bf;
-  --purple-text: #134e4a;
+  /* Legacy --purple* aliases map to green primary (compat with older class names) */
+  --purple: #16a34a;
+  --purple-dark: #15803d;
+  --purple-light: #dcfce7;
+  --purple-border: #4ade80;
+  --purple-text: #14532d;
 
   /* Green primary CTAs */
   --green: #16a34a;
@@ -44,7 +44,7 @@
   --bg-sidebar: #181816;
   --text-tertiary: var(--text-muted);
   --border-strong: rgba(255, 255, 255, 0.12);
-  --purple-glow: rgba(15, 118, 110, 0.25);
+  --purple-glow: rgba(22, 163, 74, 0.28);
   --green-glow: rgba(22, 163, 74, 0.28);
 
   --radius-lg: 10px;
@@ -95,7 +95,7 @@
 
 @layer components {
   .vikela-page.comply-page {
-    @apply mx-auto max-w-[1280px] space-y-6;
+    @apply mx-auto w-full max-w-[1280px] space-y-5 sm:space-y-6;
   }
 
   .vikela-card.comply-card {
@@ -122,15 +122,15 @@
   }
 
   .vikela-card-header.comply-card-header {
-    @apply flex items-center justify-between gap-4 border-b border-[var(--border)] px-5 py-4;
+    @apply flex flex-col gap-3 border-b border-[var(--border)] px-4 py-3.5 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-5 sm:py-4;
   }
 
   .vikela-card-body.comply-card-body {
-    @apply p-5;
+    @apply p-4 sm:p-5;
   }
 
   .vikela-stat.comply-stat {
-    @apply relative overflow-hidden rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-card)] p-5 transition-colors hover:border-[var(--border-strong)];
+    @apply relative overflow-hidden rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-card)] p-4 transition-colors hover:border-[var(--border-strong)] sm:p-5;
     box-shadow: var(--shadow-card);
   }
 
@@ -139,15 +139,15 @@
   }
 
   .vikela-stat-value.comply-stat-value {
-    @apply mt-2 font-mono text-3xl font-semibold tracking-tight text-comply-text-primary;
+    @apply mt-2 font-mono text-2xl font-semibold tracking-tight text-comply-text-primary sm:text-3xl;
   }
 
   .vikela-table-wrap.comply-table-wrap {
-    @apply overflow-x-auto rounded-[var(--radius-md)] border border-[var(--border)] bg-[var(--bg-card)];
+    @apply -mx-3 overflow-x-auto rounded-none border-y border-[var(--border)] bg-[var(--bg-card)] sm:mx-0 sm:rounded-[var(--radius-md)] sm:border;
   }
 
   .vikela-table.comply-table {
-    @apply w-full text-left text-sm;
+    @apply w-full min-w-[640px] text-left text-sm;
   }
 
   .comply-table thead {
@@ -286,18 +286,23 @@
     opacity: 0.92;
   }
 
+  .btn-purple-cta,
   .btn-brand-cta.btn-purple-cta {
     @apply inline-flex items-center justify-center rounded-md text-xs font-medium transition-opacity;
     height: 32px;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
     background: var(--green);
     border: 1px solid var(--green-dark);
     color: var(--green-light);
   }
 
+  .btn-purple-cta:hover:not(:disabled),
   .btn-brand-cta:hover:not(:disabled).btn-purple-cta:hover:not(:disabled) {
     opacity: 0.92;
   }
 
+  .btn-purple-cta:disabled,
   .btn-brand-cta:disabled.btn-purple-cta:disabled {
     opacity: 0.5;
     cursor: not-allowed;

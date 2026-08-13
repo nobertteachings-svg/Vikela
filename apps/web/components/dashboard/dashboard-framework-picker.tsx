@@ -218,7 +218,7 @@ export function DashboardFrameworkPicker({
       <CardBody className="space-y-5">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="flex items-start gap-2 text-sm text-comply-text-secondary">
-            <IconStack2 size={18} className="mt-0.5 shrink-0 text-comply-purple-border" stroke={1.5} />
+            <IconStack2 size={18} className="mt-0.5 shrink-0 text-comply-green-border" stroke={1.5} />
             <p className="max-w-xl leading-relaxed">
               Enable the frameworks your customers ask for. Vikela maps code, cloud, and identity
               findings into each program from one dashboard.
@@ -230,7 +230,7 @@ export function DashboardFrameworkPicker({
                 type="button"
                 disabled={busy}
                 onClick={addPopular}
-                className="rounded-md border border-white/[0.1] px-2.5 py-1 text-xs text-comply-text-secondary transition-colors hover:border-comply-purple-border/40 hover:text-comply-text-primary disabled:opacity-50"
+                className="rounded-md border border-white/[0.1] px-2.5 py-1 text-xs text-comply-text-secondary transition-colors hover:border-comply-green/40 hover:text-comply-text-primary disabled:opacity-50"
               >
                 Add popular
               </button>
@@ -238,7 +238,7 @@ export function DashboardFrameworkPicker({
                 type="button"
                 disabled={busy}
                 onClick={enableAll}
-                className="rounded-md border border-white/[0.1] px-2.5 py-1 text-xs text-comply-text-secondary transition-colors hover:border-comply-purple-border/40 hover:text-comply-text-primary disabled:opacity-50"
+                className="rounded-md border border-white/[0.1] px-2.5 py-1 text-xs text-comply-text-secondary transition-colors hover:border-comply-green/40 hover:text-comply-text-primary disabled:opacity-50"
               >
                 Enable all
               </button>
@@ -282,7 +282,7 @@ export function DashboardFrameworkPicker({
 
         {enrolled.length > 0 && (
           <div className="space-y-4 border-t border-white/[0.06] pt-5">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-comply-purple-border">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-comply-green-border">
               Readiness
             </p>
             {enrolled.map((fw) => (

@@ -4,7 +4,7 @@ const tones = {
   red: "border-comply-red/40 bg-comply-red/10 text-comply-red",
   amber: "border-comply-amber/40 bg-comply-amber/10 text-comply-amber",
   green: "border-comply-green/40 bg-comply-green/10 text-comply-green",
-  purple: "border-comply-purple-border/40 bg-comply-purple/15 text-comply-purple-border",
+  purple: "border-comply-green-border/40 bg-comply-green/15 text-comply-green-border",
   muted: "border-white/[0.08] bg-black/25 text-comply-text-secondary",
 } as const;
 

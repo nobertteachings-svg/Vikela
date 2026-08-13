@@ -32,11 +32,7 @@ import {
 import type { Severity } from "@vikela/shared";
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
-  return (
-    <p className="text-[11px] font-medium uppercase tracking-wider text-comply-text-tertiary">
-      {children}
-    </p>
-  );
+  return <p className="page-eyebrow">{children}</p>;
 }
 
 const SCAN_TYPE_LABEL: Record<ScanType, string> = {
@@ -187,7 +183,7 @@ export function DashboardPageContent({
             value={`${stats.controlsImplemented}/${stats.controlsTotal}`}
             accent="green"
           />
-          <StatCard label="Active frameworks" value={String(activeFrameworks)} accent="purple" />
+          <StatCard label="Active frameworks" value={String(activeFrameworks)} accent="green" />
           <StatCard
             label="Integrations"
             value={String(stats.connectedIntegrations)}

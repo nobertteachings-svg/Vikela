@@ -11,7 +11,7 @@ const accentMap = {
 export function StatCard({
   label,
   value,
-  accent = "purple",
+  accent = "green",
   hint,
 }: {
   label: string;

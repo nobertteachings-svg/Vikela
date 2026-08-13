@@ -15,7 +15,7 @@ export function AuthCard({
     <div className="app-bg flex min-h-screen items-center justify-center p-6">
       <div className="w-full max-w-[400px] rounded-[var(--radius-lg)] border border-[var(--border-strong)] bg-comply-secondary p-8 shadow-[var(--shadow-elevated)]">
         <div className="mb-8 flex justify-center">
-          <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-comply-purple text-lg font-bold text-white shadow-[0_4px_20px_var(--purple-glow)]">
+          <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-comply-green text-lg font-bold text-white shadow-[0_4px_20px_var(--purple-glow)]">
             C
           </span>
         </div>

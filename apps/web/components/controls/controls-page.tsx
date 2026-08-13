@@ -20,11 +20,7 @@ import type { ControlStatus } from "@vikela/shared";
 import { cn } from "@/lib/utils";
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
-  return (
-    <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-comply-purple-border">
-      {children}
-    </p>
-  );
+  return <p className="page-eyebrow">{children}</p>;
 }
 
 const API_STATUS_OPTIONS = [
@@ -86,15 +82,11 @@ export function ControlsPageContent({
         description="Every framework your customers ask for, mapped to controls with live evidence and gap status from your stack."
       />
 
-      <div className="marketing-panel marketing-panel-highlight relative overflow-hidden p-6 sm:p-8">
-        <div
-          className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-comply-purple/25 blur-3xl"
-          aria-hidden
-        />
+      <div className="marketing-panel marketing-panel-highlight relative overflow-hidden p-4 sm:p-6">
         <div className="relative grid gap-6 lg:grid-cols-[1fr_auto] lg:items-start">
           <div className="flex items-start gap-4">
-            <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg border border-comply-green/40 bg-comply-green/15">
-              <IconListCheck size={28} className="text-comply-purple-border" stroke={1.5} />
+            <span className="hidden sm:flex h-14 w-14 shrink-0 items-center justify-center rounded-lg border border-comply-green/40 bg-comply-green/15">
+              <IconListCheck size={28} className="text-comply-green-border" stroke={1.5} />
             </span>
             <div>
               <SectionLabel>Control library</SectionLabel>
@@ -133,8 +125,8 @@ export function ControlsPageContent({
                 className={cn(
                   "rounded-sm border px-2 py-0.5 font-mono text-[10px] transition-colors",
                   frameworkFilter === fw.slug
-                    ? "border-comply-purple-border/50 bg-comply-purple/15 text-comply-purple-light"
-                    : "border-white/[0.08] bg-white/[0.04] text-comply-text-secondary hover:border-comply-purple-border/30"
+                    ? "border-comply-green-border/50 bg-comply-green/15 text-comply-green-light"
+                    : "border-white/[0.08] bg-white/[0.04] text-comply-text-secondary hover:border-comply-green-border/30"
                 )}
               >
                 {fw.name}
@@ -145,7 +137,7 @@ export function ControlsPageContent({
               <button
                 type="button"
                 onClick={() => setFrameworkFilter("all")}
-                className="text-[10px] text-comply-purple-border hover:underline"
+                className="text-[10px] text-comply-green-border hover:underline"
               >
                 Clear filter
               </button>
@@ -155,7 +147,7 @@ export function ControlsPageContent({
       </div>
 
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-        <StatCard label="Total controls" value={String(controls.length)} accent="purple" />
+        <StatCard label="Total controls" value={String(controls.length)} accent="green" />
         <StatCard label="Implemented" value={String(implemented)} accent="green" />
         <StatCard label="Needs review" value={String(needsReview)} accent="amber" />
         <StatCard label="With open gaps" value={String(withGaps)} accent="red" />
@@ -224,7 +216,7 @@ export function ControlsPageContent({
 
           {filtered.length === 0 ? (
             <div className="comply-empty border-0 bg-transparent py-12">
-              <IconShieldCheck size={32} className="text-comply-purple-border opacity-60" />
+              <IconShieldCheck size={32} className="text-comply-green-border opacity-60" />
               <p className="mt-3 text-sm text-comply-text-secondary">
                 No controls match your filters.
               </p>
@@ -249,7 +241,7 @@ export function ControlsPageContent({
                     <td>
                       <Link
                         href={`/controls/${c.code}`}
-                        className="font-mono text-sm font-medium text-comply-purple-border hover:text-comply-purple-light"
+                        className="font-mono text-sm font-medium text-comply-green-border hover:text-comply-green-light"
                       >
                         {c.code}
                       </Link>

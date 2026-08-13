@@ -56,7 +56,7 @@ export function ScansClient({
             <p className="text-[11px] font-semibold uppercase tracking-wider text-comply-text-tertiary">
               Recent scans
             </p>
-            <p className="mt-2 font-mono text-3xl font-semibold text-comply-purple">{scans.length}</p>
+            <p className="mt-2 font-mono text-3xl font-semibold text-comply-green">{scans.length}</p>
             <p className="mt-1 text-[10px] text-comply-muted">Last 20 shown</p>
           </CardBody>
         </Card>
@@ -156,7 +156,7 @@ export function ScansClient({
                         <span className="text-comply-text-secondary">0</span>
                       )}
                     </td>
-                    <td className="font-mono font-semibold text-comply-purple-border">
+                    <td className="font-mono font-semibold text-comply-green-border">
                       {s.score ?? "—"}
                     </td>
                     <td>

@@ -42,7 +42,7 @@ export default async function VendorDetailPage({ params }: { params: { id: strin
     <div className="comply-page max-w-3xl">
       <Link
         href="/vendors"
-        className="inline-flex items-center gap-1.5 text-xs font-medium text-comply-text-secondary hover:text-comply-purple-border"
+        className="inline-flex items-center gap-1.5 text-xs font-medium text-comply-text-secondary hover:text-comply-green-border"
       >
         <IconArrowLeft size={14} />
         Back to vendors
@@ -61,13 +61,13 @@ export default async function VendorDetailPage({ params }: { params: { id: strin
         />
       </PageHeader>
 
-      <div className="marketing-panel marketing-panel-highlight relative p-6">
+      <div className="marketing-panel marketing-panel-highlight relative p-4 sm:p-6">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <p className="text-[10px] font-semibold uppercase tracking-wider text-comply-text-tertiary">
               Risk score
             </p>
-            <p className="mt-1 font-mono text-3xl font-semibold text-comply-purple">
+            <p className="mt-1 font-mono text-3xl font-semibold text-comply-green">
               {score ?? "—"}
             </p>
           </div>
@@ -99,7 +99,7 @@ export default async function VendorDetailPage({ params }: { params: { id: strin
             href={website.startsWith("http") ? website : `https://${website}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-3 inline-block text-sm text-comply-purple-border hover:underline"
+            className="mt-3 inline-block text-sm text-comply-green-border hover:underline"
           >
             {website}
           </a>

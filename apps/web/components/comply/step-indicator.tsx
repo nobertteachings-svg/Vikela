@@ -85,7 +85,7 @@ export function StepIndicator({ currentStep }: { currentStep: 1 | 2 | 3 }) {
             className={cn(
               "text-xs",
               step.num === currentStep
-                ? "font-medium text-comply-purple"
+                ? "font-medium text-comply-green"
                 : "text-comply-text-secondary"
             )}
           >

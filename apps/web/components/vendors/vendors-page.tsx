@@ -24,11 +24,7 @@ import type { UiVendor } from "@/lib/ui-mappers";
 import { cn } from "@/lib/utils";
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
-  return (
-    <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-comply-purple-border">
-      {children}
-    </p>
-  );
+  return <p className="page-eyebrow">{children}</p>;
 }
 
 const STATUS_STYLES: Record<VendorStatus, string> = {
@@ -277,15 +273,11 @@ export function VendorsPageContent({ vendors: initialVendors }: { vendors: UiVen
         </Card>
       ) : null}
 
-      <div className="marketing-panel marketing-panel-highlight relative overflow-hidden p-6 sm:p-8">
-        <div
-          className="pointer-events-none absolute -right-12 -top-12 h-40 w-40 rounded-full bg-comply-green/10 blur-3xl"
-          aria-hidden
-        />
+      <div className="marketing-panel marketing-panel-highlight relative overflow-hidden p-4 sm:p-6">
         <div className="relative grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
           <div className="flex items-start gap-4">
-            <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg border border-comply-purple-border/50 bg-comply-purple/20">
-              <IconBuildingStore size={28} className="text-comply-purple-border" stroke={1.5} />
+            <span className="hidden sm:flex h-14 w-14 shrink-0 items-center justify-center rounded-lg border border-comply-green-border/50 bg-comply-green/20">
+              <IconBuildingStore size={28} className="text-comply-green-border" stroke={1.5} />
             </span>
             <div>
               <SectionLabel>Vendor management</SectionLabel>
@@ -316,7 +308,7 @@ export function VendorsPageContent({ vendors: initialVendors }: { vendors: UiVen
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         <StatCard label="Approved" value={String(approved)} accent="green" />
         <StatCard label="Needs review" value={String(needsReview)} accent="amber" />
-        <StatCard label="SOC 2 on file" value={String(soc2Count)} accent="purple" />
+        <StatCard label="SOC 2 on file" value={String(soc2Count)} accent="green" />
         <StatCard
           label="Medium+ risk"
           value={String(vendors.filter((v) => v.risk !== "Low").length)}
@@ -331,11 +323,11 @@ export function VendorsPageContent({ vendors: initialVendors }: { vendors: UiVen
             <Link
               key={v.id}
               href={`/vendors/${v.id}`}
-              className="marketing-panel group relative block p-5 transition-all hover:border-comply-purple-border/40"
+              className="marketing-panel group relative block p-5 transition-all hover:border-comply-green/40"
             >
               <div className="flex items-start justify-between gap-2">
                 <div>
-                  <p className="font-medium text-comply-text-primary group-hover:text-comply-purple-border">
+                  <p className="font-medium text-comply-text-primary group-hover:text-comply-green-border">
                     {v.name}
                   </p>
                   <p className="text-xs text-comply-text-secondary">{v.category}</p>
@@ -347,7 +339,7 @@ export function VendorsPageContent({ vendors: initialVendors }: { vendors: UiVen
               <p className="mt-3 text-xs text-comply-muted">
                 {v.risk} risk · {v.dataAccess}
               </p>
-              <p className="mt-2 text-xs text-comply-purple-border">Review vendor</p>
+              <p className="mt-2 text-xs text-comply-green-border">Review vendor</p>
             </Link>
           ))}
       </div>
@@ -366,7 +358,7 @@ export function VendorsPageContent({ vendors: initialVendors }: { vendors: UiVen
                 placeholder="Search…"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                className="h-8 w-40 rounded-md border border-white/[0.1] bg-black/30 pl-8 pr-2 text-xs text-comply-text-primary placeholder:text-comply-muted focus:outline-none focus:ring-1 focus:ring-comply-purple/40"
+                className="h-8 w-40 rounded-md border border-white/[0.1] bg-black/30 pl-8 pr-2 text-xs text-comply-text-primary placeholder:text-comply-muted focus:outline-none focus:ring-1 focus:ring-comply-green/40"
               />
             </div>
           }
@@ -383,7 +375,7 @@ export function VendorsPageContent({ vendors: initialVendors }: { vendors: UiVen
                 className={cn(
                   "rounded-md px-3 py-1 text-xs font-medium transition-colors",
                   statusFilter === s
-                    ? "bg-comply-purple text-white"
+                    ? "bg-comply-green text-white"
                     : "text-comply-text-secondary hover:bg-white/[0.04]"
                 )}
               >
@@ -409,7 +401,7 @@ export function VendorsPageContent({ vendors: initialVendors }: { vendors: UiVen
                   <td>
                     <Link
                       href={`/vendors/${v.id}`}
-                      className="font-medium text-comply-text-primary hover:text-comply-purple-border"
+                      className="font-medium text-comply-text-primary hover:text-comply-green-border"
                     >
                       {v.name}
                     </Link>

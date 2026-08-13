@@ -11,10 +11,10 @@ export function AppShellFrame({ children }: { children: React.ReactNode }) {
   return (
     <div className="app-bg relative min-h-screen overflow-x-hidden">
       <Sidebar />
-      <main className="relative z-10 min-h-screen pl-[4.5rem] lg:pl-56">
-        <div className="px-4 py-5 sm:px-6 lg:px-8 lg:py-7">
+      <main className="relative z-10 min-h-screen pt-12 md:pl-14 md:pt-0 lg:pl-56">
+        <div className="mx-auto w-full max-w-[1400px] px-3 py-4 sm:px-5 sm:py-5 lg:px-8 lg:py-7">
           <WorkspaceIdentityBar />
-          {isLoaded && auditor && <ReadOnlyBadge />}
+          {isLoaded && auditor ? <ReadOnlyBadge /> : null}
           {children}
         </div>
       </main>

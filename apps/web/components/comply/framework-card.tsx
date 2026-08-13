@@ -32,8 +32,8 @@ export function FrameworkCard({
         isNew &&
           !isNewSelected &&
           "border-[0.5px] bg-comply-amber-light",
-        isNew && isNewSelected && "border-[1.5px] border-comply-purple bg-comply-amber-light",
-        !isNew && isSelected && "border-[1.5px] border-comply-purple bg-comply-purple-light",
+        isNew && isNewSelected && "border-[1.5px] border-comply-green bg-comply-amber-light",
+        !isNew && isSelected && "border-[1.5px] border-comply-green bg-comply-green-light",
         !isNew && !isSelected && "border-[0.5px] border-[var(--border)] bg-comply-card"
       )}
       style={
@@ -46,7 +46,7 @@ export function FrameworkCard({
         className={cn(
           "text-sm font-medium",
           isNew && "text-comply-amber-text",
-          isSelected && !isNew && "text-comply-purple-text",
+          isSelected && !isNew && "text-comply-green-text",
           !isNew && !isSelected && "text-comply-text-primary"
         )}
       >
@@ -56,7 +56,7 @@ export function FrameworkCard({
         className={cn(
           "mt-0.5 text-xs",
           isNew && "text-comply-amber-dark",
-          isSelected && !isNew && "text-comply-purple",
+          isSelected && !isNew && "text-comply-green",
           !isNew && !isSelected && "text-comply-text-secondary"
         )}
       >
@@ -66,7 +66,7 @@ export function FrameworkCard({
         className={cn(
           "absolute bottom-2 inline-flex h-[14px] items-center justify-center rounded-sm border text-[10px] font-medium",
           isSelected || isNewSelected
-            ? "w-12 border-transparent bg-comply-purple text-comply-purple-light"
+            ? "w-12 border-transparent bg-comply-green text-comply-green-light"
             : "w-14 border-[var(--border-light)] bg-comply-cream text-comply-text-secondary"
         )}
       >

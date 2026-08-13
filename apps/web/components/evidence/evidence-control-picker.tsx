@@ -78,7 +78,7 @@ export function EvidenceControlPicker({ value, onChange, className }: EvidenceCo
             setOpen(true);
             setQuery("");
           }}
-          className="w-full rounded-md border border-white/10 bg-white/[0.04] px-3 py-2 text-sm text-comply-text-primary placeholder:text-comply-muted focus:border-comply-purple-border focus:outline-none focus:ring-1 focus:ring-comply-purple-border/40"
+          className="w-full rounded-md border border-white/10 bg-white/[0.04] px-3 py-2 text-sm text-comply-text-primary placeholder:text-comply-muted focus:border-comply-green-border focus:outline-none focus:ring-1 focus:ring-comply-green-border/40"
         />
       </label>
       <p className="mt-1.5 text-[11px] text-comply-text-tertiary">
@@ -89,7 +89,7 @@ export function EvidenceControlPicker({ value, onChange, className }: EvidenceCo
         <button
           type="button"
           onClick={() => onChange(null)}
-          className="mt-2 text-xs text-comply-text-secondary underline-offset-2 hover:text-comply-purple-border hover:underline"
+          className="mt-2 text-xs text-comply-text-secondary underline-offset-2 hover:text-comply-green-border hover:underline"
         >
           Clear control
         </button>
@@ -128,7 +128,7 @@ export function EvidenceControlPicker({ value, onChange, className }: EvidenceCo
                   className={cn(
                     "w-full px-3 py-2 text-left text-sm hover:bg-white/[0.06]",
                     value?.id === o.id
-                      ? "bg-comply-purple/15 text-comply-purple-border"
+                      ? "bg-comply-green/15 text-comply-green-border"
                       : "text-comply-text-primary"
                   )}
                   onClick={() => {
@@ -137,7 +137,7 @@ export function EvidenceControlPicker({ value, onChange, className }: EvidenceCo
                     setOpen(false);
                   }}
                 >
-                  <span className="font-mono text-xs text-comply-purple-border">{o.code}</span>
+                  <span className="font-mono text-xs text-comply-green-border">{o.code}</span>
                   <span className="mt-0.5 block truncate text-comply-text-secondary">{o.title}</span>
                 </button>
               </li>

@@ -24,11 +24,7 @@ type FrameworkOption = FrameworkRow & {
 };
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
-  return (
-    <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-comply-purple-border">
-      {children}
-    </p>
-  );
+  return <p className="page-eyebrow">{children}</p>;
 }
 
 function FrameworkToggle({
@@ -69,7 +65,7 @@ function FrameworkToggle({
       <p className="mt-1 text-xs leading-relaxed text-comply-text-secondary">{fw.description}</p>
       <div className="mt-2 flex flex-wrap gap-1.5">
         {fw.recommended && (
-          <span className="rounded-sm border border-comply-purple-border/40 bg-comply-purple/10 px-1.5 py-0.5 text-[9px] text-comply-purple-light">
+          <span className="rounded-sm border border-comply-green-border/40 bg-comply-green/10 px-1.5 py-0.5 text-[9px] text-comply-green-light">
             Popular
           </span>
         )}
@@ -240,7 +236,7 @@ export function OnboardingFrameworks() {
 
         {loading ? (
           <div className="relative mt-8 flex justify-center py-12">
-            <div className="h-8 w-8 animate-spin rounded-full border-2 border-comply-purple-border/30 border-t-comply-purple" />
+            <div className="h-8 w-8 animate-spin rounded-full border-2 border-comply-green-border/30 border-t-comply-green" />
           </div>
         ) : (
           <div className="relative mt-5 grid max-h-[420px] gap-2 overflow-y-auto pr-1 sm:grid-cols-2">

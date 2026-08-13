@@ -104,7 +104,7 @@ export function CoursePlayer({
       >
         <div className="flex items-start justify-between gap-3 border-b border-white/[0.08] px-5 py-4">
           <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-comply-purple-border">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-comply-green-border">
               Course
             </p>
             <h2 className="mt-1 text-lg font-medium text-comply-text-primary">
@@ -165,7 +165,7 @@ export function CoursePlayer({
                         className={cn(
                           "flex cursor-pointer items-start gap-2 rounded-md border px-3 py-2 text-sm",
                           answers[q.id] === ci
-                            ? "border-comply-purple-border/50 bg-comply-purple/10 text-comply-text-primary"
+                            ? "border-comply-green-border/50 bg-comply-green/10 text-comply-text-primary"
                             : "border-white/[0.08] text-comply-text-secondary hover:border-white/[0.16]"
                         )}
                       >

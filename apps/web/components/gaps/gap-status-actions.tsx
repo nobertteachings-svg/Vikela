@@ -54,7 +54,7 @@ export function GapStatusActions({
             onChange={(e) => updateStatus(e.target.value as GapStatus)}
             className={cn(
               "rounded-md border border-[var(--border)] bg-comply-primary px-2 py-1.5 text-xs text-comply-text-primary",
-              "focus:border-comply-purple-border focus:outline-none focus:ring-1 focus:ring-comply-purple-border/40",
+              "focus:border-comply-green-border focus:outline-none focus:ring-1 focus:ring-comply-green-border/40",
               busy && "opacity-60"
             )}
           >

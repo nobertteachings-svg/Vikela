@@ -26,7 +26,7 @@ export default async function GapDetailPage({ params }: { params: { id: string }
     <div className="comply-page max-w-3xl">
       <Link
         href="/gaps"
-        className="inline-flex items-center gap-1.5 text-xs font-medium text-comply-text-secondary hover:text-comply-purple-border"
+        className="inline-flex items-center gap-1.5 text-xs font-medium text-comply-text-secondary hover:text-comply-green-border"
       >
         <IconArrowLeft size={14} />
         Back to gaps
@@ -54,7 +54,7 @@ export default async function GapDetailPage({ params }: { params: { id: string }
               <ol className="mt-3 space-y-2.5">
                 {fixSteps.map((step, i) => (
                   <li key={i} className="flex gap-3 text-sm text-comply-text-secondary">
-                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-comply-elevated font-mono text-xs font-semibold text-comply-purple-border">
+                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-comply-elevated font-mono text-xs font-semibold text-comply-green-border">
                       {i + 1}
                     </span>
                     <span className="pt-0.5 leading-relaxed">{step}</span>
@@ -69,7 +69,7 @@ export default async function GapDetailPage({ params }: { params: { id: string }
               <h2 className="text-xs font-semibold uppercase tracking-wider text-comply-text-tertiary">
                 Affected files
               </h2>
-              <code className="mt-2 inline-block rounded-md border border-[var(--border)] bg-comply-primary px-3 py-1.5 font-mono text-xs text-comply-purple-border">
+              <code className="mt-2 inline-block rounded-md border border-[var(--border)] bg-comply-primary px-3 py-1.5 font-mono text-xs text-comply-green-border">
                 {formatFilePath(gap.filePath, gap.lineNumber)}
               </code>
             </section>

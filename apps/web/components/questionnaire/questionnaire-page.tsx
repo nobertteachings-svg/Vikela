@@ -384,9 +384,9 @@ export function QuestionnairePageContent({
           type="button"
           onClick={() => void startQuestionnaire(false)}
           disabled={loading}
-          className="comply-empty w-full cursor-pointer transition-colors hover:border-comply-purple-border hover:bg-comply-purple/5"
+          className="comply-empty w-full cursor-pointer transition-colors hover:border-comply-green-border hover:bg-comply-green/5"
         >
-          <span className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-comply-purple/15 text-comply-purple-border">
+          <span className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-comply-green/15 text-comply-green-border">
             <IconClipboardList size={24} />
           </span>
           <p className="text-sm font-medium text-comply-text-primary">
@@ -402,7 +402,7 @@ export function QuestionnairePageContent({
         <div className="grid gap-6 lg:grid-cols-[240px_1fr]">
           {list.length > 1 ? (
             <aside className="space-y-2">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-comply-purple-border">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-comply-green-border">
                 Assessments
               </p>
               <ul className="space-y-1">
@@ -414,7 +414,7 @@ export function QuestionnairePageContent({
                       className={cn(
                         "w-full rounded-lg border px-3 py-2 text-left text-sm transition-colors",
                         q.id === data.id
-                          ? "border-comply-purple-border/40 bg-comply-purple/10 text-comply-text-primary"
+                          ? "border-comply-green-border/40 bg-comply-green/10 text-comply-text-primary"
                           : "border-transparent hover:bg-comply-surface text-comply-text-secondary"
                       )}
                     >
@@ -439,7 +439,7 @@ export function QuestionnairePageContent({
                         "comply-badge border",
                         isComplete
                           ? "border-comply-green/30 bg-comply-green/10 text-comply-green"
-                          : "border-comply-purple-border/30 bg-comply-purple/10 text-comply-purple-border"
+                          : "border-comply-green-border/30 bg-comply-green/10 text-comply-green-border"
                       )}
                     >
                       {statusLabel(data.status)}
@@ -514,7 +514,7 @@ export function QuestionnairePageContent({
                   className={cn(
                     "rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors",
                     filterCategory === "All"
-                      ? "border-comply-purple-border/40 bg-comply-purple/10 text-comply-text-primary"
+                      ? "border-comply-green-border/40 bg-comply-green/10 text-comply-text-primary"
                       : "border-comply-border text-comply-text-secondary hover:bg-comply-surface"
                   )}
                 >
@@ -530,7 +530,7 @@ export function QuestionnairePageContent({
                       className={cn(
                         "rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors",
                         filterCategory === cat
-                          ? "border-comply-purple-border/40 bg-comply-purple/10 text-comply-text-primary"
+                          ? "border-comply-green-border/40 bg-comply-green/10 text-comply-text-primary"
                           : "border-comply-border text-comply-text-secondary hover:bg-comply-surface"
                       )}
                     >

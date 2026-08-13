@@ -20,7 +20,7 @@ export function MarketingShell({
   return (
     <div className="marketing-bg relative min-h-screen overflow-hidden text-comply-text-primary antialiased">
       <div
-        className="marketing-orb absolute -left-32 top-10 h-[320px] w-[320px] rounded-full bg-comply-purple/20"
+        className="marketing-orb absolute -left-32 top-10 h-[320px] w-[320px] rounded-full bg-comply-green/20"
         aria-hidden
       />
       <div
@@ -31,11 +31,11 @@ export function MarketingShell({
       <div className="marketing-grid-overlay pointer-events-none absolute inset-0 opacity-25" aria-hidden />
 
       <header className="marketing-header relative z-10 border-b">
-        <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-6">
-          <Link href="/">
-            <LogoPill />
+        <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-3 px-4 sm:px-6">
+          <Link href="/" className="min-w-0 shrink-0">
+            <LogoPill size="sm" />
           </Link>
-          <nav className="hidden items-center gap-6 text-sm text-comply-text-secondary md:flex">
+          <nav className="hidden items-center gap-5 text-sm text-comply-text-secondary lg:flex">
             <Link href="/#frameworks" className="hover:text-comply-text-primary">
               Frameworks
             </Link>

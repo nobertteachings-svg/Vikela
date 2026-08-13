@@ -47,7 +47,7 @@ function renderMarkdownLite(text: string) {
     }
     if (part.startsWith("`") && part.endsWith("`")) {
       return (
-        <code key={j} className="rounded bg-comply-primary px-1 text-comply-purple-border">
+        <code key={j} className="rounded bg-comply-primary px-1 text-comply-green-border">
           {part.slice(1, -1)}
         </code>
       );
@@ -374,7 +374,7 @@ export function CopilotWorkspace() {
         <p className="rounded-lg bg-red-500/10 px-4 py-2 text-sm text-red-300">{error}</p>
       ) : null}
 
-      <div className="relative flex h-[calc(100vh-10.5rem)] min-h-[28rem] gap-4 lg:gap-6">
+      <div className="relative flex h-[calc(100vh-12.5rem)] min-h-[24rem] gap-4 sm:min-h-[28rem] md:h-[calc(100vh-10.5rem)] lg:gap-6">
         {threadsOpen ? (
           <button
             type="button"
@@ -411,7 +411,7 @@ export function CopilotWorkspace() {
                 }}
                 className={`w-full rounded-lg px-3 py-2 text-left text-xs transition-colors ${
                   activeThreadId === t.id
-                    ? "bg-comply-purple/20 font-medium text-comply-purple-border nav-active-glow"
+                    ? "bg-comply-green/20 font-medium text-comply-green-border nav-active-glow"
                     : "text-comply-text-secondary hover:bg-comply-elevated"
                 }`}
               >
@@ -440,7 +440,7 @@ export function CopilotWorkspace() {
                     void send(q);
                   }}
                   disabled={loading || streaming}
-                  className="rounded-full border border-[var(--border-strong)] bg-comply-elevated px-3 py-1.5 text-xs text-comply-text-secondary transition-colors hover:border-comply-purple-border hover:text-comply-purple-border disabled:opacity-50"
+                  className="rounded-full border border-[var(--border-strong)] bg-comply-elevated px-3 py-1.5 text-xs text-comply-text-secondary transition-colors hover:border-comply-green-border hover:text-comply-green-border disabled:opacity-50"
                 >
                   {q}
                 </button>
@@ -457,7 +457,7 @@ export function CopilotWorkspace() {
               >
                 {messages.length === 0 && !loading && (
                   <div className="flex flex-col items-center justify-center py-16 text-center">
-                    <Bot className="mb-4 h-12 w-12 text-comply-purple" />
+                    <Bot className="mb-4 h-12 w-12 text-comply-green" />
                     <h3 className="text-lg font-semibold text-comply-text-primary">Vikela Copilot</h3>
                     <p className="mt-1 max-w-md text-sm text-comply-text-secondary">
                       Claude-powered assistant with RAG over your gaps, controls, policies, and
@@ -468,14 +468,14 @@ export function CopilotWorkspace() {
                 {messages.map((msg, i) => (
                   <div key={i} className={`flex gap-3 ${msg.role === "user" ? "justify-end" : ""}`}>
                     {msg.role === "assistant" && (
-                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-comply-purple shadow-[0_2px_8px_var(--purple-glow)]">
+                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-comply-green shadow-[0_2px_8px_var(--purple-glow)]">
                         <Bot className="h-4 w-4 text-white" />
                       </div>
                     )}
                     <div
                       className={`max-w-[85%] rounded-lg px-4 py-3 text-sm leading-relaxed ${
                         msg.role === "user"
-                          ? "bg-comply-purple text-white"
+                          ? "bg-comply-green text-white"
                           : "border border-[var(--border)] bg-comply-elevated text-comply-text-primary"
                       }`}
                     >
@@ -503,7 +503,7 @@ export function CopilotWorkspace() {
                 ))}
                 {(loading || streaming) && messages[messages.length - 1]?.role !== "assistant" && (
                   <div className="flex gap-3">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-comply-purple">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-comply-green">
                       <Loader2 className="h-4 w-4 animate-spin text-white" />
                     </div>
                     <div className="rounded-lg border border-[var(--border)] bg-comply-elevated px-4 py-3 text-sm text-comply-text-secondary">

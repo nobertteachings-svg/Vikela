@@ -22,17 +22,13 @@ import type { UiRisk, UiTeamMember } from "@/lib/ui-mappers";
 import { cn } from "@/lib/utils";
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
-  return (
-    <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-comply-purple-border">
-      {children}
-    </p>
-  );
+  return <p className="page-eyebrow">{children}</p>;
 }
 
 const STATUS_STYLES: Record<RiskStatus, string> = {
   Open: "border-comply-red/30 bg-comply-red/10 text-comply-red",
   Mitigating: "border-comply-amber/30 bg-comply-amber/10 text-comply-amber-text",
-  Accepted: "border-comply-purple-border/30 bg-comply-purple/10 text-comply-purple-border",
+  Accepted: "border-comply-green-border/30 bg-comply-green/10 text-comply-green-border",
   Closed: "border-comply-green/30 bg-comply-green/10 text-comply-green",
 };
 
@@ -452,15 +448,11 @@ export function RisksPageContent({
 
       {formCard}
 
-      <div className="marketing-panel marketing-panel-highlight relative overflow-hidden p-6 sm:p-8">
-        <div
-          className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-comply-purple/20 blur-3xl"
-          aria-hidden
-        />
+      <div className="marketing-panel marketing-panel-highlight relative overflow-hidden p-4 sm:p-6">
         <div className="relative grid gap-6 lg:grid-cols-[1fr_auto]">
           <div className="flex items-start gap-4">
-            <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg border border-comply-purple-border/50 bg-comply-purple/20">
-              <IconChartDots size={28} className="text-comply-purple-border" stroke={1.5} />
+            <span className="hidden sm:flex h-14 w-14 shrink-0 items-center justify-center rounded-lg border border-comply-green-border/50 bg-comply-green/20">
+              <IconChartDots size={28} className="text-comply-green-border" stroke={1.5} />
             </span>
             <div>
               <SectionLabel>Risk program</SectionLabel>
@@ -495,7 +487,7 @@ export function RisksPageContent({
         <StatCard
           label="Accepted"
           value={String(risks.filter((r) => r.status === "Accepted").length)}
-          accent="purple"
+          accent="green"
         />
         <StatCard label="High score (6+)" value={String(highScoreCount)} accent="red" hint="priority" />
       </div>
@@ -560,7 +552,7 @@ export function RisksPageContent({
                 className={cn(
                   "rounded-md px-3 py-1.5 text-xs font-medium transition-colors",
                   category === c
-                    ? "bg-comply-purple text-white"
+                    ? "bg-comply-green text-white"
                     : "border border-white/[0.08] text-comply-text-secondary hover:text-comply-text-primary"
                 )}
               >
@@ -599,7 +591,7 @@ export function RisksPageContent({
                         }}
                         className={cn(
                           "cursor-pointer",
-                          selected?.id === r.id && "bg-comply-purple/10"
+                          selected?.id === r.id && "bg-comply-green/10"
                         )}
                       >
                         <td className="font-medium">{r.name}</td>
@@ -721,7 +713,7 @@ export function RisksPageContent({
 
       <div className="marketing-panel flex flex-col items-start justify-between gap-4 p-6 sm:flex-row sm:items-center">
         <div className="flex items-start gap-3">
-          <IconShield size={20} className="mt-0.5 text-comply-purple-border" />
+          <IconShield size={20} className="mt-0.5 text-comply-green-border" />
           <div>
             <p className="text-sm font-medium text-comply-text-primary">Export for auditor review</p>
             <p className="mt-1 text-xs text-comply-text-secondary">

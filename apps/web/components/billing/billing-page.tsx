@@ -56,11 +56,7 @@ export type BillingSubscriptionProp = {
 };
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
-  return (
-    <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-comply-purple-border">
-      {children}
-    </p>
-  );
+  return <p className="page-eyebrow">{children}</p>;
 }
 
 function usagePercent(used: number, limit: number | null): number {
@@ -78,7 +74,7 @@ function statusBadgeClass(status: string): string {
     return "border-comply-red/40 bg-comply-red/15 text-comply-red";
   }
   if (status === "trialing") {
-    return "border-comply-purple-border/40 bg-comply-purple/15 text-comply-purple-border";
+    return "border-comply-green-border/40 bg-comply-green/15 text-comply-green-border";
   }
   if (status === "active") {
     return "border-comply-green/40 bg-comply-green/15 text-comply-green";
@@ -125,7 +121,7 @@ function UsageMeter({
           </p>
           <p className="mt-1 text-xs leading-relaxed text-comply-text-secondary">{description}</p>
         </div>
-        <span className="shrink-0 font-mono text-xs text-comply-purple-border">{suffix}</span>
+        <span className="shrink-0 font-mono text-xs text-comply-green-border">{suffix}</span>
       </div>
       {limit != null && (
         <div className="comply-progress-track mt-4">
@@ -255,11 +251,7 @@ export function BillingPageContent({
         </div>
       ) : null}
 
-      <div className="marketing-panel marketing-panel-highlight relative overflow-hidden p-6 sm:p-8">
-        <div
-          className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-comply-purple/25 blur-3xl"
-          aria-hidden
-        />
+      <div className="marketing-panel marketing-panel-highlight relative overflow-hidden p-4 sm:p-6">
         <div className="relative grid gap-8 lg:grid-cols-[1fr_auto] lg:items-start">
           <div>
             <SectionLabel>Current plan</SectionLabel>
@@ -277,7 +269,7 @@ export function BillingPageContent({
               </span>
             </div>
             {renewalAmount ? (
-              <p className="mt-2 font-mono text-lg text-comply-purple-border">
+              <p className="mt-2 font-mono text-lg text-comply-green-border">
                 {renewalAmount}
                 <span className="text-sm font-sans font-normal text-comply-text-tertiary">
                   /billing period
@@ -329,7 +321,7 @@ export function BillingPageContent({
               <StatCard
                 label="Team seats"
                 value={`${subscription.seats.used}/${seatLimit}`}
-                accent="purple"
+                accent="green"
               />
               <StatCard
                 label="Integrations"
@@ -385,7 +377,7 @@ export function BillingPageContent({
                 className={cn(
                   "rounded-sm px-3 py-1.5 text-xs font-medium transition-colors",
                   billingInterval === "monthly"
-                    ? "bg-comply-purple/30 text-comply-purple-border"
+                    ? "bg-comply-green/30 text-comply-green-border"
                     : "text-comply-text-tertiary hover:text-comply-text-secondary"
                 )}
               >
@@ -397,7 +389,7 @@ export function BillingPageContent({
                 className={cn(
                   "rounded-sm px-3 py-1.5 text-xs font-medium transition-colors",
                   billingInterval === "annual"
-                    ? "bg-comply-purple/30 text-comply-purple-border"
+                    ? "bg-comply-green/30 text-comply-green-border"
                     : "text-comply-text-tertiary hover:text-comply-text-secondary"
                 )}
               >
@@ -442,11 +434,11 @@ export function BillingPageContent({
                 className={cn(
                   "marketing-panel relative flex flex-col p-5 text-left",
                   plan.highlight && "marketing-panel-highlight",
-                  isCurrent && "border-comply-purple-border/40"
+                  isCurrent && "border-comply-green-border/40"
                 )}
               >
                 {isCurrent && (
-                  <span className="absolute right-4 top-4 rounded-sm border border-comply-purple-border/50 bg-comply-purple/20 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-comply-purple-border">
+                  <span className="absolute right-4 top-4 rounded-sm border border-comply-green-border/50 bg-comply-green/20 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-comply-green-border">
                     Current
                   </span>
                 )}
@@ -513,7 +505,7 @@ export function BillingPageContent({
             <div className="marketing-panel flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex items-center gap-4">
                 <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md border border-white/[0.1] bg-black/30">
-                  <IconCreditCard size={24} className="text-comply-purple-border" stroke={1.5} />
+                  <IconCreditCard size={24} className="text-comply-green-border" stroke={1.5} />
                 </span>
                 <div>
                   {paymentMethod ? (
@@ -644,7 +636,7 @@ export function BillingPageContent({
                           href={inv.pdfUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 text-xs font-medium text-comply-purple-border hover:underline"
+                          className="inline-flex items-center gap-1 text-xs font-medium text-comply-green-border hover:underline"
                         >
                           <IconReceipt size={14} />
                           PDF

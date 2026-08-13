@@ -143,7 +143,7 @@ export default async function GapsPage({
                 <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
                   <Link
                     href="/integrations"
-                    className="rounded-lg bg-comply-purple px-4 py-2 text-sm font-medium text-white hover:opacity-90"
+                    className="rounded-lg bg-comply-green px-4 py-2 text-sm font-medium text-white hover:opacity-90"
                   >
                     Connect integrations
                   </Link>
@@ -155,7 +155,7 @@ export default async function GapsPage({
                   </Link>
                   <Link
                     href="/help/getting-started"
-                    className="text-sm text-comply-purple-border hover:underline"
+                    className="text-sm text-comply-green-border hover:underline"
                   >
                     Getting started guide
                   </Link>
@@ -190,7 +190,7 @@ export default async function GapsPage({
                     <td className="font-mono text-xs text-comply-text-tertiary">
                       {formatFilePath(g.filePath, g.lineNumber)}
                     </td>
-                    <td className="font-mono text-xs text-comply-purple-border">{g.controlCode ?? "—"}</td>
+                    <td className="font-mono text-xs text-comply-green-border">{g.controlCode ?? "—"}</td>
                     {!isResolved && (
                       <td className="text-comply-text-secondary">
                         {formatGapStatus(g.status as never)}

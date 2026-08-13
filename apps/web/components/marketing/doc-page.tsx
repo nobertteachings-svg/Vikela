@@ -34,7 +34,7 @@ export function DocPage({
                   <li key={item.href}>
                     <a
                       href={item.href}
-                      className="text-sm text-comply-text-secondary transition-colors hover:text-comply-purple-border"
+                      className="text-sm text-comply-text-secondary transition-colors hover:text-comply-green-border"
                     >
                       {item.label}
                     </a>

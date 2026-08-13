@@ -15,15 +15,11 @@ import type { UiTeamMember } from "@/lib/ui-mappers";
 import { cn } from "@/lib/utils";
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
-  return (
-    <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-comply-purple-border">
-      {children}
-    </p>
-  );
+  return <p className="page-eyebrow">{children}</p>;
 }
 
 const ROLE_STYLES: Record<TeamRole, string> = {
-  Admin: "border-comply-purple-border/40 bg-comply-purple/15 text-comply-purple-border",
+  Admin: "border-comply-green-border/40 bg-comply-green/15 text-comply-green-border",
   Member: "border-white/[0.12] bg-white/[0.04] text-comply-text-secondary",
   Auditor: "border-comply-green/30 bg-comply-green/10 text-comply-green",
 };
@@ -196,7 +192,7 @@ export function TeamPageContent({
         seats reserved
       </p>
 
-      <div className="marketing-panel marketing-panel-highlight relative overflow-hidden p-6 sm:p-8">
+      <div className="marketing-panel marketing-panel-highlight relative overflow-hidden p-4 sm:p-6">
         <p className="relative text-sm leading-relaxed text-comply-text-secondary">
           Invitations and role changes sync through Clerk. MFA is managed in each user&apos;s Clerk
           account settings. Vikela enforces organization roles and seat limits here.
@@ -204,18 +200,18 @@ export function TeamPageContent({
       </div>
 
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-        <StatCard label="Members" value={String(teamMembers.length)} accent="purple" />
+        <StatCard label="Members" value={String(teamMembers.length)} accent="green" />
         <StatCard label="Pending invites" value={String(pendingCount)} accent="amber" />
         <StatCard label="Admins" value={String(adminCount)} accent="green" />
         <StatCard
           label="Auditors"
           value={String(auditorCount)}
-          accent="purple"
+          accent="green"
           hint="read-only"
         />
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
+      <div className="grid gap-6 xl:grid-cols-[1fr_320px]">
         <Card elevated>
           <CardHeader title="Members" />
           <CardBody className="p-0 pb-1">
@@ -241,14 +237,14 @@ export function TeamPageContent({
                     <tr key={m.id}>
                       <td>
                         <div className="flex items-center gap-3">
-                          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-comply-purple-border/30 bg-comply-purple/15 text-[10px] font-semibold text-comply-purple-border">
+                          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-comply-green-border/30 bg-comply-green/15 text-[10px] font-semibold text-comply-green-border">
                             {initials(m.name)}
                           </span>
                           <div>
                             <p className="font-medium">
                               {m.name}
                               {isOwner ? (
-                                <span className="ml-1 text-[10px] text-comply-purple-border">
+                                <span className="ml-1 text-[10px] text-comply-green-border">
                                   (owner)
                                 </span>
                               ) : null}
@@ -411,7 +407,7 @@ export function TeamPageContent({
             <Card key={role.name} elevated={role.name === "Admin"}>
               <CardBody>
                 <div className="flex items-center gap-2">
-                  <IconUser size={18} className="text-comply-purple-border" />
+                  <IconUser size={18} className="text-comply-green-border" />
                   <h2 className="text-sm font-semibold text-comply-text-primary">{role.name}</h2>
                 </div>
                 <p className="mt-2 text-sm leading-relaxed text-comply-text-secondary">

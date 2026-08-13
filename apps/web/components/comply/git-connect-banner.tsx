@@ -92,7 +92,7 @@ export function GitConnectBanner({
   }
 
   return (
-    <Card elevated className="border-comply-purple-border/25">
+    <Card elevated className="border-comply-green-border/25">
       <CardBody>
         <h2 className="text-lg font-medium text-comply-text-primary">Connect source control</h2>
         <p className="mt-1 max-w-2xl text-sm text-comply-text-secondary">

@@ -66,11 +66,11 @@ export default async function AuditPage() {
         </Card>
         <p className="mt-4 text-xs text-comply-text-tertiary">
           Looking for scan history? See{" "}
-          <Link href="/scans" className="text-comply-purple-border hover:underline">
+          <Link href="/scans" className="text-comply-green-border hover:underline">
             Scan history
           </Link>
           . Public customer page:{" "}
-          <Link href="/trust" className="text-comply-purple-border hover:underline">
+          <Link href="/trust" className="text-comply-green-border hover:underline">
             Trust center
           </Link>
           .

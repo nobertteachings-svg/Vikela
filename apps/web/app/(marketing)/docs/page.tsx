@@ -45,7 +45,7 @@ export default function DocsPage() {
                     href={item.href}
                     className="marketing-panel flex gap-3 p-4 no-underline hover:-translate-y-0.5"
                   >
-                    <Icon size={20} className="shrink-0 text-comply-purple-border" stroke={1.5} />
+                    <Icon size={20} className="shrink-0 text-comply-green-border" stroke={1.5} />
                     <p className="text-sm font-medium text-comply-text-primary">{item.title}</p>
                   </a>
                 );
@@ -180,7 +180,7 @@ export default function DocsPage() {
             <>
               <ProseP>
                 REST API base URL (development default):{" "}
-                <code className="rounded bg-black/40 px-1.5 py-0.5 font-mono text-xs text-comply-purple-border">
+                <code className="rounded bg-black/40 px-1.5 py-0.5 font-mono text-xs text-comply-green-border">
                   http://localhost:3001
                 </code>
                 . Use an API key from Settings, API Keys.
