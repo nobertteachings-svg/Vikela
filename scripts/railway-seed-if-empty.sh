@@ -2,7 +2,7 @@
 # Seed compliance frameworks on first Railway API deploy when the DB is empty.
 set -euo pipefail
 
-ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+ROOT="$(cd "$(dirname "$0")/." && pwd)"
 cd "$ROOT/apps/api"
 
 count="$(npx tsx --eval "
@@ -22,8 +22,8 @@ const prisma = new PrismaClient();
 ")"
 
 if [[ "$count" == "0" ]]; then
-  echo "==> No frameworks in database — running seed"
+  echo "==> No frameworks in database, running seed"
   npm run db:seed
 else
-  echo "==> Database already has $count framework(s) — skipping seed"
+  echo "==> Database already has $count framework(s), skipping seed"
 fi

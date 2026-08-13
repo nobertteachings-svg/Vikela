@@ -85,7 +85,7 @@ export default async function GapDetailPage({ params }: { params: { id: string }
                 className="comply-link mt-2 inline-block font-mono text-sm"
               >
                 {gap.controlCode}
-                {gap.controlTitle ? ` — ${gap.controlTitle}` : ""}
+                {gap.controlTitle ? `, ${gap.controlTitle}` : ""}
               </Link>
             </section>
           )}

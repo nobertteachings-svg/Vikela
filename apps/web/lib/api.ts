@@ -17,7 +17,7 @@ async function clientHeaders(): Promise<HeadersInit> {
 function formatNetworkError(e: unknown): string {
   const detail = e instanceof Error ? e.message : "network error";
   if (/failed to fetch/i.test(detail)) {
-    return "Cannot reach the API — check that the API service is running and NEXT_PUBLIC_API_URL is set on the Web service, then redeploy";
+    return "Cannot reach the API, check that the API service is running and NEXT_PUBLIC_API_URL is set on the Web service, then redeploy";
   }
   return detail;
 }

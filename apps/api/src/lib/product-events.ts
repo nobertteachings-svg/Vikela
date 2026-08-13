@@ -61,7 +61,7 @@ export function captureProductEvent(
   }
 }
 
-/** Product analytics hook — wired to PostHog when POSTHOG_API_KEY is set. */
+/** Product analytics hook, wired to PostHog when POSTHOG_API_KEY is set. */
 export function trackLiteScanCompleted(payload: LiteScanCompletedPayload): void {
   captureProductEvent(
     "lite_scan_completed",

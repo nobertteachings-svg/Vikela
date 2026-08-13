@@ -55,7 +55,7 @@ export function CollectFromGapsButton({
   if (isLoaded && auditor) return null;
 
   const helperText = hasSampleGaps
-    ? "Sample findings can't be collected as evidence — run a full scan on a connected repo first."
+    ? "Sample findings can't be collected as evidence, run a full scan on a connected repo first."
     : openGaps === 0
       ? "No open gaps yet. Run a scan to generate findings you can collect."
       : openGaps != null

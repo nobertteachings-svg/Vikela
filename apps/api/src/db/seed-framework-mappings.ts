@@ -7,7 +7,7 @@ export async function seedFrameworkControlMappings(): Promise<void> {
   for (const [slug, mappings] of Object.entries(FRAMEWORK_CONTROL_MAPPINGS)) {
     const framework = await prisma.framework.findUnique({ where: { slug } });
     if (!framework) {
-      console.warn(`  skip mappings — framework not found: ${slug}`);
+      console.warn(`  skip mappings, framework not found: ${slug}`);
       continue;
     }
 
@@ -35,7 +35,7 @@ export async function seedFrameworkControlMappings(): Promise<void> {
 
 /** Backfill OrgControl rows for orgs enrolled in frameworks before mappings existed. */
 export async function backfillOrgControlsForEnrolledFrameworks(orgId: string): Promise<number> {
-  // Static import — dynamic import() under `tsx watch` intermittently returns
+  // Static import, dynamic import() under `tsx watch` intermittently returns
   // ERR_INVALID_RETURN_PROPERTY_VALUE from the load hook.
   const enrolled = await prisma.orgFramework.findMany({
     where: { orgId },

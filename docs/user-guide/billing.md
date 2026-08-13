@@ -1,6 +1,6 @@
 # Billing
 
-**Path:** Sidebar → **Billing** (`/billing`) — **admin only** (auditors blocked)  
+**Path:** Sidebar → **Billing** (`/billing`), **admin only** (auditors blocked)  
 **Who:** Admin.
 
 ## Purpose

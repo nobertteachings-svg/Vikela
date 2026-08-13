@@ -50,7 +50,7 @@ function stackFromDirectoryHints(directoryNames: string[]): RepoStack | null {
   return null;
 }
 
-/** Detect stack from repo file paths (from git.listFiles — no extra API round-trip). */
+/** Detect stack from repo file paths (from git.listFiles, no extra API round-trip). */
 export function detectRepoStack(
   filePaths: string[],
   options?: DetectRepoStackOptions

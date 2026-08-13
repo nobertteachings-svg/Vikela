@@ -32,7 +32,7 @@ export async function getMemberForRequest(
     where: { orgId_clerkId: { orgId: org.id, clerkId: auth.userId } },
   });
   if (!member) {
-    // Webhook lag / first request after org select — bootstrap Member row.
+    // Webhook lag / first request after org select, bootstrap Member row.
     try {
       await ensureMembershipFromSession(req);
     } catch {
@@ -108,7 +108,7 @@ export async function requireRole(
   const member = await getMemberForRequest(req);
   if (!member) {
     forbidden(
-      "You are not a member of this workspace — select Optic Inc in the org switcher, refresh, and try again."
+      "You are not a member of this workspace, select Optic Inc in the org switcher, refresh, and try again."
     );
   }
   if (!allowed.includes(member.role)) {

@@ -62,7 +62,7 @@ const SCAN_CHECKS = [
 ] as const;
 
 const TRUST_LINES = [
-  "Read-only OAuth — we never store your source code",
+  "Read-only OAuth, we never store your source code",
   "Findings map to SOC 2, HIPAA, ISO 27001, and more",
   "AWS, Azure, GCP, and identity providers come next",
 ] as const;
@@ -110,12 +110,12 @@ function ConnectAside() {
   return (
     <div className="mb-12 max-w-md lg:mb-0 lg:flex-1">
       <SectionLabel>Onboarding · Step 1 of 3</SectionLabel>
-      <h1 className="mt-4 bg-gradient-to-br from-[#faf9f5] via-[#d8d6ce] to-[#888780] bg-clip-text text-3xl font-medium leading-tight tracking-tight text-transparent text-balance sm:text-4xl">
+      <h1 className="mt-4 font-display text-2xl font-semibold text-comply-text-primary text-balance sm:text-3xl">
         Connect your repositories
       </h1>
       <p className="mt-4 text-sm leading-relaxed text-comply-text-secondary">
         Choose your git provider, authorize read-only access, and we&apos;ll import the repositories
-        you grant access to—then run your first compliance scan.
+        you grant access to, then run your first compliance scan.
       </p>
 
       <ul className="mt-8 space-y-3">
@@ -145,7 +145,7 @@ function ConnectAside() {
         </ul>
         <p className="mt-4 flex items-center gap-1.5 border-t border-white/[0.06] pt-3 text-[10px] text-comply-muted">
           <IconLock size={12} stroke={1.5} />
-          No code is stored — metadata and policy signals only
+          No code is stored, metadata and policy signals only
         </p>
       </div>
     </div>
@@ -249,7 +249,7 @@ function GitHubConnectSection({
       <p className="mb-3 text-[11px] leading-relaxed text-comply-text-secondary">
         Install the Vikela GitHub App and pick which repositories to grant (including{" "}
         <strong className="text-comply-text-primary">private</strong> ones). Same flow as Railway /
-        Vercel — choose <strong>Only select repositories</strong> on GitHub.
+        Vercel, choose <strong>Only select repositories</strong> on GitHub.
       </p>
 
       <div className="flex flex-col gap-2">
@@ -266,7 +266,7 @@ function GitHubConnectSection({
           </Link>
         ) : (
           <p className="text-center text-xs text-red-300">
-            GitHub is not configured on the API — set GITHUB_APP_ID + GITHUB_APP_PRIVATE_KEY (or
+            GitHub is not configured on the API, set GITHUB_APP_ID + GITHUB_APP_PRIVATE_KEY (or
             OAuth client credentials) on Railway.
           </p>
         )}
@@ -301,7 +301,7 @@ function GitHubConnectSection({
 
       {info && !info.appInstall && info.oauth && (
         <p className="mt-3 text-center text-[10px] leading-relaxed text-amber-200/80">
-          App install unavailable (missing PEM) — using OAuth fallback. Add{" "}
+          App install unavailable (missing PEM), using OAuth fallback. Add{" "}
           <code className="font-mono">GITHUB_APP_PRIVATE_KEY</code> for Railway-style install.
         </p>
       )}
@@ -605,7 +605,7 @@ function ConnectPanel({
             background: "color-mix(in srgb, var(--purple) 10%, transparent)",
           }}
         >
-          <strong className="font-medium text-comply-text-primary">Local dev mode</strong> — demo org
+          <strong className="font-medium text-comply-text-primary">Local dev mode</strong>: demo org
           with mock repos, or connect live integrations from Integrations after onboarding.
         </div>
       )}
@@ -621,9 +621,9 @@ function ConnectPanel({
           <IconPlugConnected size={14} className="mr-1 inline" />
           {PROVIDER_LABELS[justConnected.toUpperCase()] ?? justConnected} account verified
           {reposLoading
-            ? " — importing repositories…"
+            ? ", importing repositories…"
             : hasImportedRepos
-              ? ` — ${repos.length} available`
+              ? `, ${repos.length} available`
               : ""}
         </p>
       )}
@@ -867,7 +867,7 @@ function OnboardingConnectReposBody({
       const syncMessage = e instanceof Error ? e.message : "Could not sync repositories";
       try {
         await loadRepos();
-        setError(`${syncMessage} — showing last imported list.`);
+        setError(`${syncMessage}, showing last imported list.`);
       } catch {
         setError(syncMessage);
       }

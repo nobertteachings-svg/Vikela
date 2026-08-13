@@ -1,7 +1,7 @@
 import { STSClient, AssumeRoleCommand, GetCallerIdentityCommand } from "@aws-sdk/client-sts";
 import type { AwsCredentialIdentity } from "@aws-sdk/types";
 
-/** IAM access keys look like AKIA… / ASIA… — never a bare 12-digit account id. */
+/** IAM access keys look like AKIA… / ASIA…, never a bare 12-digit account id. */
 export function isValidAwsAccessKeyId(value: string | undefined): boolean {
   const v = value?.trim() ?? "";
   return /^(AKIA|ASIA)[A-Z0-9]{16}$/.test(v);

@@ -42,8 +42,7 @@ export class BitbucketProvider implements IGitProvider {
       ...init,
       headers: {
         Authorization: `Bearer ${this.token}`,
-        Accept: "application/json",
-        ...init?.headers,
+        Accept: "application/json", ...init?.headers,
       },
     });
     if (!res.ok) {
@@ -58,7 +57,7 @@ export class BitbucketProvider implements IGitProvider {
       }
       throw new Error(
         detail
-          ? `Bitbucket API: ${res.status} — ${detail}`
+          ? `Bitbucket API: ${res.status}, ${detail}`
           : `Bitbucket API: ${res.status}`
       );
     }

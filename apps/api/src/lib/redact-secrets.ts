@@ -15,7 +15,7 @@ const SECRET_PATTERNS: RegExp[] = [
   /token\s*[:=]\s*['"][^'"]{12,}['"]/gi,
 ];
 
-const REDACTED_PLACEHOLDER = "[REDACTED — sensitive value removed]";
+const REDACTED_PLACEHOLDER = "[REDACTED, sensitive value removed]";
 
 export function redactCodeSnippet(snippet: string | null | undefined): string | null {
   if (!snippet) return snippet ?? null;

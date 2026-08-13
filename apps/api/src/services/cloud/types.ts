@@ -1,5 +1,5 @@
 export interface CloudCredentials {
-  /** AWS cross-account role ARN — never store long-lived customer keys */
+  /** AWS cross-account role ARN, never store long-lived customer keys */
   roleArn?: string;
   /** External ID for STS AssumeRole (recommended) */
   externalId?: string;

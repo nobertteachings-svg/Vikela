@@ -40,11 +40,11 @@ Exact availability depends on seeding/catalog version.
 
 ## Related entities
 
-- [Controls](./controls.md) — library filtered by framework  
-- [Gaps and findings](./gaps-and-findings.md) — drive failing controls  
-- [Evidence](./evidence.md) — supports control coverage  
-- [Policies](./policies.md) — publish policies mapped to frameworks  
-- [Trust](./getting-started.md#trust-center) — public view of enrolled frameworks  
+- [Controls](./controls.md), library filtered by framework  
+- [Gaps and findings](./gaps-and-findings.md), drive failing controls  
+- [Evidence](./evidence.md), supports control coverage  
+- [Policies](./policies.md), publish policies mapped to frameworks  
+- [Trust](./getting-started.md#trust-center), public view of enrolled frameworks  
 
 ## Role notes
 

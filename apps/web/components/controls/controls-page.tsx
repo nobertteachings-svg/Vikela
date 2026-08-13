@@ -83,7 +83,7 @@ export function ControlsPageContent({
       <PageHeader
         eyebrow="Compliance"
         title="Controls"
-        description="Every framework your customers ask for—mapped to controls with live evidence and gap status from your stack."
+        description="Every framework your customers ask for, mapped to controls with live evidence and gap status from your stack."
       />
 
       <div className="marketing-panel marketing-panel-highlight relative overflow-hidden p-6 sm:p-8">

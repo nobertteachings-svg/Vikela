@@ -5,7 +5,7 @@
 
 ## Purpose
 
-AI assistant grounded in your workspace: ask about gaps, controls, evidence, and remediation without leaving Vikela. Answers should reference your org’s data—not generic internet advice alone.
+AI assistant grounded in your workspace: ask about gaps, controls, evidence, and remediation without leaving Vikela. Answers should reference your org’s data, not generic internet advice alone.
 
 ## Navigation and primary workflows
 

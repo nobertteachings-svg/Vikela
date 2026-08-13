@@ -113,7 +113,7 @@ export async function executeFullScan(
       completedAt: new Date(),
     });
 
-    // Parent FULL scan has no gap rows — gap alert emails fire when each sub-scan completes.
+    // Parent FULL scan has no gap rows, gap alert emails fire when each sub-scan completes.
     notifyScanEmails(
       orgId,
       {

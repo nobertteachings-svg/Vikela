@@ -2,7 +2,7 @@ import Anthropic from "@anthropic-ai/sdk";
 import { redactCodeSnippet } from "./redact-secrets.js";
 
 const MODEL = process.env.ANTHROPIC_MODEL ?? "claude-sonnet-4-20250514";
-/** Per-call timeout — hung Anthropic requests must not stall BullMQ scans. */
+/** Per-call timeout, hung Anthropic requests must not stall BullMQ scans. */
 const REMEDIATION_TIMEOUT_MS = 20_000;
 
 let client: Anthropic | null = null;

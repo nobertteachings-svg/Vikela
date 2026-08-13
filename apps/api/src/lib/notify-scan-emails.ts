@@ -17,7 +17,7 @@ export type ScanEmailContext = {
 };
 
 export type NotifyScanEmailsOptions = {
-  /** Full-scan parent rows have no gap rows — gap alerts run on sub-scans only. */
+  /** Full-scan parent rows have no gap rows, gap alerts run on sub-scans only. */
   includeGapAlerts?: boolean;
 };
 

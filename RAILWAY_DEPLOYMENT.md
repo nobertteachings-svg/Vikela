@@ -6,7 +6,7 @@ This guide explains how to deploy Vikela to Railway.
 
 - Railway account ([railway.app](https://railway.app))
 - GitHub repository with your Vikela code
-- Clerk account for authentication (`ALLOW_DEMO_INTEGRATIONS` is local-dev only — keep `false` on Railway)
+- Clerk account for authentication (`ALLOW_DEMO_INTEGRATIONS` is local-dev only, keep `false` on Railway)
 
 ## Architecture on Railway
 
@@ -41,10 +41,10 @@ You'll need to create 4 services in your Railway project:
 
 ### 4. Configure the API Service
 
-1. **Remove Root Directory** — leave it **empty** (repo root). Railway must see `package-lock.json` at the root.
+1. **Remove Root Directory**: leave it **empty** (repo root). Railway must see `package-lock.json` at the root.
 2. In API service **Settings** → **Config file path**: `apps/api/railway.json`
 3. Or set manually:
-   - **Build Command:** `npm run build -w @vikela/api` (Nixpacks runs `npm ci` in the install phase — do not repeat it here)
+   - **Build Command:** `npm run build -w @vikela/api` (Nixpacks runs `npm ci` in the install phase, do not repeat it here)
    - **Start Command:** `bash scripts/railway-start-api.sh`
 
 4. Add these environment variables to the API service:
@@ -67,7 +67,7 @@ CLERK_PUBLISHABLE_KEY=pk_test_REPLACE_ME
 CLERK_SECRET_KEY=sk_test_REPLACE_ME
 CLERK_WEBHOOK_SECRET=whsec_REPLACE_ME
 
-# Local-dev only — keep false in production. Never enable demo integrations on Railway.
+# Local-dev only, keep false in production. Never enable demo integrations on Railway.
 ALLOW_DEMO_INTEGRATIONS=false
 VIKELA_DEV_ORG_SLUG=demo
 
@@ -83,7 +83,7 @@ DISABLE_SCAN_WORKER=false
 # AI (optional)
 ANTHROPIC_API_KEY=sk-ant-api03-REPLACE_ME
 
-# GitHub — public App required for customer install (Railway/Vercel-style)
+# GitHub, public App required for customer install (Railway/Vercel-style)
 # See "GitHub App setup" section below.
 GITHUB_APP_ID=YOUR_GITHUB_APP_ID
 GITHUB_APP_PRIVATE_KEY=-----BEGIN RSA PRIVATE KEY-----\nREPLACE_WITH_GITHUB_APP_PEM\n-----END RSA PRIVATE KEY-----\n
@@ -120,14 +120,14 @@ STRIPE_WEBHOOK_SECRET=
 
 ### 5. Configure the Web Service
 
-1. **Root Directory** — leave **empty** (repo root). Do not set `apps/web`.
+1. **Root Directory**: leave **empty** (repo root). Do not set `apps/web`.
 2. In Web service **Settings** → **Config file path**: `apps/web/railway.json`
 3. Or set manually:
    - **Builder:** Nixpacks
-   - **Build Command:** `npm run build -w @vikela/shared && npm run build -w @vikela/web` (Nixpacks runs `npm ci --include=dev` in the install phase — do not repeat it here)
+   - **Build Command:** `npm run build -w @vikela/shared && npm run build -w @vikela/web` (Nixpacks runs `npm ci --include=dev` in the install phase, do not repeat it here)
    - **Start Command:** `npm run start -w @vikela/web`
    - **Healthcheck Path:** `/`
-4. Clear any dashboard overrides that use `cd ../..` or `npm run start` without the workspace flag — those only applied when Root Directory was `apps/web`.
+4. Clear any dashboard overrides that use `cd ./.` or `npm run start` without the workspace flag, those only applied when Root Directory was `apps/web`.
 
 5. Add these environment variables to the web service:
 
@@ -136,7 +136,7 @@ STRIPE_WEBHOOK_SECRET=
 NODE_ENV=production
 NEXT_PUBLIC_API_URL=https://YOUR_API.up.railway.app
 
-# Auth (same Clerk application as API — both keys required on Web)
+# Auth (same Clerk application as API, both keys required on Web)
 CLERK_SECRET_KEY=sk_test_REPLACE_ME
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_REPLACE_ME
 NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
@@ -305,9 +305,9 @@ If deploy logs show `Clerk: Handshake token verification failed` / `secret-key-i
 
 1. In [Clerk Dashboard](https://dashboard.clerk.com) → your app → **API Keys**, copy the **publishable** and **secret** keys from the **same** application.
 2. On the **Web** service, set:
-   - `CLERK_SECRET_KEY` = `sk_test_...` or `sk_live_...`
-   - `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` = matching `pk_test_...` or `pk_live_...`
-3. Keys must be a matching pair (both test or both live — not mixed).
+   - `CLERK_SECRET_KEY` = `sk_test_..` or `sk_live_..`
+   - `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` = matching `pk_test_..` or `pk_live_..`
+3. Keys must be a matching pair (both test or both live, not mixed).
 4. No quotes or trailing spaces in Railway variable values.
 5. After changing any `NEXT_PUBLIC_*` variable, **redeploy** (Next.js bakes them in at build time). `CLERK_SECRET_KEY` alone only needs a service restart/redeploy.
 

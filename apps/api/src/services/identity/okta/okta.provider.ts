@@ -198,7 +198,7 @@ export class OktaProvider implements IIdentityProvider {
     if (logs.length === 0) {
       findings.push({
         title: "No Okta system log events in the last 7 days",
-        description: "Unable to retrieve audit logs — verify okta.logs.read scope or log retention.",
+        description: "Unable to retrieve audit logs, verify okta.logs.read scope or log retention.",
         severity: "LOW",
         source: "LOGGING",
         resourceType: "OktaLog",

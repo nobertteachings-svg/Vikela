@@ -150,7 +150,7 @@ export const identityRoutes: FastifyPluginAsync = async (app) => {
         .status(503)
         .send(
           err(
-            "Auth0 is not configured — set AUTH0_MANAGEMENT_CLIENT_ID and AUTH0_MANAGEMENT_CLIENT_SECRET on the API"
+            "Auth0 is not configured, set AUTH0_MANAGEMENT_CLIENT_ID and AUTH0_MANAGEMENT_CLIENT_SECRET on the API"
           )
         );
     }
@@ -176,7 +176,7 @@ export const identityRoutes: FastifyPluginAsync = async (app) => {
         .status(404)
         .send(
           err(
-            "Organization not found — select Optic Inc in the org switcher, refresh /integrations, then try again."
+            "Organization not found, select Optic Inc in the org switcher, refresh /integrations, then try again."
           )
         );
     }

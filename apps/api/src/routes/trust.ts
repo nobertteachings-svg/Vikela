@@ -152,7 +152,7 @@ export const trustRoutes: FastifyPluginAsync = async (app) => {
     return reply.send(ok({ settings: next.trust }));
   });
 
-  /** Visitor trust center — only when published. */
+  /** Visitor trust center, only when published. */
   app.get("/public/trust/:slug", async (req, reply) => {
     const { slug } = req.params as { slug: string };
     const org = await prisma.organization.findUnique({
@@ -178,7 +178,7 @@ export const trustRoutes: FastifyPluginAsync = async (app) => {
     );
   });
 
-  /** Visitor report request — published centers only. */
+  /** Visitor report request, published centers only. */
   app.post("/public/trust/:slug/report-request", async (req, reply) => {
     const { slug } = req.params as { slug: string };
     const body = (req.body ?? {}) as {
@@ -259,7 +259,7 @@ export const trustRoutes: FastifyPluginAsync = async (app) => {
       admins.map((to) =>
         sendEmail({
           to,
-          subject: `Trust center report request — ${org.name}`,
+          subject: `Trust center report request, ${org.name}`,
           html: `
             <p>Someone requested a compliance report via your trust center.</p>
             <ul>
@@ -279,7 +279,7 @@ export const trustRoutes: FastifyPluginAsync = async (app) => {
     return reply.send(
       ok({
         received: true,
-        message: `Thanks — we notified ${org.name}. They’ll follow up at ${email}.`,
+        message: `Thanks, we notified ${org.name}. They’ll follow up at ${email}.`,
       })
     );
   });

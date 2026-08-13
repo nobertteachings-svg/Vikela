@@ -1,5 +1,5 @@
 /**
- * Cross-framework control graph — maps canonical Vikela controls (SOC 2 codes)
+ * Cross-framework control graph, maps canonical Vikela controls (SOC 2 codes)
  * to each compliance framework's requirement identifiers.
  * One scan finding on CC6.1 satisfies SOC 2, HIPAA, ISO 27001, etc.
  */
@@ -227,24 +227,24 @@ const CMMC_MAP: Record<string, string> = {
 };
 
 const SOC1_MAP: Record<string, string> = {
-  "CC1.1": "Control Environment — Integrity",
-  "CC1.2": "Control Environment — Board oversight",
-  "CC2.1": "Communication — Internal",
-  "CC3.1": "Risk Assessment — Objectives",
-  "CC5.1": "Control Activities — Selection",
-  "CC5.2": "Control Activities — Technology",
+  "CC1.1": "Control Environment: Integrity",
+  "CC1.2": "Control Environment: Board oversight",
+  "CC2.1": "Communication: Internal",
+  "CC3.1": "Risk Assessment: Objectives",
+  "CC5.1": "Control Activities: Selection",
+  "CC5.2": "Control Activities: Technology",
   "CC8.1": "Change Management",
-  "PI1.1": "Processing Integrity — Completeness",
-  "PI1.2": "Processing Integrity — Accuracy",
+  "PI1.1": "Processing Integrity: Completeness",
+  "PI1.2": "Processing Integrity: Accuracy",
   "CC9.2": "Vendor Management",
-  "CC4.1": "Monitoring — Ongoing evaluations",
-  "CC4.2": "Monitoring — Deficiency communication",
+  "CC4.1": "Monitoring: Ongoing evaluations",
+  "CC4.2": "Monitoring: Deficiency communication",
 };
 
-/** Framework slug → control mappings (excludes soc2 — seeded from SOC2_CONTROLS). */
+/** Framework slug → control mappings (excludes soc2, seeded from SOC2_CONTROLS). */
 export const FRAMEWORK_CONTROL_MAPPINGS: Record<string, FrameworkControlMapping[]> = {
   soc1: mapCodes(Object.keys(SOC1_MAP), (c) => SOC1_MAP[c] ?? c),
-  soc3: mapCodes(CANONICAL_CONTROL_CODES, (c) => `SOC 3 Trust Report — ${c}`),
+  soc3: mapCodes(CANONICAL_CONTROL_CODES, (c) => `SOC 3 Trust Report: ${c}`),
   hipaa: mapCodes(Object.keys(HIPAA_MAP), (c) => HIPAA_MAP[c] ?? c),
   iso27001: mapCodes(Object.keys(ISO27001_MAP), (c) => ISO27001_MAP[c] ?? c),
   iso42001: mapCodes(Object.keys(ISO42001_MAP), (c) => ISO42001_MAP[c] ?? c),

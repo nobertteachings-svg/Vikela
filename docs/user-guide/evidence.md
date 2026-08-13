@@ -5,7 +5,7 @@
 
 ## Purpose
 
-The evidence locker stores proof that controls are operating—uploads, auto-collected artifacts from findings, and audit-period exports for external auditors.
+The evidence locker stores proof that controls are operating, uploads, auto-collected artifacts from findings, and audit-period exports for external auditors.
 
 ## Navigation and primary workflows
 
@@ -13,7 +13,7 @@ The evidence locker stores proof that controls are operating—uploads, auto-col
 2. Review coverage: controls with ≥1 linked evidence item.
 3. **Upload** files and optionally link a control.
 4. **Collect from gaps** for eligible open findings.
-5. Set an **audit period** and **export** (ZIP) when preparing for audit—auditors use export heavily.
+5. Set an **audit period** and **export** (ZIP) when preparing for audit, auditors use export heavily.
 
 > **Screenshot:** Evidence locker with coverage meter and upload
 
@@ -21,11 +21,11 @@ The evidence locker stores proof that controls are operating—uploads, auto-col
 
 `.pdf`, `.png`, `.jpg`, `.jpeg`, `.txt`, `.csv`, `.json`
 
-Uploads go to object storage (S3)—not the database. Type may be recorded as `OTHER` unless the UI offers finer types.
+Uploads go to object storage (S3), not the database. Type may be recorded as `OTHER` unless the UI offers finer types.
 
 ## Coverage
 
-**Coverage** ≈ share of controls that have at least one linked evidence item. Pair with gap closure for real audit readiness—not uploads alone.
+**Coverage** ≈ share of controls that have at least one linked evidence item. Pair with gap closure for real audit readiness, not uploads alone.
 
 ## Plan storage
 
@@ -52,6 +52,6 @@ Evidence storage counts against plan MB limits (product may approximate usage). 
 | Upload fails | Check file type/size; storage plan limit; admin role |
 | Cannot collect from gap | Sample/onboarding gaps are blocked |
 | Export empty | Widen audit period; confirm items exist |
-| Auditor can’t upload | Expected—use export or ask a member to upload |
+| Auditor can’t upload | Expected, use export or ask a member to upload |
 
 Back to [User guide index](./README.md).

@@ -50,7 +50,7 @@ export function validateApiProductionEnv(): void {
 
   if (!process.env.CORS_ALLOWED_ORIGINS?.trim()) {
     console.warn(
-      "CORS_ALLOWED_ORIGINS is not set — only APP_URL will be allowed. Set CORS_ALLOWED_ORIGINS to your Web Railway URL."
+      "CORS_ALLOWED_ORIGINS is not set, only APP_URL will be allowed. Set CORS_ALLOWED_ORIGINS to your Web Railway URL."
     );
   }
 }

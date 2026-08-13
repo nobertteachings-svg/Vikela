@@ -134,7 +134,7 @@ export function OnboardingScan() {
 
           {showSampleNote && (
             <p className="rounded-md border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-center text-xs text-amber-200/90">
-              <strong>Sample preview</strong> — we couldn&apos;t find enough issues in the connected repo
+              <strong>Sample preview</strong>: we couldn&apos;t find enough issues in the connected repo
               {scan.repoStack ? ` (${scan.repoStack})` : ""}, so these example findings show what Vikela
               surfaces. Connect more repos or run a full scan for live results.
             </p>

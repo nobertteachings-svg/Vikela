@@ -1,18 +1,18 @@
-# Vikela — Developer Handover
+# Vikela. Developer Handover
 
 **Last updated:** May 23, 2026  
 **Audience:** Engineers onboarding to the Vikela monorepo  
-**Tagline:** *Protect. Shield. Comply.* — Universal Compliance Engine
+**Tagline:** *Protect. Shield. Comply.*. Universal Compliance Engine
 
 This document is the single read-through guide to how Vikela is built, how data flows, and where to change things safely.
 
-**Production status (May 2026):** Ready for design-partner / paid beta after env configuration and a passing [STAGING_SMOKE_CHECKLIST.md](./STAGING_SMOKE_CHECKLIST.md) run. Security (auth, RBAC, tenant isolation, secret redaction, webhook verification) is implemented — see the audit for launch checklist and remaining P2/GA items.
+**Production status (May 2026):** Ready for design-partner / paid beta after env configuration and a passing [STAGING_SMOKE_CHECKLIST.md](./STAGING_SMOKE_CHECKLIST.md) run. Security (auth, RBAC, tenant isolation, secret redaction, webhook verification) is implemented, see the audit for launch checklist and remaining P2/GA items.
 
 **Related docs:**
 
-- [PRODUCTION_READINESS_AUDIT.md](./PRODUCTION_READINESS_AUDIT.md) — launch gaps, security resolutions, env checklist
-- [STAGING_SMOKE_CHECKLIST.md](./STAGING_SMOKE_CHECKLIST.md) — pre-launch gate on staging
-- [SMOKE_RUN_LOCAL.md](./SMOKE_RUN_LOCAL.md) — local API smoke notes (not a staging substitute)
+- [PRODUCTION_READINESS_AUDIT.md](./PRODUCTION_READINESS_AUDIT.md), launch gaps, security resolutions, env checklist
+- [STAGING_SMOKE_CHECKLIST.md](./STAGING_SMOKE_CHECKLIST.md), pre-launch gate on staging
+- [SMOKE_RUN_LOCAL.md](./SMOKE_RUN_LOCAL.md), local API smoke notes (not a staging substitute)
 
 ---
 
@@ -90,7 +90,7 @@ vikela/
 
 ```bash
 cp .env.example .env
-# Required: ENCRYPTION_KEY — openssl rand -hex 32
+# Required: ENCRYPTION_KEY, openssl rand -hex 32
 
 docker compose up -d
 npm install
@@ -117,7 +117,7 @@ File: `apps/api/src/lib/org-context.ts`
 
 1. Org API key (`Bearer vk_*`) → `ApiKey.keyHash` → org
 2. Clerk session `orgId` → `Organization.clerkOrgId`
-3. Headers `X-Clerk-Org-Id` / `X-Org-Slug` — only when auth not enforced, user has Clerk session, or `X-Vikela-Internal-Secret` matches
+3. Headers `X-Clerk-Org-Id` / `X-Org-Slug`, only when auth not enforced, user has Clerk session, or `X-Vikela-Internal-Secret` matches
 4. Dev fallback: org `demo` when auth not enforced
 
 ### API authentication
@@ -130,9 +130,9 @@ File: `apps/api/src/lib/org-context.ts`
 
 **Auth guard order:** org API key → internal secret → Clerk JWT.
 
-**Internal secret rules:** In production, internal secret alone cannot perform write mutations without a signed-in user. Next.js `server-api.ts` does not send internal secret in production — RSC/route handlers must use Clerk JWT.
+**Internal secret rules:** In production, internal secret alone cannot perform write mutations without a signed-in user. Next.js `server-api.ts` does not send internal secret in production. RSC/route handlers must use Clerk JWT.
 
-**Membership gate:** After JWT auth, the guard verifies the user has a `Member` row for the session org — except on bootstrap paths (see below).
+**Membership gate:** After JWT auth, the guard verifies the user has a `Member` row for the session org, except on bootstrap paths (see below).
 
 **Org API key IP allowlist:** When `Organization.settings.security.ipAllowlist` is non-empty, API key requests from other IPs receive HTTP 403. Implemented in `plugins/auth-guard.ts` via `lib/ip-allowlist.ts`.
 
@@ -149,7 +149,7 @@ Clerk webhooks normally create `Member` rows, but onboarding must work before th
 | `POST /api/v1/onboarding/lite-scan` | Start onboarding scan |
 | `GET /api/v1/onboarding/lite-scan/status` | Poll lite scan progress |
 
-Clerk webhook handler: `routes/clerk-webhook.ts` — org create, membership sync, framework enrollment, `auditor_invite_accepted` event.
+Clerk webhook handler: `routes/clerk-webhook.ts`, org create, membership sync, framework enrollment, `auditor_invite_accepted` event.
 
 ### API authorization
 
@@ -192,9 +192,9 @@ File: `apps/api/src/lib/plan-limits.ts`
 
 Enforced on:
 
-- `POST /scans/*`, `POST /repositories/:id/scan`, `POST /cloud-accounts/:id/scan`, `POST /identity-integrations/:id/scan` — monthly scan cap
-- `POST /members/invite` — seat cap
-- `POST /integrations/:provider/connect` — integration cap (skips if reconnecting same provider)
+- `POST /scans/*`, `POST /repositories/:id/scan`, `POST /cloud-accounts/:id/scan`, `POST /identity-integrations/:id/scan`, monthly scan cap
+- `POST /members/invite`, seat cap
+- `POST /integrations/:provider/connect`, integration cap (skips if reconnecting same provider)
 
 Returns HTTP 402 with upgrade message when exceeded.
 
@@ -214,13 +214,13 @@ Key models beyond core compliance entities:
 
 | Model | Purpose |
 |-------|---------|
-| `Organization.settings` | JSON — notifications, security prefs (incl. `ipAllowlist`) |
+| `Organization.settings` | JSON, notifications, security prefs (incl. `ipAllowlist`) |
 | `Member` | Clerk user ↔ org with Vikela role |
 | `PendingInvite` | Outstanding Clerk invites (email, role, expiry) |
 | `ApiKey` | Hashed API keys per org |
 | `OrgWebhook` | Outbound webhook endpoints |
 | `TrainingAssignment` | Per-member module progress |
-| `AuditEvent` | Immutable admin action log (DB only — no dedicated UI yet) |
+| `AuditEvent` | Immutable admin action log (DB only, no dedicated UI yet) |
 | `Vendor` | Extended fields: score, documents, subprocessors, etc. |
 | `Scan.parentScanId` | Links child scans to a full-scan parent; lite scans use `isLiteScan` |
 | `Gap.isSample` | Sample/onboarding gaps excluded from RAG via `openRealGapsWhere()` |
@@ -265,7 +265,7 @@ Full scans (`execute-full-scan.ts`) create a parent scan and child scans with `p
 
 ---
 
-## 8. Web App Routes — Data Sources
+## 8. Web App Routes. Data Sources
 
 | Route | Data source |
 |-------|-------------|
@@ -277,7 +277,7 @@ Full scans (`execute-full-scan.ts`) create a parent scan and child scans with `p
 | `/team` | **API** (`/members`, `/members/invites`) |
 | `/evidence` | **API** + client upload |
 | `/audit` | **API** (scan history via `/scans`) |
-| `/trust` | **API** (org, frameworks, policies — in-app preview) |
+| `/trust` | **API** (org, frameworks, policies, in-app preview) |
 | `/onboarding/*` | **API** (onboarding + lite scan) |
 | Sidebar labels | `mock-data.ts` `navItems` only |
 
@@ -291,14 +291,14 @@ All org-scoped routes resolve tenant via `resolveOrganization` / `requireOrganiz
 
 | Route group | Read | Write / mutate | Admin-only |
 |-------------|------|----------------|------------|
-| Dashboard, gaps, controls, frameworks, risks, vendors, training | `requireRead` | — | — |
+| Dashboard, gaps, controls, frameworks, risks, vendors, training | `requireRead` |, |, |
 | Scans, evidence, questionnaires, repositories (scan) | `requireRead` | `requireMutation` + plan limits | sync repos: `requireAdmin` |
 | Policies | `requireRead` | generate/edit: `requireMutation` | approve, publish, delete: `requireAdmin` |
 | Copilot | `requireRead` (chat, explain) | create thread: `requireMutation` | reindex: `requireAdmin` |
-| Integrations, AWS/Azure/GCP connect, JumpCloud | `requireRead` | — | `requireAdmin` |
-| Settings, billing checkout, members invite | `requireRead` | — | `requireAdmin` |
-| Org patch | — | — | `requireAdmin` |
-| Onboarding | Auth required when enforced | lite scan: any authenticated member | — |
+| Integrations, AWS/Azure/GCP connect, JumpCloud | `requireRead` |, | `requireAdmin` |
+| Settings, billing checkout, members invite | `requireRead` |, | `requireAdmin` |
+| Org patch |, |, | `requireAdmin` |
+| Onboarding | Auth required when enforced | lite scan: any authenticated member |, |
 
 Org API keys (`vk_*`) follow the same matrix but cannot perform admin-only actions.
 
@@ -313,7 +313,7 @@ Org API keys (`vk_*`) follow the same matrix but cannot perform admin-only actio
 | POST | `/settings/webhooks` |
 | DELETE | `/settings/webhooks/:id` |
 
-Settings JSON shape: `lib/org-settings.ts` — `notifications.*`, `security.mfaRequired`, `security.ssoEnforced`, `security.ipAllowlist[]`.
+Settings JSON shape: `lib/org-settings.ts`, `notifications.*`, `security.mfaRequired`, `security.ssoEnforced`, `security.ipAllowlist[]`.
 
 ### Members
 
@@ -352,7 +352,7 @@ All mutation routes check roles and plan limits where applicable.
 ## 10. Evidence Storage & Upload
 
 - API: `POST /api/v1/evidence` (multipart)
-- Export: `POST /api/v1/evidence/export` — ZIP audit package (`services/evidence/export-audit-package.ts`)
+- Export: `POST /api/v1/evidence/export`. ZIP audit package (`services/evidence/export-audit-package.ts`)
 - Web: `components/evidence/evidence-upload.tsx`
 - Files scoped by `orgId` on read/update/delete/download
 
@@ -396,7 +396,7 @@ Key events: `lite_scan_completed`, `auditor_invite_accepted`, `audit_export_down
 | Command | What it runs |
 |---------|--------------|
 | `npm run test` | 16 API unit test modules under `apps/api/src/__tests__/` |
-| `npm run test:e2e` | Playwright — home, health, evidence upload |
+| `npm run test:e2e` | Playwright, home, health, evidence upload |
 | `npm run build` | Full monorepo build |
 | `./scripts/smoke-api-local.sh` | 26 local API checks (demo org; not staging gate) |
 
@@ -416,7 +416,7 @@ CI (`.github/workflows/ci.yml`):
 - **Web:** Vercel (`VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`)
 - **API:** `npm run db:migrate` then Railway (`RAILWAY_TOKEN`) or your container registry
 
-Set `CORS_ALLOWED_ORIGINS` to your production web URL(s). Do **not** set `DISABLE_SCAN_WORKER` in production — lite scans and async jobs require the BullMQ worker.
+Set `CORS_ALLOWED_ORIGINS` to your production web URL(s). Do **not** set `DISABLE_SCAN_WORKER` in production, lite scans and async jobs require the BullMQ worker.
 
 ---
 
@@ -458,14 +458,14 @@ See `.env.example`. Production-critical:
 
 ## 16. Known Quirks
 
-1. **No Clerk in dev** — shared `demo` org unless Clerk keys are set.
-2. **Sample gaps** — lite scan may insert `isSample: true` gaps; filter with `?isSample=false` or `openRealGapsWhere()` for real posture.
-3. **Provider stubs** — many integration cards are catalog placeholders; hide or flag in prod UI.
-4. **Scanner heuristics** — code/cloud findings are pattern-based; expect false positives until suppressions ship (P2).
-5. **Copilot** — all chat flows use API `/api/v1/copilot/*` (legacy Next route removed).
-6. **Trust center** — `/trust` is an in-app preview; report-request form has no backend yet.
-7. **Audit page vs AuditEvent** — `/audit` shows scan history; `AuditEvent` table logs admin actions (no UI yet).
-8. **CI disables worker** — `DISABLE_SCAN_WORKER=true` in CI; do not use in staging/production.
+1. **No Clerk in dev**: shared `demo` org unless Clerk keys are set.
+2. **Sample gaps**: lite scan may insert `isSample: true` gaps; filter with `?isSample=false` or `openRealGapsWhere()` for real posture.
+3. **Provider stubs**: many integration cards are catalog placeholders; hide or flag in prod UI.
+4. **Scanner heuristics**: code/cloud findings are pattern-based; expect false positives until suppressions ship (P2).
+5. **Copilot**: all chat flows use API `/api/v1/copilot/*` (legacy Next route removed).
+6. **Trust center**: `/trust` is an in-app preview; report-request form has no backend yet.
+7. **Audit page vs AuditEvent**: `/audit` shows scan history; `AuditEvent` table logs admin actions (no UI yet).
+8. **CI disables worker**: `DISABLE_SCAN_WORKER=true` in CI; do not use in staging/production.
 
 ---
 
@@ -519,4 +519,4 @@ See `.env.example`. Production-critical:
 
 ---
 
-*Vikela © 2026 — Proprietary*
+*Vikela © 2026. Proprietary*

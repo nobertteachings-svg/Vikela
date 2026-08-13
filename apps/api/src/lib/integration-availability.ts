@@ -62,7 +62,7 @@ export function getProviderConnectAvailability(
         ? { connectable: true }
         : { connectable: false, reason: "not_configured" };
     case "CLOUDFLARE":
-      // Customer supplies API token — no Vikela-side Cloudflare app secrets required.
+      // Customer supplies API token, no Vikela-side Cloudflare app secrets required.
       return { connectable: true };
     case "OKTA":
       return process.env.OKTA_CLIENT_ID
@@ -83,23 +83,23 @@ export function getProviderConnectAvailability(
         ? { connectable: true }
         : { connectable: false, reason: "not_configured" };
     case "DATADOG":
-      // Customer supplies API + Application keys — no Vikela-side Datadog secrets required.
+      // Customer supplies API + Application keys, no Vikela-side Datadog secrets required.
       return { connectable: true };
     case "GRAFANA":
-      // Customer supplies base URL + service account token — no Vikela-side Grafana secrets required.
+      // Customer supplies base URL + service account token, no Vikela-side Grafana secrets required.
       return { connectable: true };
     case "PAGERDUTY":
-      // Customer supplies REST API token — no Vikela-side PagerDuty OAuth app required.
+      // Customer supplies REST API token, no Vikela-side PagerDuty OAuth app required.
       return { connectable: true };
     case "NEW_RELIC":
-      // Customer supplies User API key (+ optional account id / region) — no platform NR secrets.
+      // Customer supplies User API key (+ optional account id / region), no platform NR secrets.
       return { connectable: true };
     case "SLACK":
       return process.env.SLACK_CLIENT_ID && process.env.SLACK_CLIENT_SECRET
         ? { connectable: true }
         : { connectable: false, reason: "not_configured" };
     case "MICROSOFT_TEAMS":
-      // Customer supplies Incoming Webhook URL — no Vikela-side Teams OAuth app required.
+      // Customer supplies Incoming Webhook URL, no Vikela-side Teams OAuth app required.
       return { connectable: true };
     default:
       return { connectable: false, reason: "coming_soon" };

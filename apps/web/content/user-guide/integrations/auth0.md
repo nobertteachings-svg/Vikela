@@ -1,7 +1,7 @@
 # Auth0
 
 **Category:** Identity  
-**Connect type:** Management API (M2M) via dialog — customer Auth0 tenant + Vikela platform M2M client  
+**Connect type:** Management API (M2M) via dialog, customer Auth0 tenant + Vikela platform M2M client  
 **Path:** Integrations → Identity → **Auth0**
 
 ## What Vikela uses it for
@@ -50,7 +50,7 @@ Disconnect in Vikela. Optionally rotate the M2M client secret on the platform si
 |---------|-----|
 | Not configured | Operator sets Management client env; **restart API** (env reload) |
 | Unauthorized / 401 from Auth0 | Authorize the M2M app on the tenant; check domain spelling (`xxx.us.auth0.com`) |
-| Integration limit | Starter allows 5 providers — disconnect another (e.g. unused Bitbucket) then retry |
+| Integration limit | Starter allows 5 providers, disconnect another (e.g. unused Bitbucket) then retry |
 | Wrong region domain | Use the exact domain from the Auth0 dashboard |
 
 Related: [Integrations overview](./README.md).

@@ -47,12 +47,12 @@ const NOTIFICATION_ROWS = [
   {
     key: "gapAlerts",
     label: "New compliance gaps",
-    description: "Critical/high gaps — emailed to admins and posted to connected Slack/Teams.",
+    description: "Critical/high gaps, emailed to admins and posted to connected Slack/Teams.",
   },
   {
     key: "scanComplete",
     label: "Scan completed",
-    description: "Scan summary — emailed to admins and posted to connected Slack/Teams.",
+    description: "Scan summary, emailed to admins and posted to connected Slack/Teams.",
   },
   {
     key: "memberInvites",
@@ -189,8 +189,7 @@ export function SettingsPageContent({
         events: created.events,
         isActive: created.isActive,
         createdAt: new Date().toISOString(),
-      },
-      ...prev,
+      }, ...prev,
     ]);
     setWebhookName("");
     setWebhookUrl("");
@@ -279,8 +278,7 @@ export function SettingsPageContent({
         prefix: created.prefix,
         createdAt: new Date().toISOString(),
         lastUsedAt: null,
-      },
-      ...prev,
+      }, ...prev,
     ]);
     if (typeof window !== "undefined") {
       window.alert(`Copy your API key now (shown once):\n\n${created.key}`);
@@ -601,7 +599,7 @@ export function SettingsPageContent({
                     >
                       Clerk
                     </a>
-                    . Configure MFA policies and session settings there — Vikela does not override them.
+                    . Configure MFA policies and session settings there. Vikela does not override them.
                   </p>
                   <p className="text-sm leading-relaxed text-comply-text-secondary">
                     SSO / SAML is available through Clerk for Enterprise organizations. Contact sales if you need
@@ -620,7 +618,7 @@ export function SettingsPageContent({
                   <ul className="space-y-2">
                     {security.ipAllowlist.length === 0 ? (
                       <li className="rounded-md border border-dashed border-white/[0.08] px-3 py-2 text-xs text-comply-muted">
-                        No restrictions — all IPs can use API keys.
+                        No restrictions, all IPs can use API keys.
                       </li>
                     ) : (
                       security.ipAllowlist.map((ip) => (
@@ -737,7 +735,7 @@ export function SettingsPageContent({
                   </tbody>
                 </DataTable>
                 <p className="border-t border-white/[0.06] px-6 py-4 text-xs leading-relaxed text-comply-muted">
-                  Keys authenticate the Vikela API and CI scanners. Store secrets in your vault—keys are
+                  Keys authenticate the Vikela API and CI scanners. Store secrets in your vault, keys are
                   shown only once at creation.
                 </p>
               </CardBody>

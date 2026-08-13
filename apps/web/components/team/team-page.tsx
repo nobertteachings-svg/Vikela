@@ -199,7 +199,7 @@ export function TeamPageContent({
       <div className="marketing-panel marketing-panel-highlight relative overflow-hidden p-6 sm:p-8">
         <p className="relative text-sm leading-relaxed text-comply-text-secondary">
           Invitations and role changes sync through Clerk. MFA is managed in each user&apos;s Clerk
-          account settings — Vikela enforces organization roles and seat limits here.
+          account settings. Vikela enforces organization roles and seat limits here.
         </p>
       </div>
 

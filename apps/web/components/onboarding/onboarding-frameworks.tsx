@@ -173,11 +173,11 @@ export function OnboardingFrameworks() {
     <div className="flex w-full max-w-5xl flex-col items-center lg:flex-row lg:items-start lg:justify-center lg:gap-16 xl:gap-24">
       <div className="mb-12 max-w-md lg:mb-0 lg:flex-1">
         <SectionLabel>Onboarding · Step 2 of 3</SectionLabel>
-        <h1 className="mt-4 bg-gradient-to-br from-[#faf9f5] via-[#d8d6ce] to-[#888780] bg-clip-text text-3xl font-medium leading-tight tracking-tight text-transparent text-balance sm:text-4xl">
+        <h1 className="mt-4 font-display text-2xl font-semibold text-comply-text-primary text-balance sm:text-3xl">
           Pick your compliance frameworks
         </h1>
         <p className="mt-4 text-sm leading-relaxed text-comply-text-secondary">
-          Enable every standard you need today—or add FedRAMP, CMMC, and PCI when contracts require
+          Enable every standard you need today, or add FedRAMP, CMMC, and PCI when contracts require
           them. All frameworks share the same control graph; you&apos;re not rebuilding your program
           each time.
         </p>
@@ -199,7 +199,7 @@ export function OnboardingFrameworks() {
             <span className="text-[10px] font-semibold uppercase tracking-wider">Tip</span>
           </div>
           <p className="mt-2 text-xs leading-relaxed text-comply-text-secondary">
-            Frameworks marked &quot;controls coming soon&quot; are enabled on your workspace now—full
+            Frameworks marked &quot;controls coming soon&quot; are enabled on your workspace now, full
             control libraries roll out without losing your selection.
           </p>
         </div>

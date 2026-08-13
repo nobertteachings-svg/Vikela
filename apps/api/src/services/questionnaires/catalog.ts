@@ -6,7 +6,7 @@
 export type CatalogQuestion = {
   category: string;
   question: string;
-  /** Starter text for reviewers — always human-reviewed before Approved. */
+  /** Starter text for reviewers, always human-reviewed before Approved. */
   suggestedAnswer: string;
 };
 
@@ -119,7 +119,7 @@ export const VENDOR_SECURITY_CATALOG: CatalogQuestion[] = [
     category: "Application & infrastructure",
     question: "Describe your secure software development lifecycle (code review, dependency scanning, secrets handling).",
     suggestedAnswer:
-      "PR reviews required for production code. SCA/SAST in CI. Secrets stored in a vault/secret manager — not in source control.",
+      "PR reviews required for production code. SCA/SAST in CI. Secrets stored in a vault/secret manager, not in source control.",
   },
   {
     category: "Application & infrastructure",

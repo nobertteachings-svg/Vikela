@@ -1,6 +1,6 @@
 # Settings
 
-**Path:** Sidebar → **Settings** (`/settings`) — **admin only** (auditors blocked)  
+**Path:** Sidebar → **Settings** (`/settings`), **admin only** (auditors blocked)  
 **Who:** Admin (OWNER/ADMIN).
 
 ## Purpose
@@ -14,7 +14,7 @@ Organization profile, notifications, security preferences, API keys, outbound we
 - Edit **organization name** (saved to backend).
 - View org **slug**.
 - Preview **Trust center** URL (`/trust`).
-- Other profile fields may be local UI until fully wired—confirm saves succeed.
+- Other profile fields may be local UI until fully wired, confirm saves succeed.
 
 ### 2. Notifications
 
@@ -29,14 +29,14 @@ Save preferences; email delivery depends on platform email configuration.
 
 ### 3. Security
 
-- **MFA required** — saved; enforcement may show **Coming soon**.  
-- **SSO enforced** / SAML — Coming soon where labeled.  
+- **MFA required**: saved; enforcement may show **Coming soon**.  
+- **SSO enforced** / SAML. Coming soon where labeled.  
 - **IP allowlist** for API keys (`vk_…` keys).
 
 ### 4. API Keys
 
 - Create **read-scoped** API keys for automation.
-- Secret shown **once** — store securely.
+- Secret shown **once**: store securely.
 - Revoke compromised keys immediately.
 
 ### 5. Webhooks
@@ -47,7 +47,7 @@ Save preferences; email delivery depends on platform email configuration.
 ### 6. Danger zone
 
 - Export org data (JSON / CSV / PDF via HTML print flows as offered).
-- **Delete organization** — type the org slug to confirm. Irreversible.
+- **Delete organization**: type the org slug to confirm. Irreversible.
 
 > **Screenshot:** Settings tabs with Danger zone confirm
 

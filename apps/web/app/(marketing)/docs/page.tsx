@@ -61,24 +61,24 @@ export default function DocsPage() {
               <ProseP>Get from zero to a posture score in under ten minutes.</ProseP>
               <ProseUl>
                 <ProseLi>
-                  <strong>1. Create an account</strong> —{" "}
+                  <strong>1. Create an account</strong>: {" "}
                   <Link href="/sign-up">Sign up</Link> with email or connect GitHub, GitLab, or
                   Bitbucket.
                 </ProseLi>
                 <ProseLi>
-                  <strong>2. Connect sources</strong> — Select repositories and add cloud or
+                  <strong>2. Connect sources</strong>: Select repositories and add cloud or
                   identity providers from Integrations.
                 </ProseLi>
                 <ProseLi>
-                  <strong>3. Enable frameworks</strong> — Turn on SOC 2, HIPAA, ISO 27001, or any
+                  <strong>3. Enable frameworks</strong>: Turn on SOC 2, HIPAA, ISO 27001, or any
                   combination supported in your plan.
                 </ProseLi>
                 <ProseLi>
-                  <strong>4. Review gaps</strong> — Use the dashboard for severity-ranked findings
+                  <strong>4. Review gaps</strong>: Use the dashboard for severity-ranked findings
                   with remediation steps.
                 </ProseLi>
                 <ProseLi>
-                  <strong>5. Export evidence</strong> — Publish policies and download evidence when
+                  <strong>5. Export evidence</strong>: Publish policies and download evidence when
                   frameworks are audit-ready.
                 </ProseLi>
               </ProseUl>
@@ -91,7 +91,7 @@ export default function DocsPage() {
           content: (
             <>
               <ProseP>
-                Vikela reads configuration and security signals from your whole stack—not only
+                Vikela reads configuration and security signals from your whole stack: not only
                 application repositories.
               </ProseP>
               <div className="not-prose mt-4 grid gap-3 sm:grid-cols-3">
@@ -124,19 +124,19 @@ export default function DocsPage() {
           content: (
             <ProseUl>
               <ProseLi>
-                <strong>SOC 2 / SOC 1 / SOC 3</strong> — Trust services criteria
+                <strong>SOC 2 / SOC 1 / SOC 3</strong>: Trust services criteria
               </ProseLi>
               <ProseLi>
-                <strong>HIPAA</strong> — Safeguards for protected health information
+                <strong>HIPAA</strong>: Safeguards for protected health information
               </ProseLi>
               <ProseLi>
-                <strong>ISO 27001 & ISO 42001</strong> — Security management and AI governance
+                <strong>ISO 27001 & ISO 42001</strong>: Security management and AI governance
               </ProseLi>
               <ProseLi>
-                <strong>GDPR</strong> — Privacy-oriented control coverage
+                <strong>GDPR</strong>: Privacy-oriented control coverage
               </ProseLi>
               <ProseLi>
-                <strong>PCI DSS, FedRAMP, CMMC</strong> — Growth and Enterprise tiers
+                <strong>PCI DSS, FedRAMP, CMMC</strong>: Growth and Enterprise tiers
               </ProseLi>
             </ProseUl>
           ),
@@ -151,7 +151,7 @@ export default function DocsPage() {
                 remediation guidance. Resolve gaps when fixes ship; evidence flows to the vault.
               </ProseP>
               <ProseP>
-                The Controls library shows per-framework implementation status—filter by owner or
+                The Controls library shows per-framework implementation status: filter by owner or
                 status for auditor working sessions.
               </ProseP>
             </>
@@ -163,7 +163,7 @@ export default function DocsPage() {
           content: (
             <>
               <ProseP>
-                Copilot answers questions in context of your gaps and integrations—e.g. why a
+                Copilot answers questions in context of your gaps and integrations: e.g. why a
                 control failed and what change fixes it.
               </ProseP>
               <ProseP>
@@ -187,19 +187,19 @@ export default function DocsPage() {
               </ProseP>
               <ProseUl>
                 <ProseLi>
-                  <strong>GET /api/v1/dashboard</strong> — Posture and gap summary
+                  <strong>GET /api/v1/dashboard</strong>: Posture and gap summary
                 </ProseLi>
                 <ProseLi>
-                  <strong>GET /api/v1/gaps</strong> — List compliance gaps
+                  <strong>GET /api/v1/gaps</strong>: List compliance gaps
                 </ProseLi>
                 <ProseLi>
-                  <strong>GET /api/v1/controls</strong> — Control catalog
+                  <strong>GET /api/v1/controls</strong>: Control catalog
                 </ProseLi>
                 <ProseLi>
-                  <strong>GET /api/v1/integrations</strong> — Provider status
+                  <strong>GET /api/v1/integrations</strong>: Provider status
                 </ProseLi>
                 <ProseLi>
-                  <strong>POST /api/v1/scans</strong> — Trigger a scan
+                  <strong>POST /api/v1/scans</strong>: Trigger a scan
                 </ProseLi>
               </ProseUl>
               <ProseP>

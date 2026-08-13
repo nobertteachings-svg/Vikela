@@ -1,4 +1,4 @@
-/** Canonical compliance framework catalog — marketing, onboarding, and seed data. */
+/** Canonical compliance framework catalog, marketing, onboarding, and seed data. */
 export type FrameworkCatalogEntry = {
   slug: string;
   name: string;
@@ -15,7 +15,7 @@ export const COMPLIANCE_FRAMEWORKS: FrameworkCatalogEntry[] = [
     slug: "soc2",
     name: "SOC 2 Type II",
     description:
-      "Service Organization Control 2 — Trust Services Criteria for security, availability, and confidentiality.",
+      "Service Organization Control 2. Trust Services Criteria for security, availability, and confidentiality.",
     version: "2017",
     tagline: "Most common for SaaS",
     recommended: true,
@@ -23,7 +23,7 @@ export const COMPLIANCE_FRAMEWORKS: FrameworkCatalogEntry[] = [
   {
     slug: "soc1",
     name: "SOC 1",
-    description: "Service Organization Control 1 — financial reporting and ICFR.",
+    description: "Service Organization Control 1, financial reporting and ICFR.",
     version: "2017",
     tagline: "Financial controls",
   },

@@ -34,7 +34,7 @@ export async function syncGitRepositories(integrationId: string): Promise<number
           externalId: repo.externalId,
         },
       },
-      // Preserve isActive — user selection / onboarding must not be wiped on refresh or webhook sync.
+      // Preserve isActive, user selection / onboarding must not be wiped on refresh or webhook sync.
       update: {
         name: repo.name,
         fullName: repo.fullName,

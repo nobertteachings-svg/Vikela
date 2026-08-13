@@ -23,7 +23,7 @@ describe("formatCollectFromGapsMessage", () => {
   it("prompts to scan when there are no open gaps", () => {
     assert.equal(
       formatCollectFromGapsMessage({ created: 0, skipped: 0, openGaps: 0 }),
-      "No open gaps to collect from — run a scan first"
+      "No open gaps to collect from, run a scan first"
     );
   });
 

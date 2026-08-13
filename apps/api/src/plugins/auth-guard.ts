@@ -72,7 +72,7 @@ export const authGuardPlugin: FastifyPluginAsync = async (app) => {
     } catch {
       return reply.status(401).send({
         data: null,
-        error: "Unauthorized — sign in, use an API key (Bearer vk_...), or select an organization",
+        error: "Unauthorized, sign in, use an API key (Bearer vk_...), or select an organization",
       });
     }
 

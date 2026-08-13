@@ -6,7 +6,7 @@ type ScanWithGapCounts = {
   children?: { _count: { gaps: number } }[];
 };
 
-/** Gap count for list views — FULL rows sum child scan gaps. */
+/** Gap count for list views. FULL rows sum child scan gaps. */
 export function gapsFoundForScan(scan: ScanWithGapCounts): number {
   if (scan.scanType === "FULL") {
     return (scan.children ?? []).reduce((sum, child) => sum + child._count.gaps, 0);

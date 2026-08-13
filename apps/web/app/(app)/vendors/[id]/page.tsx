@@ -168,7 +168,7 @@ export default async function VendorDetailPage({ params }: { params: { id: strin
                   </li>
                 ))
               ) : (
-                <li className="text-sm text-comply-muted">No documents listed yet — add them below.</li>
+                <li className="text-sm text-comply-muted">No documents listed yet, add them below.</li>
               )}
             </ul>
             {subprocessors.length > 0 ? (

@@ -144,7 +144,7 @@ export const integrationsRoutes: FastifyPluginAsync = async (app) => {
       if (!isDemoConnectAllowed()) {
         return reply
           .status(400)
-          .send(err("accessToken or roleArn required — complete OAuth or cloud setup"));
+          .send(err("accessToken or roleArn required, complete OAuth or cloud setup"));
       }
     }
     const token =

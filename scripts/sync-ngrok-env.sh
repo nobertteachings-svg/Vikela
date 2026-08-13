@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Update APP_URL + OAuth redirect URIs in .env from the active ngrok web tunnel (port 3000).
 set -euo pipefail
-ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+ROOT="$(cd "$(dirname "$0")/." && pwd)"
 ENV_FILE="${ENV_FILE:-$ROOT/.env}"
 
 NGROK_API="${NGROK_API:-http://127.0.0.1:4040/api/tunnels}"
@@ -20,7 +20,7 @@ for t in tunnels:
     if url.startswith('https'):
         print(url.rstrip('/'))
         raise SystemExit
-raise SystemExit('No https ngrok tunnel found — start: ngrok http 3000')
+raise SystemExit('No https ngrok tunnel found, start: ngrok http 3000')
 ")"
 
 python3 - "$ENV_FILE" "$NGROK" <<'PY'

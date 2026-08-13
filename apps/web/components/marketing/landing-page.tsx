@@ -70,7 +70,7 @@ const CAPABILITIES = [
     icon: IconStack2,
     title: "Continuous control mapping",
     description:
-      "Findings from repos, cloud accounts, and identity providers map to the exact control—across every framework you enable.",
+      "Findings from repos, cloud accounts, and identity providers map to the exact control, across every framework you enable.",
   },
   {
     icon: IconLayoutDashboard,
@@ -82,7 +82,7 @@ const CAPABILITIES = [
     icon: IconRobot,
     title: "AI remediation & evidence",
     description:
-      "Plain-language fix steps, policy drafts, and questionnaire answers grounded in your environment—not generic templates.",
+      "Plain-language fix steps, policy drafts, and questionnaire answers grounded in your environment, not generic templates.",
   },
 ] as const;
 
@@ -91,13 +91,13 @@ const WHY_VIKELA = [
     icon: IconRocket,
     title: "Self-serve from day one",
     description:
-      "Sign up, connect a source, and see posture—no demo call required to start. Enterprise sales stays optional for Enterprise plans.",
+      "Sign up, connect a source, and see posture. No demo call required to start. Enterprise sales stays optional for Enterprise plans.",
   },
   {
     icon: IconCurrencyDollar,
     title: "Prices you can see before you buy",
     description:
-      "Published list prices from Free through Growth. Upgrade when a deal needs more capacity—not after a procurement loop.",
+      "Published list prices from Free through Growth. Upgrade when a deal needs more capacity, not after a procurement loop.",
   },
   {
     icon: IconShieldCheck,
@@ -107,7 +107,7 @@ const WHY_VIKELA = [
   },
   {
     icon: IconStack2,
-    title: "Code, cloud, and identity—together",
+    title: "Code, cloud, and identity together",
     description:
       "Auditors don’t only look at repos. Branch protection, IAM, MFA, and cloud config feed one control graph.",
   },
@@ -123,7 +123,7 @@ const FIRST_HOUR = [
     t: "Minutes later",
     title: "See mapped gaps",
     description:
-      "Findings land against SOC 2, ISO 27001, and HIPAA controls—so you know what blocks the deal.",
+      "Findings land against the frameworks you’ve enabled, so you know what blocks the deal.",
   },
   {
     t: "Same day",
@@ -144,7 +144,7 @@ const STEPS = [
     icon: IconShieldCheck,
     title: "See mapped gaps",
     description:
-      "Every finding ties to SOC 2, ISO 27001, HIPAA, and the rest—with auditor-ready context so you know what to fix first.",
+      "Every finding ties to SOC 2, ISO 27001, HIPAA, and the rest, with auditor-ready context so you know what to fix first.",
   },
   {
     icon: IconFileCertificate,
@@ -161,15 +161,15 @@ const FAQ_ITEMS = [
   },
   {
     q: "How long does setup take?",
-    a: "Most teams connect their first integration in under 10 minutes and start seeing mapped gaps shortly after. Getting fully audit-ready still depends on your starting posture—but you won’t spend months building a spreadsheet program first.",
+    a: "Most teams connect their first integration in under 10 minutes and start seeing mapped gaps shortly after. Getting fully audit-ready still depends on your starting posture, but you won’t spend months building a spreadsheet program first.",
   },
   {
     q: "What happens if I go over my check or seat limit?",
-    a: "We enforce plan limits in-product with a clear upgrade prompt—no surprise overage invoices. Upgrade when a deal needs more capacity, or stay on your current tier and wait for the next billing cycle where limits reset (checks) or free a seat.",
+    a: "We enforce plan limits in-product with a clear upgrade prompt. No surprise overage invoices. Upgrade when a deal needs more capacity, or stay on your current tier and wait for the next billing cycle where limits reset (checks) or free a seat.",
   },
   {
     q: "Can I switch or add frameworks later?",
-    a: "Yes. Enable the mapping packs you need today and add FedRAMP, CMMC, or ISO 42001 when contracts require them—without re-implementing your program.",
+    a: "Yes. Enable the mapping packs you need today and add FedRAMP, CMMC, or ISO 42001 when contracts require them, without re-implementing your program.",
   },
   {
     q: "Do I need a compliance person on my team?",
@@ -177,7 +177,7 @@ const FAQ_ITEMS = [
   },
   {
     q: "Is Vikela a replacement for an auditor?",
-    a: "No. Vikela gets you audit-ready—gaps mapped, evidence collected, questionnaires answered. A licensed CPA / audit firm still issues the report. We make that engagement faster and less painful.",
+    a: "No. Vikela gets you audit-ready: gaps mapped, evidence collected, questionnaires answered. A licensed CPA / audit firm still issues the report. We make that engagement faster and less painful.",
   },
   {
     q: "What happens to my data if I cancel?",
@@ -186,14 +186,14 @@ const FAQ_ITEMS = [
 ] as const;
 
 const HERO_PROOF = [
-  "Built for seed–Series A & scale-up teams",
-  "Self-serve — no sales call",
+  "Built for seed to Series A and scale-up teams",
+  "Self-serve, no sales call",
   "Transparent pricing, free to start",
 ] as const;
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-comply-purple-border">
+    <p className="text-xs font-medium uppercase tracking-wide text-comply-text-tertiary">
       {children}
     </p>
   );
@@ -265,14 +265,14 @@ export function LandingPage() {
         <section className="mx-auto max-w-6xl px-6 pb-12 pt-16 lg:pt-24">
           <div className="grid items-center gap-12 lg:grid-cols-[1fr_380px] lg:gap-16">
             <div>
-              <SectionLabel>SOC 2 for startups &amp; scale-ups</SectionLabel>
-              <h1 className="mt-4 max-w-xl bg-gradient-to-br from-[#faf9f5] via-[#e8e6e0] to-[#b4b2a9] bg-clip-text text-[2.5rem] font-medium leading-[1.12] tracking-tight text-transparent text-balance sm:text-5xl">
+              <SectionLabel>Multi-framework compliance for startups &amp; scale-ups</SectionLabel>
+              <h1 className="mt-4 max-w-xl font-display text-3xl font-semibold text-comply-text-primary text-balance sm:text-4xl">
                 Get audit-ready in weeks, not months
               </h1>
               <p className="mt-5 max-w-lg text-base leading-relaxed text-comply-text-secondary">
-                Vikela is compliance automation built for startup and scale-up teams: connect your
-                stack, see your SOC 2, ISO 27001, and HIPAA gaps in minutes, and close the enterprise
-                deal stuck on a security questionnaire.
+                Vikela maps code, cloud, and identity into the frameworks your customers ask for
+                (SOC 2, ISO 27001, HIPAA, GDPR, PCI DSS, and more). Run one program, close the
+                security questionnaire, and ship the deal.
               </p>
               <div className="mt-8">
                 <MarketingAuthLinks />
@@ -332,7 +332,7 @@ export function LandingPage() {
               <span className="font-medium text-comply-text-primary">
                 Most teams start Vikela the moment a customer sends a security questionnaire
               </span>
-              — not before. Mapped gaps after you connect your first integration, not after months of
+              . Not before. Mapped gaps after you connect your first integration, not after months of
               spreadsheet prep.
             </p>
             <div className="flex shrink-0 flex-wrap gap-4">
@@ -352,23 +352,20 @@ export function LandingPage() {
           </div>
         </section>
 
-        {/* ICP social proof — honest, no fake logos */}
+        {/* ICP social proof, honest, no fake logos */}
         <section className="border-b border-white/[0.06]">
           <div className="mx-auto max-w-6xl px-6 py-8">
             <p className="text-center text-sm text-comply-text-secondary">
               Built for{" "}
-              <span className="text-comply-text-primary">seed–Series A and scale-up teams</span>{" "}
-              closing enterprise deals — founders and eng leads who need SOC 2 without a GRC
-              department.
+              <span className="text-comply-text-primary">seed to Series A and scale-up teams</span>{" "}
+              closing enterprise deals. Founders and eng leads who need multi-framework readiness
+              without a GRC department.
             </p>
             <div className="mx-auto mt-6 max-w-2xl border-l-2 border-comply-purple-border/50 pl-5 text-left">
               <p className="text-sm leading-relaxed text-comply-text-secondary">
                 The job: answer the questionnaire, know which controls are actually failing in{" "}
-                <span className="text-comply-text-primary">your</span> GitHub and AWS — not sit
+                <span className="text-comply-text-primary">your</span> GitHub and AWS, not sit
                 through another sales demo or fill a blank spreadsheet.
-              </p>
-              <p className="mt-3 text-xs text-comply-muted">
-                Real customer stories will land here as design partners ship audits with Vikela.
               </p>
             </div>
           </div>
@@ -376,8 +373,8 @@ export function LandingPage() {
 
         <section id="why" className="mx-auto max-w-6xl px-6 py-20">
           <SectionLabel>Why Vikela</SectionLabel>
-          <h2 className="mt-2 max-w-xl text-xl font-medium tracking-tight">
-            What you get that the spreadsheet — and the sales-gated tools — won’t give you
+          <h2 className="mt-2 max-w-xl font-display text-2xl font-semibold text-comply-text-primary">
+            What spreadsheets and sales-gated tools won’t give you
           </h2>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-comply-text-secondary">
             Positive claims about how we work. No competitor table required.
@@ -405,11 +402,11 @@ export function LandingPage() {
             <div className="flex items-end justify-between gap-6">
               <div>
                 <SectionLabel>Time to value</SectionLabel>
-                <h2 className="mt-2 text-xl font-medium tracking-tight">
+                <h2 className="mt-2 font-display text-xl font-semibold text-comply-text-primary">
                   Your first hour with Vikela
                 </h2>
                 <p className="mt-2 max-w-xl text-sm text-comply-text-secondary">
-                  Concrete milestones — not a vague “get started” promise.
+                  Concrete milestones, not a vague “get started” promise.
                 </p>
               </div>
               <IconClock
@@ -434,7 +431,7 @@ export function LandingPage() {
             </ol>
             <div className="mt-10">
               <Link href="/sign-up" className="btn-purple-cta h-10 px-5 text-sm">
-                Start free — see gaps today
+                Start free, see gaps today
                 <IconArrowRight size={16} className="ml-1.5 inline" />
               </Link>
             </div>
@@ -446,12 +443,12 @@ export function LandingPage() {
             <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
               <div>
                 <SectionLabel>Framework coverage</SectionLabel>
-                <h2 className="mt-2 text-xl font-medium tracking-tight">
-                  Start with SOC 2. Add frameworks when deals require them.
+                <h2 className="mt-2 font-display text-xl font-semibold text-comply-text-primary">
+                  One program. Every framework the deal asks for.
                 </h2>
                 <p className="mt-2 max-w-xl text-sm leading-relaxed text-comply-text-secondary">
-                  One control graph across the packs you enable—no re-implementing your program when
-                  the next RFP asks for ISO, HIPAA, or FedRAMP.
+                  Enable SOC 2, ISO, HIPAA, GDPR, PCI, or FedRAMP and CMMC when contracts require
+                  them, all on one control graph. No re-implementing your program for the next RFP.
                 </p>
               </div>
             </div>
@@ -465,12 +462,12 @@ export function LandingPage() {
 
         <section id="integrations" className="mx-auto max-w-6xl px-6 py-20">
           <SectionLabel>Data sources</SectionLabel>
-          <h2 className="mt-2 text-xl font-medium tracking-tight">
-            Evidence from your whole stack—not just repos
+          <h2 className="mt-2 font-display text-xl font-semibold text-comply-text-primary">
+            Evidence from your whole stack, not just repos
           </h2>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-comply-text-secondary">
             Compliance lives in IAM policies, branch protection, MFA enrollment, and cloud
-            configs—not only in application code. Connect the systems auditors actually review.
+            configs, not only in application code. Connect the systems auditors actually review.
           </p>
           <div className="mt-10 grid gap-6 md:grid-cols-3">
             {INTEGRATION_GROUPS.map((group) => (
@@ -512,7 +509,7 @@ export function LandingPage() {
         <section className="marketing-section-band border-t py-20">
           <div className="mx-auto max-w-6xl px-6">
             <SectionLabel>Platform</SectionLabel>
-            <h2 className="mt-2 text-xl font-medium tracking-tight">
+            <h2 className="mt-2 font-display text-xl font-semibold text-comply-text-primary">
               Built for founders and eng leads who still need to ship
             </h2>
             <div className="mt-10 grid gap-4 md:grid-cols-3">
@@ -536,7 +533,7 @@ export function LandingPage() {
 
         <section id="how-it-works" className="mx-auto max-w-6xl px-6 py-20">
           <SectionLabel>Workflow</SectionLabel>
-          <h2 className="mt-2 text-xl font-medium tracking-tight">
+          <h2 className="mt-2 font-display text-xl font-semibold text-comply-text-primary">
             From questionnaire to audit-ready
           </h2>
           <p className="mt-2 max-w-xl text-sm text-comply-text-secondary">
@@ -567,12 +564,12 @@ export function LandingPage() {
           <div className="mx-auto max-w-6xl px-6">
             <div className="text-center">
               <SectionLabel>Pricing</SectionLabel>
-              <h2 className="mt-2 text-xl font-medium tracking-tight">
+              <h2 className="mt-2 font-display text-xl font-semibold text-comply-text-primary">
                 Transparent pricing. Free to start.
               </h2>
               <p className="mx-auto mt-2 max-w-lg text-sm text-comply-text-secondary">
                 Self-serve plans with published list prices. Upgrade when a deal needs more
-                capacity—not after a sales call.
+                capacity, not after a sales call.
               </p>
             </div>
             <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -636,7 +633,7 @@ export function LandingPage() {
           <div className="mx-auto max-w-3xl px-6">
             <div className="text-center">
               <SectionLabel>FAQ</SectionLabel>
-              <h2 className="mt-2 text-xl font-medium tracking-tight">
+              <h2 className="mt-2 font-display text-xl font-semibold text-comply-text-primary">
                 Questions founders actually ask
               </h2>
             </div>
@@ -677,11 +674,11 @@ export function LandingPage() {
         <section className="border-t border-white/[0.06]">
           <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-6 px-6 py-14 sm:flex-row">
             <div>
-              <h2 className="text-lg font-medium tracking-tight">
+              <h2 className="font-display text-lg font-semibold text-comply-text-primary">
                 Got the questionnaire? See your gaps today.
               </h2>
               <p className="mt-1 text-sm text-comply-text-secondary">
-                Free to start. Self-serve. Transparent pricing — no sales call.
+                Free to start. Self-serve. Transparent pricing, no sales call.
               </p>
             </div>
             <div className="flex shrink-0 flex-wrap items-center gap-3">
@@ -705,7 +702,7 @@ export function LandingPage() {
           <div>
             <LogoPill />
             <p className="mt-3 max-w-xs text-xs leading-relaxed text-comply-muted">
-              Compliance automation for startup and scale-up teams—self-serve, transparent pricing.
+              Compliance automation for startup and scale-up teams, self-serve, transparent pricing.
             </p>
           </div>
           <nav className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-comply-muted">

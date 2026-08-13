@@ -1,6 +1,6 @@
 import type { Role } from "@prisma/client";
 
-/** Clerk organization role keys — must match Clerk dashboard per environment. */
+/** Clerk organization role keys, must match Clerk dashboard per environment. */
 export const CLERK_ROLE_MEMBER = "org:member";
 export const CLERK_ROLE_ADMIN = "org:admin";
 export const CLERK_ROLE_AUDITOR = "org:auditor";

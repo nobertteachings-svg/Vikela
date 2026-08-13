@@ -180,12 +180,7 @@ async function runCodeScanOnPRFiles(
     if (content.length > MAX_FILE_SIZE) continue;
     const lines = content.split("\n");
     allFindings.push(
-      ...scanSecrets(filePath, content, lines),
-      ...scanEncryption(filePath, content, lines),
-      ...scanLogging(filePath, content, lines),
-      ...scanAccess(filePath, content, lines),
-      ...scanDependencies(filePath, content),
-      ...runFrameworkCodeScans(frameworkSlugs, filePath, content, lines)
+      ...scanSecrets(filePath, content, lines), ...scanEncryption(filePath, content, lines), ...scanLogging(filePath, content, lines), ...scanAccess(filePath, content, lines), ...scanDependencies(filePath, content), ...runFrameworkCodeScans(frameworkSlugs, filePath, content, lines)
     );
   }
 
@@ -216,13 +211,12 @@ async function postPrReviewComments(
     "## Vikela Compliance Scan",
     "",
     `Found **${findings.length}** potential compliance issue(s) in this PR.`,
-    "",
-    ...top.map(
+    "", ...top.map(
       (f) =>
-        `- **${f.severity}** \`${f.filePath}${f.lineNumber ? `:${f.lineNumber}` : ""}\` — ${f.title}`
+        `- **${f.severity}** \`${f.filePath}${f.lineNumber ? `:${f.lineNumber}` : ""}\`, ${f.title}`
     ),
     "",
-    "_Powered by [Vikela](https://vikela.dev) — Protect. Shield. Comply._",
+    "_Powered by [Vikela](https://vikela.dev). Protect. Shield. Comply._",
   ].join("\n");
 
   await git.commentOnPR(repoFullName, prNumber, { body: summary });
@@ -233,7 +227,7 @@ async function postPrReviewComments(
     if (!f.filePath || !f.lineNumber) continue;
     try {
       await git.commentOnPRReview(repoFullName, prNumber, {
-        body: `**${f.severity}** — ${f.title}\n\n${f.remediation.slice(0, 500)}`,
+        body: `**${f.severity}**: ${f.title}\n\n${f.remediation.slice(0, 500)}`,
         path: f.filePath,
         line: f.lineNumber,
         commitSha,

@@ -53,4 +53,4 @@ Disconnect in Vikela; revoke the enterprise app under Entra ID → Enterprise ap
 | Consent / admin approval required | Ask Entra admin to grant admin consent |
 | Limit reached | Free slot or upgrade |
 
-Related: [Azure AD (identity)](./azure-ad.md) (directory/identity scans — separate card).
+Related: [Azure AD (identity)](./azure-ad.md) (directory/identity scans, separate card).

@@ -1,4 +1,4 @@
-/** Text embeddings for RAG — OpenAI when configured, local fallback otherwise. */
+/** Text embeddings for RAG. OpenAI when configured, local fallback otherwise. */
 
 const LOCAL_DIMS = 256;
 
@@ -51,8 +51,8 @@ export async function embedTexts(texts: string[]): Promise<(number[] | null)[]> 
       const quotaHit = errText.includes("insufficient_quota") || errText.includes("quota");
       console.warn(
         quotaHit
-          ? "OpenAI embeddings quota exceeded — using local embeddings for RAG."
-          : `OpenAI embeddings failed — using local fallback: ${errText.slice(0, 200)}`
+          ? "OpenAI embeddings quota exceeded, using local embeddings for RAG."
+          : `OpenAI embeddings failed, using local fallback: ${errText.slice(0, 200)}`
       );
       return texts.map((t) => localEmbedText(t));
     }
@@ -63,7 +63,7 @@ export async function embedTexts(texts: string[]): Promise<(number[] | null)[]> 
     const ordered = json.data ?? [];
     return texts.map((t, i) => parseEmbedding(ordered[i]?.embedding) ?? localEmbedText(t));
   } catch (e) {
-    console.warn("OpenAI embeddings error — using local fallback:", e);
+    console.warn("OpenAI embeddings error, using local fallback:", e);
     return texts.map((t) => localEmbedText(t));
   }
 }

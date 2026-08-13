@@ -137,7 +137,7 @@ export function AuditPeriodToolbar({
       ) : null}
       {exporting && (
         <p className="text-xs text-comply-text-tertiary" role="status">
-          Building ZIP — this may take a moment for large evidence sets.
+          Building ZIP, this may take a moment for large evidence sets.
         </p>
       )}
       {message && (

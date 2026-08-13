@@ -70,7 +70,7 @@ export const awsRoutes: FastifyPluginAsync = async (app) => {
         .status(404)
         .send(
           err(
-            "Organization not found — select Optic Inc (or your workspace) in the Clerk org switcher, refresh /integrations, then try again."
+            "Organization not found, select Optic Inc (or your workspace) in the Clerk org switcher, refresh /integrations, then try again."
           )
         );
     }
@@ -100,7 +100,7 @@ export const awsRoutes: FastifyPluginAsync = async (app) => {
     };
 
     if (!body.roleArn?.startsWith("arn:aws:iam::")) {
-      return reply.status(400).send(err("Invalid roleArn — must be a valid IAM role ARN"));
+      return reply.status(400).send(err("Invalid roleArn, must be a valid IAM role ARN"));
     }
 
     try {

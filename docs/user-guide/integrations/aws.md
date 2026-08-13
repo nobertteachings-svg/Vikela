@@ -1,7 +1,7 @@
 # AWS
 
 **Category:** Cloud  
-**Connect type:** AssumeRole (Role ARN) — **never** long-lived customer access keys  
+**Connect type:** AssumeRole (Role ARN), **never** long-lived customer access keys  
 **Path:** Integrations → Cloud → **AWS**
 
 ## What Vikela uses it for
@@ -29,7 +29,7 @@ Findings feed **gaps** and control readiness.
 2. In the dialog, follow instructions to deploy Vikela’s CloudFormation / IAM policy so your account has a role Vikela can assume.
    - Operators can also expose a template via `GET /api/v1/aws/cloudformation-template`.
 3. Copy the **Role ARN** created in your account.
-4. Paste the Role ARN (and External ID if shown — often `vikela-scanner` or your org’s configured value).
+4. Paste the Role ARN (and External ID if shown, often `vikela-scanner` or your org’s configured value).
 5. Submit. Vikela calls AssumeRole to verify.
 6. Card shows **Connected**.
 
@@ -65,4 +65,4 @@ Disconnect from Integrations. Optionally delete the IAM role/stack in AWS.
 | No findings | Confirm role permissions cover IAM/S3/CloudTrail/etc.; confirm region expectations |
 | Limit reached | Free a slot or upgrade |
 
-Related: [Gaps and findings](../gaps-and-findings.md), [Integrations overview](./README.md).
+Related: [Gaps and findings](./gaps-and-findings.md), [Integrations overview](./README.md).

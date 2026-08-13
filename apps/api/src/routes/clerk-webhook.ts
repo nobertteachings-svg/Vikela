@@ -128,7 +128,7 @@ export const clerkWebhookRoutes: FastifyPluginAsync = async (app) => {
         },
       });
 
-      // Framework enrollment happens during onboarding — not at org creation.
+      // Framework enrollment happens during onboarding, not at org creation.
 
       return reply.send(ok({ orgId: org.id, slug: org.slug }));
     }

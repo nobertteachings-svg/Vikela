@@ -46,7 +46,7 @@ type DialogKind =
 
 const GIT_PROVIDERS = new Set(["GITHUB", "GITLAB", "BITBUCKET"]);
 
-/** Observability + communication: credentials/alerts only — not scan sources. */
+/** Observability + communication: credentials/alerts only, not scan sources. */
 const ALERT_CREDENTIAL_PROVIDERS = new Set([
   "DATADOG",
   "GRAFANA",
@@ -134,7 +134,7 @@ export function IntegrationsProviderGrid({
     const ok = window.confirm(
       `Disconnect ${providerName} in Vikela?\n\n` +
         "This revokes stored credentials in Vikela and deactivates linked repos/accounts. " +
-        "It does not remove the GitHub App, OAuth grant, IAM role, or API key in your provider — " +
+        "It does not remove the GitHub App, OAuth grant, IAM role, or API key in your provider, " +
         "revoke those separately if needed."
     );
     if (!ok) return;
@@ -291,7 +291,7 @@ export function IntegrationsProviderGrid({
               ) : null}
               {int.id === "AWS" && int.connectable && int.awsPlatformReady === false ? (
                 <p className="mt-2 text-[11px] text-comply-amber-text">
-                  Platform AWS STS is not configured — connect will fail until Vikela AWS keys are set.
+                  Platform AWS STS is not configured, connect will fail until Vikela AWS keys are set.
                 </p>
               ) : null}
               <div className="mt-4 flex items-center justify-between gap-3 border-t border-white/[0.06] pt-4">

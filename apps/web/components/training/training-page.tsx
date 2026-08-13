@@ -354,7 +354,7 @@ export function TrainingPageContent({
           onClose={() => setPlayer(null)}
           onCompleted={() => {
             setPlayer(null);
-            setMessage({ type: "success", text: "Course completed — certificate is available" });
+            setMessage({ type: "success", text: "Course completed, certificate is available" });
             refresh();
           }}
         />
@@ -506,7 +506,7 @@ export function TrainingPageContent({
           <CardBody className="space-y-3">
             {myOpen.length === 0 ? (
               <p className="text-sm text-comply-green">
-                You&apos;re caught up — all assigned modules are complete.
+                You&apos;re caught up, all assigned modules are complete.
               </p>
             ) : (
               myOpen.map((a) => (
@@ -861,7 +861,7 @@ export function TrainingPageContent({
                                   onClick={() =>
                                     void updateAssignment(a.id, "COMPLETE", { force: true })
                                   }
-                                  title="Admin override — skips quiz"
+                                  title="Admin override, skips quiz"
                                 >
                                   Force complete {a.moduleName ?? "module"}
                                 </button>

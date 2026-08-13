@@ -55,7 +55,7 @@ export default function SecurityPage() {
             <>
               <ProseP>
                 Vikela is built for teams that handle sensitive security posture data. Security
-                is not a checkbox on our roadmap—it is a constraint on every feature we ship.
+                is not a checkbox on our roadmap. It is a constraint on every feature we ship.
               </ProseP>
               <div className="mt-6 grid gap-3 sm:grid-cols-2">
                 {PILLARS.map((p) => {
@@ -108,7 +108,7 @@ export default function SecurityPage() {
             <>
               <ProseP>
                 We collect the minimum data required to assess compliance posture: configuration
-                metadata, policy findings, IAM settings, and evidence artifacts—not bulk source
+                metadata, policy findings, IAM settings, and evidence artifacts, not bulk source
                 code archives unless a specific feature you enable requires temporary analysis.
               </ProseP>
               <ProseUl>
@@ -142,8 +142,8 @@ export default function SecurityPage() {
           content: (
             <>
               <ProseP>
-                Integrations use OAuth, app installations, or short-lived credentials—never stored
-                in plain text. AWS connections use cross-account IAM roles (AssumeRole only)—we do
+                Integrations use OAuth, app installations, or short-lived credentials, never stored
+                in plain text. AWS connections use cross-account IAM roles (AssumeRole only). We do
                 not store long-lived AWS access keys for customer accounts. You control revocation
                 from your cloud console.
               </ProseP>

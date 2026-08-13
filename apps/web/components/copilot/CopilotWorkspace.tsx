@@ -357,7 +357,7 @@ export function CopilotWorkspace() {
         <PageHeader
           eyebrow="AI"
           title="Copilot"
-          description="Ask about gaps, controls, evidence, and remediation—grounded in your workspace."
+          description="Ask about gaps, controls, evidence, and remediation, grounded in your workspace."
           className="border-b-0 pb-0"
         />
         <ComplyButton
@@ -425,7 +425,7 @@ export function CopilotWorkspace() {
         <div className="flex min-h-0 min-w-0 flex-1 flex-col">
           {gapId && (
             <p className="mb-2 shrink-0 text-xs text-amber-400">
-              Explaining gap from Gaps page — context is pinned to this finding.
+              Explaining gap from Gaps page, context is pinned to this finding.
             </p>
           )}
 

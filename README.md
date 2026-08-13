@@ -1,6 +1,6 @@
 # Vikela
 
-**Protect. Shield. Comply.** — Universal compliance engine for startups.
+**Protect. Shield. Comply.**: Universal compliance engine for startups.
 
 Automate SOC 2, ISO 27001, HIPAA, GDPR, and ISO 42001 by scanning **code + cloud + identity** across GitHub/GitLab/Bitbucket, AWS/Azure/GCP, and Okta/Azure AD/Google Workspace.
 
@@ -17,7 +17,7 @@ Automate SOC 2, ISO 27001, HIPAA, GDPR, and ISO 42001 by scanning **code + cloud
                     └──────────────────────────────────────────┘
 ```
 
-Every external platform connects via the `Integration` model with **AES-256-GCM encrypted tokens**. AWS uses **AssumeRole only** — no customer long-lived keys.
+Every external platform connects via the `Integration` model with **AES-256-GCM encrypted tokens**. AWS uses **AssumeRole only**: no customer long-lived keys.
 
 ## Quick start
 
@@ -41,9 +41,9 @@ npm run dev -w @vikela/web   # :3000
 
 End-user documentation for org admins and operators (sign-up, integrations, frameworks, evidence, billing, and more):
 
-- **[docs/user-guide/](./docs/user-guide/README.md)** — index and how Vikela fits together
+- **[docs/user-guide/](./docs/user-guide/README.md)**: index and how Vikela fits together
 - [Getting started](./docs/user-guide/getting-started.md)
-- [Integrations](./docs/user-guide/integrations/README.md) — per-provider connect how-tos
+- [Integrations](./docs/user-guide/integrations/README.md), per-provider connect how-tos
 
 Developer handover and ops docs remain under [`docs/`](./docs/) (e.g. `DEVELOPER_HANDOVER.md`, `PRODUCTION_SETUP.md`).
 
@@ -59,11 +59,11 @@ For cloud deployment, see [RAILWAY_DEPLOYMENT.md](./RAILWAY_DEPLOYMENT.md) for c
 | AWS | Connected (AssumeRole) | 1 cloud account |
 | Azure AD | Connected | Identity |
 
-**8 gaps** — 4 code + 4 cloud (IAM, S3, CloudTrail, security group)
+**8 gaps**: 4 code + 4 cloud (IAM, S3, CloudTrail, security group)
 
-## Phase 3 — AWS Cloud Scanner ✅
+## Phase 3. AWS Cloud Scanner ✅
 
-- **AssumeRole only** — never stores customer AWS keys
+- **AssumeRole only**: never stores customer AWS keys
 - Checks: **IAM** (MFA, stale access keys), **CloudTrail**, **S3** (public access, encryption), **GuardDuty**, **security groups**
 - CloudFormation template: `GET /api/v1/aws/cloudformation-template`
 - Connect: `POST /api/v1/integrations/aws/connect` with Role ARN
@@ -82,22 +82,22 @@ curl -X POST http://localhost:3001/api/v1/cloud-accounts/{id}/scan -d '{"async":
 
 UI: **Settings → Integrations → AWS** (modal) · **Settings → Cloud Accounts → Scan now**
 
-## Phase 4 — Identity Providers ✅
+## Phase 4. Identity Providers ✅
 
 - **Okta**, **Azure AD**, **Google Workspace** with OAuth + compliance scans (MFA, inactive users, CA policies)
 - **JumpCloud** API key connect · **Auth0** stub
 - **Settings → Identity → Scan now** · daily `IDENTITY_SCAN_CRON`
 
-## Phase 6 — AI Copilot ✅
+## Phase 6. AI Copilot ✅
 
 Claude-powered compliance assistant with **RAG** over gaps, controls, policies, and evidence.
 
-- **Persistent threads** — conversation history per org
-- **Streaming responses** — SSE at `POST /api/v1/copilot/chat/stream`
-- **Gap-aware Q&A** — `POST /api/v1/copilot/explain-gap/:id` or **Gaps → Ask Copilot**
-- **Smart suggestions** — generated from your open findings
-- **Source citations** — RAG chunks shown on each answer
-- **Knowledge reindex** — `POST /api/v1/copilot/reindex`
+- **Persistent threads**: conversation history per org
+- **Streaming responses**: SSE at `POST /api/v1/copilot/chat/stream`
+- **Gap-aware Q&A**: `POST /api/v1/copilot/explain-gap/:id` or **Gaps → Ask Copilot**
+- **Smart suggestions**: generated from your open findings
+- **Source citations**: RAG chunks shown on each answer
+- **Knowledge reindex**: `POST /api/v1/copilot/reindex`
 
 ```bash
 # Stream chat
@@ -115,19 +115,19 @@ UI: **AI Copilot** (sidebar) · thread history · live streaming
 
 Set `ANTHROPIC_API_KEY` for full Claude responses (demo fallback without it).
 
-## Phase 7 — Evidence + Policies ✅
+## Phase 7. Evidence + Policies ✅
 
 Audit-ready **Evidence Locker** and AI **Policy Generator** with coverage tracking.
 
 ### Evidence Locker
 - Upload files (10MB) · link to SOC 2 controls · filter by control
-- **Coverage dashboard** — % of controls with evidence
-- **Auto-collect from gaps** — turn scanner findings into evidence records
+- **Coverage dashboard**: % of controls with evidence
+- **Auto-collect from gaps**: turn scanner findings into evidence records
 - PATCH metadata · auto-reindex copilot knowledge
 
 ### Policy Generator
 - AI drafts pre-filled with org name + open gaps (`ANTHROPIC_API_KEY`)
-- **Generate SOC 2 bundle** — 6 core policies in one click
+- **Generate SOC 2 bundle**: 6 core policies in one click
 - Workflow: Draft → Review → Approve → **Publish** (files to Evidence locker)
 - Markdown export · inline editor · regenerate with AI
 
@@ -149,14 +149,14 @@ curl -X POST http://localhost:3001/api/v1/policies/{id}/publish -H "X-Org-Slug: 
 
 UI: **Evidence** (coverage matrix) · **Policies** (editor + bundle)
 
-## Phase 8 — Multi-tenant + Azure/GCP + Full Scan ✅
+## Phase 8. Multi-tenant + Azure/GCP + Full Scan ✅
 
-- **Org context** — API resolves tenant via `X-Org-Slug` or `X-Clerk-Org-Id` (demo fallback)
-- **Clerk webhook** — `POST /api/v1/webhooks/clerk` syncs `organization.created` → Vikela org + SOC 2 controls
-- **Azure cloud scanner** — Activity logs, storage public access, NSG rules (ARM API)
-- **GCP cloud scanner** — Log sinks, GCS public access, firewall rules, service accounts
-- **Full scan** — `POST /api/v1/scans/full` runs code + all cloud accounts + identity integrations
-- **Onboarding wizard** — 3-step Git → Cloud → Identity at `/onboarding`
+- **Org context**: API resolves tenant via `X-Org-Slug` or `X-Clerk-Org-Id` (demo fallback)
+- **Clerk webhook**: `POST /api/v1/webhooks/clerk` syncs `organization.created` → Vikela org + SOC 2 controls
+- **Azure cloud scanner**: Activity logs, storage public access, NSG rules (ARM API)
+- **GCP cloud scanner**: Log sinks, GCS public access, firewall rules, service accounts
+- **Full scan**: `POST /api/v1/scans/full` runs code + all cloud accounts + identity integrations
+- **Onboarding wizard**: 3-step Git → Cloud → Identity at `/onboarding`
 
 ```bash
 # Full compliance scan (async)
@@ -171,7 +171,7 @@ curl http://localhost:3001/api/v1/org -H "X-Org-Slug: demo"
 
 Connect Azure/GCP: **Settings → Integrations** (demo connect without OAuth, or configure client IDs for live OAuth).
 
-## Phase 2 — Git + Code Scanner
+## Phase 2. Git + Code Scanner
 
 - GitHub App install + OAuth (`/api/v1/auth/github/*`)
 - GitLab + Bitbucket OAuth + webhooks
@@ -210,14 +210,14 @@ curl -X POST http://localhost:3001/api/v1/repositories/{repoId}/scan -H "Content
 
 See build prompt for full tree. Key paths:
 
-- `apps/api/src/services/git/` — IGitProvider + GitHub/GitLab/Bitbucket
-- `apps/api/src/services/cloud/` — ICloudProvider + AWS/Azure/GCP
-- `apps/api/src/services/scanner/` — Code + cloud scan orchestration
-- `apps/api/src/services/copilot/` — RAG context, threads, Claude chat + stream
-- `apps/api/src/services/evidence/` — coverage, auto-collect from gaps
-- `apps/api/src/services/policy/` — generator, bundle, publish to evidence
-- `apps/web/components/integrations/` — Provider tiles UI
+- `apps/api/src/services/git/`. IGitProvider + GitHub/GitLab/Bitbucket
+- `apps/api/src/services/cloud/`. ICloudProvider + AWS/Azure/GCP
+- `apps/api/src/services/scanner/`. Code + cloud scan orchestration
+- `apps/api/src/services/copilot/`. RAG context, threads, Claude chat + stream
+- `apps/api/src/services/evidence/`, coverage, auto-collect from gaps
+- `apps/api/src/services/policy/`, generator, bundle, publish to evidence
+- `apps/web/components/integrations/`. Provider tiles UI
 
 ## License
 
-Proprietary — Vikela © 2026
+Proprietary. Vikela © 2026

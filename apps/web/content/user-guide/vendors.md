@@ -9,7 +9,7 @@ Third-party / vendor risk register: track vendors, scores, questionnaires, and r
 
 ## Navigation and primary workflows
 
-1. Open **Vendors** — list vendors and scores.
+1. Open **Vendors**: list vendors and scores.
 2. **Add** or **edit** a vendor (name, contact, risk tier, etc.).
 3. Open detail: review score, actions, linked questionnaire.
 4. Launch or continue a [Questionnaire](./getting-started.md#questionnaire) with `vendorId` when assessing a supplier. The production bank covers governance, access, encryption, IR, privacy, and subprocessors (30 questions).

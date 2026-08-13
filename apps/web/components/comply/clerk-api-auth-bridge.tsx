@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import { registerClientApiHeaders } from "@/lib/api-auth-client";
 import { initPostHog, posthog } from "@/lib/posthog-client";
 
-/** Registers API headers from Clerk session — must render inside ClerkProvider. */
+/** Registers API headers from Clerk session, must render inside ClerkProvider. */
 export function ClerkApiAuthBridge({ children }: { children: React.ReactNode }) {
   const { getToken, userId, orgId, orgSlug, isLoaded } = useAuth();
 

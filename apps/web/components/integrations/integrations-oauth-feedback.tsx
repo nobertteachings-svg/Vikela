@@ -6,8 +6,8 @@ import { IconAlertTriangle, IconCircleCheck, IconX } from "@tabler/icons-react";
 
 const ERROR_LABELS: Record<string, string> = {
   github_not_configured:
-    "GitHub is not configured — set a public GitHub App (GITHUB_APP_ID + PEM) or OAuth client credentials.",
-  github_missing_params: "GitHub connection was interrupted — try again.",
+    "GitHub is not configured, set a public GitHub App (GITHUB_APP_ID + PEM) or OAuth client credentials.",
+  github_missing_params: "GitHub connection was interrupted, try again.",
   gitlab_not_configured: "GitLab OAuth is not configured on this server.",
   gitlab_no_code: "GitLab did not return an authorization code.",
   bitbucket_not_configured: "Bitbucket OAuth is not configured on this server.",

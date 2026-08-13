@@ -1,5 +1,5 @@
 /**
- * Legacy mock datasets — do not use for production UI structure; prefer product-config / billing-plans.
+ * Legacy mock datasets, do not use for production UI structure; prefer product-config / billing-plans.
  */
 export {
   navItems,
@@ -35,10 +35,10 @@ export const frameworkReadiness = [
 ];
 
 export const recentActivity = [
-  { time: "2h ago", icon: "scan", text: "Scan completed — api-service · 3 new gaps" },
-  { time: "5h ago", icon: "document", text: "Policy updated — Access Control Policy v2.1" },
-  { time: "1d ago", icon: "check", text: "Control evidence approved — CC6.1" },
-  { time: "2d ago", icon: "alert", text: "New gap — Hardcoded AWS key in config.py" },
+  { time: "2h ago", icon: "scan", text: "Scan completed, api-service · 3 new gaps" },
+  { time: "5h ago", icon: "document", text: "Policy updated. Access Control Policy v2.1" },
+  { time: "1d ago", icon: "check", text: "Control evidence approved. CC6.1" },
+  { time: "2d ago", icon: "alert", text: "New gap. Hardcoded AWS key in config.py" },
 ];
 
 export const topGaps = [
@@ -162,7 +162,7 @@ export const evidenceItems = [
 ];
 
 export const policies = [
-  { id: "access", name: "Access Control Policy", status: "Published", updated: "2025-05-15", content: `# Access Control Policy\n\n## Purpose\nThis policy defines how Acme Corp manages logical access to production systems and customer data.\n\n## Scope\nAll employees, contractors, and systems with access to production environments.\n\n## Policy\n1. All production access requires MFA via Okta.\n2. Access is granted on least-privilege basis with manager approval.\n3. Quarterly access reviews are conducted for all privileged accounts.\n4. Service accounts use IAM roles — never long-lived access keys in code.` },
+  { id: "access", name: "Access Control Policy", status: "Published", updated: "2025-05-15", content: `# Access Control Policy\n\n## Purpose\nThis policy defines how Acme Corp manages logical access to production systems and customer data.\n\n## Scope\nAll employees, contractors, and systems with access to production environments.\n\n## Policy\n1. All production access requires MFA via Okta.\n2. Access is granted on least-privilege basis with manager approval.\n3. Quarterly access reviews are conducted for all privileged accounts.\n4. Service accounts use IAM roles, never long-lived access keys in code.` },
   { id: "incident", name: "Incident Response Plan", status: "Published", updated: "2025-04-20", content: `# Incident Response Plan\n\n## Detection\nSecurity events are monitored via Datadog and AWS CloudTrail.\n\n## Response\n1. Triage within 15 minutes for critical alerts.\n2. Engage security lead and engineering on-call.\n3. Document timeline in incident tracker.\n4. Post-mortem within 5 business days.` },
   { id: "change", name: "Change Management Policy", status: "Draft", updated: "2025-05-18", content: `# Change Management Policy\n\n## Overview\nAll production changes require peer review and automated CI checks before merge.` },
   { id: "data", name: "Data Classification Policy", status: "Draft", updated: "2025-05-10", content: `# Data Classification Policy\n\n## Classifications\n- Public, Internal, Confidential, Restricted (PII/PHI).` },
@@ -636,7 +636,7 @@ export const settingsApiKeys = [
 export const settingsWebhooks = [
   {
     id: "wh_slack",
-    name: "Slack — #security-alerts",
+    name: "Slack, #security-alerts",
     url: "https://hooks.slack.com/services/T•••/B•••/xxx",
     events: ["gap.critical", "gap.high", "scan.complete"],
     status: "Active" as const,
@@ -644,7 +644,7 @@ export const settingsWebhooks = [
   },
   {
     id: "wh_jira",
-    name: "Jira — Compliance board",
+    name: "Jira. Compliance board",
     url: "https://acme.atlassian.net/rest/api/2/issue",
     events: ["gap.critical", "gap.created"],
     status: "Active" as const,
@@ -746,42 +746,42 @@ export const billingInvoices = [
     date: "2025-05-01",
     amount: "$949.00",
     status: "Paid" as const,
-    description: "Growth plan — May 2025",
+    description: "Growth plan. May 2025",
   },
   {
     id: "inv_2025_04",
     date: "2025-04-01",
     amount: "$949.00",
     status: "Paid" as const,
-    description: "Growth plan — Apr 2025",
+    description: "Growth plan. Apr 2025",
   },
   {
     id: "inv_2025_03",
     date: "2025-03-01",
     amount: "$949.00",
     status: "Paid" as const,
-    description: "Growth plan — Mar 2025",
+    description: "Growth plan. Mar 2025",
   },
   {
     id: "inv_2025_02",
     date: "2025-02-01",
     amount: "$949.00",
     status: "Paid" as const,
-    description: "Growth plan — Feb 2025",
+    description: "Growth plan. Feb 2025",
   },
   {
     id: "inv_2025_01",
     date: "2025-01-01",
     amount: "$329.00",
     status: "Paid" as const,
-    description: "Starter plan — Jan 2025 (prorated upgrade)",
+    description: "Starter plan. Jan 2025 (prorated upgrade)",
   },
   {
     id: "inv_2024_12",
     date: "2024-12-01",
     amount: "$329.00",
     status: "Paid" as const,
-    description: "Starter plan — Dec 2024",
+    description: "Starter plan. Dec 2024",
   },
 ];
 
@@ -874,7 +874,7 @@ export const trainingModules = [
   {
     id: "mod-secrets",
     name: "Secrets & credentials hygiene",
-    description: "Never commit secrets, use vaults, and rotate keys—aligned with current gap remediation.",
+    description: "Never commit secrets, use vaults, and rotate keys, aligned with current gap remediation.",
     completed: 4,
     total: 6,
     due: "2025-05-28",

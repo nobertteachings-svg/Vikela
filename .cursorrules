@@ -2,12 +2,14 @@
 - All API responses: { data, error, meta } envelope
 - All dates UTC in database
 - All provider tokens AES-256-GCM encrypted before storing
-- AWS customer connections use AssumeRole only — never long-lived keys
+- AWS customer connections use AssumeRole only; never long-lived keys
 - All provider logic must implement the correct interface (IGitProvider / ICloudProvider / IIdentityProvider)
-- Use provider.factory.ts — never instantiate providers directly in routes
+- Use provider.factory.ts; never instantiate providers directly in routes
 - Cloud scans always run in BullMQ background jobs (when >2s)
 - Scanner findings always include: source, severity, resourceType, resourceId, region, remediation
-- All file uploads to S3 — never store binary in the database
-- All DB queries through Prisma — raw SQL only for pgvector similarity search
-- Provider brand colors only on badges — never as primary UI palette
-- ENCRYPTION_KEY must be set — throw on startup if missing
+- All file uploads to S3; never store binary in the database
+- All DB queries through Prisma; raw SQL only for pgvector similarity search
+- Provider brand colors only on badges; never as primary UI palette
+- ENCRYPTION_KEY must be set; throw on startup if missing
+- No em dashes (U+2014) in copy or comments. Use periods, commas, colons, or parentheses. Empty-value placeholders may use a single em dash character in tables/UI only.
+- Typography: IBM Plex Sans (UI), Source Serif 4 (display headlines via font-display), IBM Plex Mono (code). Do not use DM Sans, Inter, Roboto, Geist, or gradient clipped headline text. Keep marketing H1 around text-3xl/sm:text-4xl, not oversized 5xl stacks.

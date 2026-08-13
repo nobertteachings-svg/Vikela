@@ -10,7 +10,7 @@ export const GAP_SOURCES: GapSource[] = [
   "MONITORING",
 ];
 
-/** Comma-separated `?source=` values → Prisma filter (single enum or `{ in: [...] }`). */
+/** Comma-separated `?source=` values → Prisma filter (single enum or `{ in: [..] }`). */
 export function parseGapSourceFilter(source?: string): GapSource[] | undefined {
   if (!source?.trim()) return undefined;
   const parts = source.split(",").map((s) => s.trim()).filter(Boolean);
@@ -25,7 +25,7 @@ export function gapSourceWhere(sources: GapSource[] | undefined) {
   return { source: { in: sources } };
 }
 
-/** Open gaps that are not onboarding/lite samples — use for RAG, Copilot, and policy generation. */
+/** Open gaps that are not onboarding/lite samples, use for RAG, Copilot, and policy generation. */
 export function openRealGapsWhere(orgId: string) {
   return { orgId, status: "OPEN" as const, isSample: false };
 }

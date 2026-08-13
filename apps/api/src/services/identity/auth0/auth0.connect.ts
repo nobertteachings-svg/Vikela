@@ -35,7 +35,7 @@ export async function fetchAuth0ManagementToken(domain: string): Promise<string>
   const clientSecret = managementClientSecret();
   if (!clientId || !clientSecret) {
     throw new Error(
-      "Auth0 is not configured — set AUTH0_MANAGEMENT_CLIENT_ID and AUTH0_MANAGEMENT_CLIENT_SECRET (Machine-to-Machine app with read:users)"
+      "Auth0 is not configured, set AUTH0_MANAGEMENT_CLIENT_ID and AUTH0_MANAGEMENT_CLIENT_SECRET (Machine-to-Machine app with read:users)"
     );
   }
 
@@ -53,7 +53,7 @@ export async function fetchAuth0ManagementToken(domain: string): Promise<string>
 
   if (!tokenRes.ok) {
     const body = await tokenRes.text();
-    throw new Error(`Auth0 token exchange failed: ${tokenRes.status} — ${body.slice(0, 280)}`);
+    throw new Error(`Auth0 token exchange failed: ${tokenRes.status}, ${body.slice(0, 280)}`);
   }
 
   const json = (await tokenRes.json()) as { access_token?: string };

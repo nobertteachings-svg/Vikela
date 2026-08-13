@@ -283,7 +283,7 @@ function demoAwsFindings(): ScanFinding[] {
   return [
     {
       title: "CloudTrail logging not enabled (demo)",
-      description: "Demo mode — configure AWS_VIKELA_* env vars for live scans.",
+      description: "Demo mode, configure AWS_VIKELA_* env vars for live scans.",
       severity: "HIGH",
       source: "LOGGING",
       cloudProvider: "AWS",

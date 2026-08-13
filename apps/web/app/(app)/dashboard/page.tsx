@@ -23,15 +23,15 @@ export default async function DashboardPage() {
         <PageHeader
           eyebrow="Overview"
           title="Dashboard"
-          description="One platform for every framework—mapped from code, cloud, and identity."
+          description="One platform for every framework, mapped from code, cloud, and identity."
         />
         <ApiError
           message={
             e instanceof Error
               ? e.message.includes("Organization not found") ||
                   e.message.includes("No organization found")
-                ? `${e.message} — API is up but your Clerk org is not in Vikela yet. Restart dev after .env sync, or run: npm run db:seed. For a new Clerk org, forward webhooks (clerk webhook) or open /onboarding.`
-                : `${e.message} — ensure the API is running (npm run dev) and the database is seeded (npm run db:seed).`
+                ? `${e.message}. API is up but your Clerk org is not in Vikela yet. Restart dev after .env sync, or run: npm run db:seed. For a new Clerk org, forward webhooks (clerk webhook) or open /onboarding.`
+                : `${e.message}, ensure the API is running (npm run dev) and the database is seeded (npm run db:seed).`
               : "Failed to load dashboard"
           }
         />

@@ -22,7 +22,7 @@ jobs:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
         run: |
-          npx vercel deploy --prod --token="$VERCEL_TOKEN" || echo "Vercel deploy failed — check VERCEL_* secrets"
+          npx vercel deploy --prod --token="$VERCEL_TOKEN" || echo "Vercel deploy failed, check VERCEL_* secrets"
       - name: Skip Vercel (no secrets)
         if: env.VERCEL_TOKEN == ''
         run: echo "Set VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID in repo secrets to deploy web"

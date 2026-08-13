@@ -3,7 +3,7 @@ import type { CloudProvider } from "@prisma/client";
 import { isDemoConnectAllowed } from "../../lib/auth.js";
 
 /**
- * Demo cloud findings — only when ALLOW_DEMO_INTEGRATIONS=true and not production.
+ * Demo cloud findings, only when ALLOW_DEMO_INTEGRATIONS=true and not production.
  * Production / normal staging never invent compliance results.
  */
 export function demoCloudFindings(provider: CloudProvider): ScanFinding[] {

@@ -14,7 +14,7 @@ export type OrgRoleContextValue = {
 
 const hasClerk = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
 
-/** Local dev without Clerk — treat as loaded admin so mutation UI is testable. */
+/** Local dev without Clerk, treat as loaded admin so mutation UI is testable. */
 const NO_CLERK_VALUE: OrgRoleContextValue = {
   orgRole: undefined,
   appRole: "admin",

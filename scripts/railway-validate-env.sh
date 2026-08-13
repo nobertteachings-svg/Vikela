@@ -47,15 +47,15 @@ case "$SERVICE" in
     require_var CLERK_SECRET_KEY
     validate_base_url APP_URL "$APP_URL"
     if [[ "${DATABASE_URL:-}" == *localhost* ]]; then
-      echo "ERROR: DATABASE_URL must reference Railway Postgres — use \${{Postgres.DATABASE_URL}}"
+      echo "ERROR: DATABASE_URL must reference Railway Postgres, use \${{Postgres.DATABASE_URL}}"
       exit 1
     fi
     if [[ "${REDIS_URL:-}" == *localhost* ]]; then
-      echo "ERROR: REDIS_URL must reference Railway Redis — use \${{Redis.REDIS_URL}}"
+      echo "ERROR: REDIS_URL must reference Railway Redis, use \${{Redis.REDIS_URL}}"
       exit 1
     fi
     if [[ -z "${CORS_ALLOWED_ORIGINS:-}" ]]; then
-      echo "WARN: CORS_ALLOWED_ORIGINS not set — set it to your Web Railway URL"
+      echo "WARN: CORS_ALLOWED_ORIGINS not set, set it to your Web Railway URL"
     fi
     ;;
   web)

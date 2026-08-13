@@ -11,7 +11,7 @@ Create, edit, and publish security/compliance policies mapped to frameworks. Pub
 
 1. Open **Policies**.
 2. Generate or draft a policy (AI-assisted where available).
-3. Edit content to match your real practices—do not publish boilerplate you do not follow.
+3. Edit content to match your real practices, do not publish boilerplate you do not follow.
 4. Map to relevant frameworks/controls as the UI allows.
 5. **Publish** when ready for internal use / trust page.
 6. Revise and re-publish when controls or org practices change.

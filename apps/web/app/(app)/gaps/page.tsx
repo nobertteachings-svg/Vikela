@@ -67,8 +67,7 @@ export default async function GapsPage({
         source,
         framework: frameworkSlug,
         control: controlCode,
-        scanId,
-        ...period,
+        scanId, ...period,
       }),
       complianceApi.dashboard(),
       complianceApi.billing().catch(() => null),
@@ -98,7 +97,7 @@ export default async function GapsPage({
         title="Gaps & findings"
         description={
           isResolved
-            ? "Gaps marked resolved — track closure over your audit period."
+            ? "Gaps marked resolved, track closure over your audit period."
             : scanId
               ? "Gaps from this scan run."
               : controlCode

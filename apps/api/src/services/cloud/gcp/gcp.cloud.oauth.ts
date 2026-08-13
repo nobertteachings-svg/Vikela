@@ -94,7 +94,7 @@ export async function handleGcpCloudOAuthCallback(code: string, stateB64: string
       }
       // Non-fatal if v3 search still works
       if (v1Res.status !== 403 && v1Res.status !== 404) {
-        throw new Error(`GCP project listing failed: ${v1Res.status} — ${body.slice(0, 280)}`);
+        throw new Error(`GCP project listing failed: ${v1Res.status}, ${body.slice(0, 280)}`);
       }
     }
 

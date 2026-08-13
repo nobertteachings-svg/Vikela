@@ -26,15 +26,15 @@ export function ConnectAuth0Dialog({
     setError(null);
     try {
       if (!isLoaded) {
-        throw new Error("Session still loading — wait a moment and try again.");
+        throw new Error("Session still loading, wait a moment and try again.");
       }
       if (!orgId) {
         throw new Error(
-          "No workspace selected — use the org switcher (top bar) to select Optic Inc, then try again."
+          "No workspace selected, use the org switcher (top bar) to select Optic Inc, then try again."
         );
       }
 
-      // Same-origin proxy (server Clerk session) — avoids flaky cross-origin Bearer to :3001.
+      // Same-origin proxy (server Clerk session), avoids flaky cross-origin Bearer to :3001.
       const res = await fetch("/api/integrations/auth0/connect", {
         method: "POST",
         headers: { "Content-Type": "application/json" },

@@ -5,7 +5,7 @@ test.describe("Accessibility tests", () => {
   test("homepage has no accessibility violations", async ({ page }) => {
     await page.goto("/");
     const accessibilityScanResults = await new AxeBuilder({ page }).analyze();
-    // Fail only on serious/critical — marketing polish may still have minor axe noise.
+    // Fail only on serious/critical, marketing polish may still have minor axe noise.
     const blocking = accessibilityScanResults.violations.filter((v) =>
       ["serious", "critical"].includes(v.impact ?? "")
     );

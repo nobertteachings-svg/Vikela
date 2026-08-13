@@ -232,7 +232,7 @@ export const trainingRoutes: FastifyPluginAsync = async (app) => {
 
     const me = await getMemberForRequest(req);
     if (!me) {
-      // Dev / internal secret without a user — return empty personal queue.
+      // Dev / internal secret without a user, return empty personal queue.
       return reply.send(ok({ memberId: null, assignments: [] }));
     }
 
@@ -492,7 +492,7 @@ export const trainingRoutes: FastifyPluginAsync = async (app) => {
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Training certificate — ${escapeHtml(assignment.module.name)}</title>
+  <title>Training certificate, ${escapeHtml(assignment.module.name)}</title>
   <style>
     body { font-family: Georgia, serif; color: #111; max-width: 720px; margin: 48px auto; padding: 24px; border: 2px solid #222; }
     h1 { font-size: 28px; margin-bottom: 8px; }

@@ -97,7 +97,7 @@ async function serverApiFetch<T>(
   } catch (e) {
     const detail = e instanceof Error ? e.message : "network error";
     throw new Error(
-      `Cannot reach API at ${API_URL} (${detail}) — check NEXT_PUBLIC_API_URL on the Web service and that the API service is running`
+      `Cannot reach API at ${API_URL} (${detail}), check NEXT_PUBLIC_API_URL on the Web service and that the API service is running`
     );
   }
   return parseApiResponse<T>(res);

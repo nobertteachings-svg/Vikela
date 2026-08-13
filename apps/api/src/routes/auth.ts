@@ -86,7 +86,7 @@ export const authRoutes: FastifyPluginAsync = async (app) => {
     if (!orgSlug) return reply.redirect(oauthOrgErrorRedirect(returnTo));
     const state = encodeOAuthState(orgSlug, returnTo, query.clerkOrg);
 
-    // App install first (Railway / Vercel / Render model) — requires a public GitHub App
+    // App install first (Railway / Vercel / Render model), requires a public GitHub App
     if (isGitHubAppConfigured()) {
       return reply.redirect(getGitHubAppInstallUrl(state));
     }

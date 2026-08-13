@@ -25,7 +25,7 @@ Integrations are how Vikela reads your systems. Each **active provider** counts 
 | **AssumeRole** | Paste Role ARN (+ external ID) after deploying a stack | AWS |
 | **API key / token** | Paste keys or webhook URL in a dialog; Vikela verifies then stores encrypted | Cloudflare, JumpCloud, Auth0 (M2M), Datadog, Grafana, PagerDuty, New Relic, Teams |
 
-Tokens are encrypted at rest (AES-256-GCM). AWS never stores long-lived customer access keys—only AssumeRole.
+Tokens are encrypted at rest (AES-256-GCM). AWS never stores long-lived customer access keys, only AssumeRole.
 
 ## Plan limits
 
@@ -36,7 +36,7 @@ Tokens are encrypted at rest (AES-256-GCM). AWS never stores long-lived customer
 | Growth | 20 |
 | Enterprise | 999 |
 
-If you see **Integration limit reached**, disconnect an unused provider or [upgrade](../billing.md). Reconnecting the **same** provider does not consume an extra slot.
+If you see **Integration limit reached**, disconnect an unused provider or [upgrade](./billing.md). Reconnecting the **same** provider does not consume an extra slot.
 
 ## Grid status labels
 
@@ -82,7 +82,7 @@ Exact disconnect UX may vary by provider; if a card stays Connected after an err
 | **Platform** (Vikela operator `.env`) | Your Vikela host | `GITHUB_*`, `GITLAB_APP_ID`, `SLACK_CLIENT_ID`, `AUTH0_MANAGEMENT_CLIENT_ID`, Azure/GCP OAuth apps |
 | **Customer** (you in the UI) | Org admin | AWS Role ARN, Cloudflare API token, Datadog keys, Teams webhook URL |
 
-If Connect shows **Not configured**, the platform side is incomplete—customer keys alone cannot fix it.
+If Connect shows **Not configured**, the platform side is incomplete, customer keys alone cannot fix it.
 
 ## Troubleshooting (all providers)
 
@@ -129,4 +129,4 @@ If Connect shows **Not configured**, the platform side is incomplete—customer 
 - [Slack](./slack.md)
 - [Microsoft Teams](./microsoft-teams.md)
 
-Back to [User guide index](../README.md).
+Back to [User guide index](./README.md).

@@ -44,7 +44,7 @@ export function SeverityBreakdownBar({
   if (total === 0) {
     return (
       <p className="text-sm text-comply-text-secondary">
-        No open gaps — run a scan to keep posture current.
+        No open gaps, run a scan to keep posture current.
       </p>
     );
   }

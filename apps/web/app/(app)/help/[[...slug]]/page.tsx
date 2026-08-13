@@ -19,7 +19,7 @@ export default function HelpPage({ params }: Props) {
       <PageHeader
         eyebrow="Help"
         title={page.title}
-        description="How to use Vikela — connect providers, run scans, collect evidence, and prepare for audit."
+        description="How to use Vikela, connect providers, run scans, collect evidence, and prepare for audit."
       />
       <div className="flex flex-col gap-8 lg:flex-row">
         <aside className="shrink-0 lg:w-56">

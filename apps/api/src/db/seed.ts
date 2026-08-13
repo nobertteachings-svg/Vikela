@@ -68,7 +68,7 @@ const SOC2_CONTROLS: Array<{
 ];
 
 async function main() {
-  console.log("Seeding Vikela database...");
+  console.log("Seeding Vikela database..");
 
   for (const fw of COMPLIANCE_FRAMEWORKS) {
     await prisma.framework.upsert({
@@ -112,10 +112,10 @@ async function main() {
     });
   }
 
-  console.log("Seeding cross-framework control mappings...");
+  console.log("Seeding cross-framework control mappings..");
   await seedFrameworkControlMappings();
 
-  console.log("Seeding framework-native controls...");
+  console.log("Seeding framework-native controls..");
   const nativeCount = await seedNativeControls();
   console.log(`  ${nativeCount} native controls seeded.`);
 
@@ -491,8 +491,7 @@ async function main() {
   for (const gap of demoGaps) {
     await prisma.gap.create({
       data: {
-        orgId: org.id,
-        ...gap,
+        orgId: org.id, ...gap,
       },
     });
   }
@@ -621,7 +620,7 @@ async function main() {
         dataAccess: "Infrastructure metadata",
         contractRenewal: new Date("2026-01-15"),
         score: 92,
-        questionnaireStatus: "Approved — annual review complete",
+        questionnaireStatus: "Approved, annual review complete",
         documents: ["SOC 2 Type II report", "Pen test summary"],
         subprocessors: ["Amazon data centers"],
         dataProcessing: true,
@@ -675,7 +674,7 @@ async function main() {
         dataAccess: "Internal docs",
         contractRenewal: new Date("2025-08-01"),
         score: 65,
-        questionnaireStatus: "In progress — security review pending",
+        questionnaireStatus: "In progress, security review pending",
         documents: [],
         subprocessors: [],
         dataProcessing: false,

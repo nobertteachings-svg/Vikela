@@ -27,7 +27,7 @@ export default async function ControlsPage({
         <ApiError
           message={
             e instanceof Error
-              ? `${e.message} — ensure the API is running and the database is seeded.`
+              ? `${e.message}, ensure the API is running and the database is seeded.`
               : "Failed to load controls"
           }
         />

@@ -6,7 +6,7 @@
 
 ## Purpose
 
-Gaps are compliance findings produced primarily by **scans** of code, cloud, and identity. They are the operational queue: triage, remediate, accept, or resolve—and collect evidence when ready.
+Gaps are compliance findings produced primarily by **scans** of code, cloud, and identity. They are the operational queue: triage, remediate, accept, or resolve, and collect evidence when ready.
 
 ## How scans relate
 

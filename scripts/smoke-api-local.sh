@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
-# Local API smoke (demo org). Not a substitute for staging checklist — use for dev regression.
+# Local API smoke (demo org). Not a substitute for staging checklist, use for dev regression.
 set -euo pipefail
 
 API="${API_URL:-http://localhost:3001}"
 ORG_SLUG="${VIKELA_DEV_ORG_SLUG:-demo}"
 H=(-H "X-Org-Slug: $ORG_SLUG" -H "Content-Type: application/json")
 # When Clerk is configured, local smoke uses the internal service secret (same as e2e helpers).
-if [[ -z "${INTERNAL_API_SECRET:-}" && -f "$(dirname "$0")/../.env" ]]; then
+if [[ -z "${INTERNAL_API_SECRET:-}" && -f "$(dirname "$0")/./.env" ]]; then
   INTERNAL_API_SECRET="$(python3 -c "
 from pathlib import Path
-p = Path('$(dirname "$0")/../.env')
+p = Path('$(dirname "$0")/./.env')
 for line in p.read_text().splitlines():
   if line.startswith('INTERNAL_API_SECRET='):
     print(line.split('=',1)[1].strip().strip('\"').strip(\"'\"))

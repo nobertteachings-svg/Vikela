@@ -1,4 +1,4 @@
-# Deprecated when Root Directory is empty — use repo root nixpacks.toml instead.
+# Deprecated when Root Directory is empty, use repo root nixpacks.toml instead.
 # If you must set Root Directory to apps/api, Railway cannot access package-lock.json.
 # Remove Root Directory and set Config file path to apps/api/railway.json.
 

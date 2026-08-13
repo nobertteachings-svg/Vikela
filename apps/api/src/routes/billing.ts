@@ -165,7 +165,7 @@ export const billingRoutes: FastifyPluginAsync = async (app) => {
           }
         }
       } catch {
-        // Stripe optional — return DB-backed fields if API fails
+        // Stripe optional, return DB-backed fields if API fails
       }
     }
 
@@ -342,7 +342,7 @@ export const billingRoutes: FastifyPluginAsync = async (app) => {
         });
         return reply.send(ok({ url: session.url, flow: "payment_method_update" as const }));
       } catch {
-        // Portal configuration may not enable this flow — fall through to default portal.
+        // Portal configuration may not enable this flow, fall through to default portal.
       }
     }
 

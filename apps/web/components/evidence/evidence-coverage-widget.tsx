@@ -28,7 +28,7 @@ export function EvidenceCoverageWidget({
           </h2>
           <p className="mt-2 text-sm leading-relaxed text-comply-text-secondary">
             A control is <strong className="font-medium text-comply-text-primary">covered</strong> when
-            at least one evidence record is linked to it — scan exports, policies, screenshots, or
+            at least one evidence record is linked to it, scan exports, policies, screenshots, or
             uploads.
           </p>
           <p className="mt-3 font-mono text-sm text-comply-text-primary">

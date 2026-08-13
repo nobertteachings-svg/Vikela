@@ -36,8 +36,8 @@ export function BillingCheckoutBanner() {
           <p className="text-sm font-medium text-comply-green">Checkout complete</p>
           <p className="mt-1 text-sm text-comply-text-secondary">
             {plan
-              ? `Thanks — your ${plan} subscription is being activated.`
-              : "Thanks — your subscription is being activated."}{" "}
+              ? `Thanks, your ${plan} subscription is being activated.`
+              : "Thanks, your subscription is being activated."}{" "}
             Plan and invoices update once Stripe confirms (usually within a few seconds). Refresh if
             status still shows as complimentary.
           </p>

@@ -48,7 +48,7 @@ export async function finalizeLiteScan(params: {
     noRepo,
   });
 
-  // Sample gaps only in explicit local demo mode — never invent findings for real customers.
+  // Sample gaps only in explicit local demo mode, never invent findings for real customers.
   const useSample =
     isDemoConnectAllowed() && realGapCount < LITE_SCAN_MIN_REAL_FINDINGS;
   let source: "repo" | "sample" | "mixed" = "repo";

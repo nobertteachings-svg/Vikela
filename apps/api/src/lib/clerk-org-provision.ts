@@ -56,12 +56,12 @@ export async function ensureOrganizationFromSession(
     },
   });
 
-  // Framework enrollment is driven by onboarding framework selection — not auto-provisioned here.
+  // Framework enrollment is driven by onboarding framework selection, not auto-provisioned here.
 
   return org;
 }
 
-/** OAuth callbacks have no Clerk session — provision org from state when webhooks lag. */
+/** OAuth callbacks have no Clerk session, provision org from state when webhooks lag. */
 export async function ensureOrganizationFromClerkId(
   clerkOrgId: string,
   slugHint?: string | null

@@ -1,4 +1,4 @@
-# Deprecated when Root Directory is empty — use repo root nixpacks.toml instead.
+# Deprecated when Root Directory is empty, use repo root nixpacks.toml instead.
 # Remove Root Directory and set Config file path to apps/web/railway.json.
 
 [phases.install]

@@ -6,7 +6,7 @@ const GITLAB_HOST = process.env.GITLAB_HOST ?? "https://gitlab.com";
 
 /**
  * Best-effort: register push/MR webhooks on synced GitLab/Bitbucket repos.
- * Failures are logged and never block OAuth/sync — local/dev often lacks a public URL.
+ * Failures are logged and never block OAuth/sync, local/dev often lacks a public URL.
  */
 export async function ensureGitWebhooks(integrationId: string): Promise<{
   attempted: number;

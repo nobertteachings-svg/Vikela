@@ -55,7 +55,7 @@ function RecoverySteps() {
         <code className="rounded bg-comply-primary px-1.5 py-0.5 font-mono text-xs">npm run db:setup</code>
       </li>
       <li>
-        Restart <code className="rounded bg-comply-primary px-1.5 py-0.5 font-mono text-xs">npm run dev</code> — API
+        Restart <code className="rounded bg-comply-primary px-1.5 py-0.5 font-mono text-xs">npm run dev</code>. API
         on :3001
       </li>
     </ol>

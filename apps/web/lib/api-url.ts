@@ -28,7 +28,7 @@ export function assertProductionApiUrl(): void {
   const url = getServerApiUrl();
   if (url.includes("localhost") || url.includes("127.0.0.1")) {
     throw new Error(
-      "API URL not configured for production — set NEXT_PUBLIC_API_URL on the Web service to your Railway API domain (e.g. https://api-xxx.up.railway.app), then redeploy"
+      "API URL not configured for production, set NEXT_PUBLIC_API_URL on the Web service to your Railway API domain (e.g. https://api-xxx.up.railway.app), then redeploy"
     );
   }
   if (url.endsWith("/api/v1") || url.endsWith("/api")) {

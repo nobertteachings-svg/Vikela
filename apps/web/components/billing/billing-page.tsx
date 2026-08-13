@@ -234,7 +234,7 @@ export function BillingPageContent({
               integrations may be limited until payment succeeds. Invoices remain available below.
             </p>
             <p className="mt-2 text-xs text-comply-text-tertiary">
-              After updating the card, refresh this page — status usually clears within a minute of
+              After updating the card, refresh this page, status usually clears within a minute of
               Stripe confirming payment.
             </p>
           </div>
@@ -663,7 +663,7 @@ export function BillingPageContent({
         <div>
           <SectionLabel>Need help?</SectionLabel>
           <p className="mt-2 text-sm text-comply-text-secondary">
-            Questions about proration, annual contracts, or enterprise procurement—we respond within
+            Questions about proration, annual contracts, or enterprise procurement, we respond within
             one business day.
           </p>
         </div>

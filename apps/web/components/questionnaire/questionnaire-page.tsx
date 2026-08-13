@@ -337,8 +337,7 @@ export function QuestionnairePageContent({
   function exportAnswers() {
     if (!data) return;
     const lines = [
-      "category,question,answer,status",
-      ...data.items.map(
+      "category,question,answer,status", ...data.items.map(
         (i) =>
           `"${(i.category || "General").replace(/"/g, '""')}","${i.q.replace(/"/g, '""')}","${i.answer.replace(/"/g, '""')}",${normalizeStatus(i.status)}`
       ),
@@ -363,8 +362,8 @@ export function QuestionnairePageContent({
         title={title}
         description={
           vendorId
-            ? "Vendor security assessment — review answers by category, approve or skip each item, then mark complete."
-            : "Production vendor security questionnaire — governance, IAM, data protection, incident response, privacy, and subprocessors."
+            ? "Vendor security assessment, review answers by category, approve or skip each item, then mark complete."
+            : "Production vendor security questionnaire, governance, IAM, data protection, incident response, privacy, and subprocessors."
         }
       >
         {vendorId ? (
@@ -395,7 +394,7 @@ export function QuestionnairePageContent({
           </p>
           <p className="mt-1 max-w-lg text-sm text-comply-text-secondary">
             Creates 30 production questions across security governance, access, encryption,
-            vulnerability management, incident response, privacy, and subprocessors — with
+            vulnerability management, incident response, privacy, and subprocessors, with
             editable suggested answers.
           </p>
         </button>

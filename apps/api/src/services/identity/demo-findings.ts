@@ -2,7 +2,7 @@ import type { ScanFinding } from "@vikela/shared";
 import { isDemoConnectAllowed } from "../../lib/auth.js";
 
 /**
- * Demo identity findings — only when ALLOW_DEMO_INTEGRATIONS=true and not production.
+ * Demo identity findings, only when ALLOW_DEMO_INTEGRATIONS=true and not production.
  */
 export function demoIdentityFindings(provider: string): ScanFinding[] {
   if (!isDemoConnectAllowed()) return [];

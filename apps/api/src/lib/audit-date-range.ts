@@ -47,7 +47,7 @@ export function collectedAtFilter(from?: string, to?: string): { gte?: Date; lte
   }
 }
 
-/** Optional list filters — partial range allowed (from only or to only). */
+/** Optional list filters, partial range allowed (from only or to only). */
 export function optionalDateFilter(
   from?: string,
   to?: string

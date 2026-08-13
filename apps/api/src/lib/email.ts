@@ -44,7 +44,7 @@ export async function sendScanCompleteEmail(params: {
   const scoreLabel = params.score ?? "—";
   return sendEmail({
     to: params.to,
-    subject: `Scan complete — ${scoreLabel} posture score`,
+    subject: `Scan complete, ${scoreLabel} posture score`,
     html: `
       <p>A <strong>${params.scanType}</strong> finished for <strong>${params.orgName}</strong>.</p>
       <ul>
@@ -52,7 +52,7 @@ export async function sendScanCompleteEmail(params: {
         <li>Gaps found this scan: <strong>${params.gapCount}</strong></li>
       </ul>
       <p><a href="${params.scansUrl}">View scans in Vikela</a></p>
-      <p style="color:#666;font-size:12px">Vikela — Universal Compliance Engine</p>
+      <p style="color:#666;font-size:12px">Vikela. Universal Compliance Engine</p>
     `,
   });
 }
@@ -76,7 +76,7 @@ export async function sendGapAlertsEmail(params: {
   const findingsHtml = params.findings
     .map(
       (g) =>
-        `<li><strong>${g.severity}</strong> — ${escapeHtml(g.title)}</li>`
+        `<li><strong>${g.severity}</strong>: ${escapeHtml(g.title)}</li>`
     )
     .join("");
 
@@ -88,7 +88,7 @@ export async function sendGapAlertsEmail(params: {
       <p><strong>${params.totalCount}</strong> critical/high finding${params.totalCount === 1 ? "" : "s"} (${breakdown}).</p>
       <ul>${findingsHtml}</ul>
       <p><a href="${params.gapsUrl}">Review gaps in Vikela</a></p>
-      <p style="color:#666;font-size:12px">Vikela — Universal Compliance Engine</p>
+      <p style="color:#666;font-size:12px">Vikela. Universal Compliance Engine</p>
     `,
   });
 }
@@ -113,7 +113,7 @@ export async function sendMemberInviteEmail(params: {
     html: `
       <p>${params.inviterName} invited you to join <strong>${params.orgName}</strong> on Vikela.</p>
       <p><a href="${params.inviteUrl}">Accept invitation</a></p>
-      <p style="color:#666;font-size:12px">Vikela — Universal Compliance Engine</p>
+      <p style="color:#666;font-size:12px">Vikela. Universal Compliance Engine</p>
     `,
   });
 }
@@ -127,7 +127,7 @@ export async function sendCriticalGapAlert(params: {
 }) {
   return sendEmail({
     to: params.to,
-    subject: `[${params.severity}] New compliance gap — ${params.orgName}`,
+    subject: `[${params.severity}] New compliance gap, ${params.orgName}`,
     html: `
       <p>A <strong>${params.severity}</strong> gap was detected in <strong>${params.orgName}</strong>:</p>
       <p>${params.gapTitle}</p>
@@ -148,13 +148,13 @@ export async function sendTrainingReminderEmail(params: {
     .join("");
   return sendEmail({
     to: params.to,
-    subject: `Training reminder — ${params.orgName}`,
+    subject: `Training reminder, ${params.orgName}`,
     html: `
       <p>Hi ${escapeHtml(params.name)},</p>
       <p>You have overdue security training for <strong>${escapeHtml(params.orgName)}</strong>:</p>
       <ul>${list}</ul>
       <p><a href="${params.trainingUrl}">Complete training in Vikela</a></p>
-      <p style="color:#666;font-size:12px">Vikela — Universal Compliance Engine</p>
+      <p style="color:#666;font-size:12px">Vikela. Universal Compliance Engine</p>
     `,
   });
 }

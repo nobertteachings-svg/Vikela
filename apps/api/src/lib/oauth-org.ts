@@ -1,6 +1,6 @@
 import { DEMO_ORG_SLUG } from "./org-context.js";
 
-/** OAuth state org slug — never default to demo in production. */
+/** OAuth state org slug, never default to demo in production. */
 export function resolveOAuthOrgSlug(orgParam: string | undefined): string | null {
   if (orgParam?.trim()) return orgParam.trim();
   if (process.env.NODE_ENV === "production") return null;

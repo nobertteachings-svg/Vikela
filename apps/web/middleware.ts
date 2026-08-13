@@ -18,7 +18,7 @@ const isPublicRoute = createRouteMatcher([
   "/api/auth(.*)",
 ]);
 
-/** Proxied to Fastify — auth is Bearer token on the API, not a Clerk session gate here. */
+/** Proxied to Fastify, auth is Bearer token on the API, not a Clerk session gate here. */
 const isApiProxyRoute = createRouteMatcher(["/api/v1(.*)"]);
 
 const isOnboardingRoute = createRouteMatcher(["/onboarding(.*)"]);
@@ -31,7 +31,7 @@ export default hasClerk
 
       const { orgRole, userId } = await auth();
 
-      // Marketing home (`/`) stays reachable while signed in — CTAs switch to "Open dashboard".
+      // Marketing home (`/`) stays reachable while signed in. CTAs switch to "Open dashboard".
       // (Previously we forced / → /dashboard, which trapped users with no way back to the site.)
 
       if (userId && isAuditor(orgRole) && isAuditorBlockedPath(req.nextUrl.pathname)) {

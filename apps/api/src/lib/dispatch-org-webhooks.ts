@@ -19,7 +19,7 @@ function deliveryId(): string {
 
 /**
  * Fire-and-forget outbound webhooks for an org. Matches endpoints subscribed to `event`.
- * v1: no retry queue — failures are logged server-side only.
+ * v1: no retry queue, failures are logged server-side only.
  */
 export function dispatchOrgWebhooks(
   orgId: string,
@@ -168,7 +168,7 @@ export function emitScanCompleted(
   dispatchOrgWebhooks(orgId, "scan.completed", scanCompletedPayload(scan));
 }
 
-/** Manual test delivery — uses latest completed scan payload for this org. */
+/** Manual test delivery, uses latest completed scan payload for this org. */
 export async function sendTestWebhookScanCompleted(
   orgId: string,
   webhookId: string
@@ -191,7 +191,7 @@ export async function sendTestWebhookScanCompleted(
     orderBy: { completedAt: "desc" },
   });
   if (!scan) {
-    return { ok: false, reached: false, error: "No completed scan yet — run a scan first" };
+    return { ok: false, reached: false, error: "No completed scan yet, run a scan first" };
   }
 
   const gapCount = await prisma.gap.count({

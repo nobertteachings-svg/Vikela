@@ -96,7 +96,7 @@ export function GitConnectBanner({
       <CardBody>
         <h2 className="text-lg font-medium text-comply-text-primary">Connect source control</h2>
         <p className="mt-1 max-w-2xl text-sm text-comply-text-secondary">
-          Link GitHub, GitLab, or Bitbucket to scan repositories—not just one provider.
+          Link GitHub, GitLab, or Bitbucket to scan repositories, not just one provider.
         </p>
         {!orgSlug && (
           <p className="mt-2 text-xs text-amber-400/90">

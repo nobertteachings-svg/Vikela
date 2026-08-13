@@ -267,7 +267,7 @@ export const settingsRoutes: FastifyPluginAsync = async (app) => {
       return reply.status(status).send(err(result.error ?? "Test delivery failed"));
     }
 
-    // Delivery was attempted — always return data so the UI can distinguish
+    // Delivery was attempted, always return data so the UI can distinguish
     // accepted vs "reached host but remote rejected" vs network failure.
     return reply.send(
       ok({
@@ -367,16 +367,13 @@ export const settingsRoutes: FastifyPluginAsync = async (app) => {
 
     if (format === "csv") {
       const lines = [
-        "type,id,title,severity_or_status,extra,created_at",
-        ...gaps.map(
+        "type,id,title,severity_or_status,extra,created_at", ...gaps.map(
           (g) =>
             `gap,${g.id},${csvEscape(g.title)},${g.severity},${g.status},${g.createdAt.toISOString()}`
-        ),
-        ...scans.map(
+        ), ...scans.map(
           (s) =>
             `scan,${s.id},${s.scanType},${s.status},${s.score ?? ""},${s.startedAt.toISOString()}`
-        ),
-        ...evidence.map(
+        ), ...evidence.map(
           (e) =>
             `evidence,${e.id},${csvEscape(e.title)},${e.type},${e.source},${e.collectedAt.toISOString()}`
         ),
@@ -387,9 +384,9 @@ export const settingsRoutes: FastifyPluginAsync = async (app) => {
         .send(lines.join("\n"));
     }
 
-    const html = `<!DOCTYPE html><html><head><meta charset="utf-8"/><title>Vikela export — ${org.name}</title>
+    const html = `<!DOCTYPE html><html><head><meta charset="utf-8"/><title>Vikela export, ${org.name}</title>
 <style>body{font-family:system-ui,sans-serif;max-width:800px;margin:2rem auto;color:#222}h1{font-size:1.4rem}table{border-collapse:collapse;width:100%;font-size:12px}td,th{border:1px solid #ddd;padding:6px;text-align:left}</style></head><body>
-<h1>${escapeHtml(org.name)} — workspace export</h1>
+<h1>${escapeHtml(org.name)}, workspace export</h1>
 <p>Exported ${payload.exportedAt}. Print this page to PDF.</p>
 <h2>Gaps (${gaps.length})</h2>
 <table><tr><th>Severity</th><th>Title</th><th>Status</th></tr>

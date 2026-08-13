@@ -29,9 +29,9 @@ This guide walks a new organization from sign-up through the first meaningful sc
 
 New orgs are guided through onboarding. Typical steps:
 
-1. **Connect repositories** — link GitHub, GitLab, or Bitbucket and select repos to monitor. See [GitHub](./integrations/github.md), [GitLab](./integrations/gitlab.md), [Bitbucket](./integrations/bitbucket.md).
-2. **Invite team** — add members/admins/auditors. See [Team and access](./team-and-access.md).
-3. **Optional cloud / identity** — connect AWS, Azure, GCP, Okta, etc. from [Integrations](./integrations/README.md).
+1. **Connect repositories**: link GitHub, GitLab, or Bitbucket and select repos to monitor. See [GitHub](./integrations/github.md), [GitLab](./integrations/gitlab.md), [Bitbucket](./integrations/bitbucket.md).
+2. **Invite team**: add members/admins/auditors. See [Team and access](./team-and-access.md).
+3. **Optional cloud / identity**: connect AWS, Azure, GCP, Okta, etc. from [Integrations](./integrations/README.md).
 
 You can skip optional steps and finish later from **Integrations** and **Team**.
 
@@ -52,9 +52,9 @@ After at least one Git (or cloud/identity) integration is connected:
 
 Depending on connected providers:
 
-- **Code** — repositories (branch protection, secrets patterns, etc. per scanner).
-- **Cloud** — AWS AssumeRole checks, Azure/GCP/Cloudflare where connected.
-- **Identity** — MFA, inactive users, directory posture where connected.
+- **Code**: repositories (branch protection, secrets patterns, etc. per scanner).
+- **Cloud**: AWS AssumeRole checks, Azure/GCP/Cloudflare where connected.
+- **Identity**: MFA, inactive users, directory posture where connected.
 
 Findings become **gaps** linked to **controls** and enrolled **frameworks**.
 
@@ -77,7 +77,7 @@ Related: [Gaps and findings](./gaps-and-findings.md), [Frameworks](./frameworks.
 
 ## Scans
 
-**Path:** Sidebar → **Scans** (`/scans`) — **hidden for auditors**
+**Path:** Sidebar → **Scans** (`/scans`), **hidden for auditors**
 
 **Purpose:** History of code, cloud, identity, and full scans; posture trend over time.
 
@@ -117,8 +117,8 @@ Admins configure org naming and trust URL preview under [Settings](./settings.md
 
 ## Remediation and audit (adjacent)
 
-- **Remediation** (`/remediation`) — step-by-step plans for open critical/high gaps. See [Gaps and findings](./gaps-and-findings.md).
-- **Audit** (`/audit`) — recent compliance/scan activity trail.
+- **Remediation** (`/remediation`), step-by-step plans for open critical/high gaps. See [Gaps and findings](./gaps-and-findings.md).
+- **Audit** (`/audit`), recent compliance/scan activity trail.
 
 ## Recommended first week
 

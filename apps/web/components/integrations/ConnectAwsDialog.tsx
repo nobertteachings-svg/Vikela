@@ -20,17 +20,17 @@ export function ConnectAwsDialog({ onClose, onSuccess }: { onClose: () => void; 
     setError(null);
     try {
       if (!isLoaded) {
-        throw new Error("Session still loading — wait a moment and try again.");
+        throw new Error("Session still loading, wait a moment and try again.");
       }
       if (!orgId) {
         throw new Error(
-          "No workspace selected — use the org switcher (top bar) to select Optic Inc, then try again."
+          "No workspace selected, use the org switcher (top bar) to select Optic Inc, then try again."
         );
       }
 
       const token = await getToken();
       if (!token) {
-        throw new Error("Not signed in — refresh the page and sign in again.");
+        throw new Error("Not signed in, refresh the page and sign in again.");
       }
 
       // Drop stale demo slug so API resolves Optic via Clerk org id / membership.
@@ -47,7 +47,7 @@ export function ConnectAwsDialog({ onClose, onSuccess }: { onClose: () => void; 
       }>("/api/v1/onboarding/ensure-membership");
       if (ensured.needsClerkOrg || !ensured.orgReady) {
         throw new Error(
-          "No workspace selected — use the org switcher (top bar) to select Optic Inc, then try again."
+          "No workspace selected, use the org switcher (top bar) to select Optic Inc, then try again."
         );
       }
       if (ensured.orgSlug) {
@@ -81,7 +81,7 @@ export function ConnectAwsDialog({ onClose, onSuccess }: { onClose: () => void; 
           </div>
 
           <p className="mb-4 text-sm text-muted">
-            Vikela uses cross-account <strong>AssumeRole</strong> only — we never store your AWS access keys.
+            Vikela uses cross-account <strong>AssumeRole</strong> only, we never store your AWS access keys.
           </p>
 
           <ol className="mb-4 list-decimal space-y-2 pl-5 text-sm text-zinc-300">

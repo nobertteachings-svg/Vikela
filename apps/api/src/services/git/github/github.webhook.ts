@@ -60,7 +60,7 @@ export async function handleGitHubWebhook(
     }
     return {
       handled: true,
-      message: `Installation ${payload.installation.id} created — complete setup via OAuth callback`,
+      message: `Installation ${payload.installation.id} created, complete setup via OAuth callback`,
     };
   }
 

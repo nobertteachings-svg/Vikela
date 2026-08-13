@@ -198,4 +198,4 @@ export const landingPlans = [
 ] as const;
 
 export const enterpriseFooterCopy =
-  "Enterprise — custom controls, priority support, SSO on Enterprise plans. Annual billing saves ~17%.";
+  "Enterprise: custom controls, priority support, SSO on Enterprise plans. Annual billing saves ~17%.";

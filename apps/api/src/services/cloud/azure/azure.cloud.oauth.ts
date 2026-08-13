@@ -52,12 +52,12 @@ export async function handleAzureCloudOAuthCallback(code: string, state: string)
     process.env.AZURE_CLIENT_SECRET ?? process.env.AZURE_CLIENT_SECRET_VALUE;
   if (!clientSecret) {
     throw new Error(
-      "AZURE_CLIENT_SECRET is not set — paste the client secret Value from Azure (not the Secret ID)"
+      "AZURE_CLIENT_SECRET is not set, paste the client secret Value from Azure (not the Secret ID)"
     );
   }
   if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(clientSecret)) {
     throw new Error(
-      "AZURE_CLIENT_SECRET looks like a Secret ID — use the secret Value from Certificates & secrets"
+      "AZURE_CLIENT_SECRET looks like a Secret ID, use the secret Value from Certificates & secrets"
     );
   }
 

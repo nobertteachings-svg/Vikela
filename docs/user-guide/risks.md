@@ -5,7 +5,7 @@
 
 ## Purpose
 
-Maintain an organizational **risk register**: track risks beyond individual scan gaps, assign owners, and record mitigation—especially for accepted findings or business risks frameworks expect you to manage.
+Maintain an organizational **risk register**: track risks beyond individual scan gaps, assign owners, and record mitigation, especially for accepted findings or business risks frameworks expect you to manage.
 
 ## Navigation and primary workflows
 
@@ -39,6 +39,6 @@ Typical fields (labels may vary slightly in UI):
 | Symptom | Fix |
 |---------|-----|
 | Can’t create | Confirm write role (not auditor-only) |
-| Missing fields after upgrade | Refresh; migrations may add register columns—re-edit the risk |
+| Missing fields after upgrade | Refresh; migrations may add register columns, re-edit the risk |
 
 Back to [User guide index](./README.md).

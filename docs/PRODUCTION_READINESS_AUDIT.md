@@ -1,4 +1,4 @@
-# Vikela — Production Readiness Audit
+# Vikela. Production Readiness Audit
 
 **Last updated:** August 12, 2026  
 **Scope:** `vikela` monorepo (`apps/web`, `apps/api`, `packages/shared`)  
@@ -6,7 +6,7 @@
 
 This audit tracks what is **implemented**, what **still blocks production**, and what remains for enterprise scale. Use it with the handover doc for file-level detail and the staging checklist as the pre-launch gate.
 
-> **Note (Aug 2026):** Some May 2026 rows below were stale. Trust center and AuditEvent UI are implemented; see updated status in the tables. Local `demo` org seed is for development only — production never silently falls back to the `demo` slug.
+> **Note (Aug 2026):** Some May 2026 rows below were stale. Trust center and AuditEvent UI are implemented; see updated status in the tables. Local `demo` org seed is for development only, production never silently falls back to the `demo` slug.
 
 ---
 
@@ -50,30 +50,30 @@ This audit tracks what is **implemented**, what **still blocks production**, and
 
 ## Resolved Blockers (May 2026)
 
-### P0 — Security
+### P0. Security
 
 | Item | Resolution |
 |------|------------|
-| Auth only when Clerk configured | `requireProductionClerkConfig()` — API throws on boot in production without `CLERK_SECRET_KEY` |
-| No role-based authorization | `lib/authorization.ts` — `requireAdmin`, `requireWrite`, `requireRead` on routes |
-| Header org fallback | `org-context.ts` — `X-Org-Slug` / `X-Clerk-Org-Id` ignored when auth enforced without Clerk session or internal secret |
+| Auth only when Clerk configured | `requireProductionClerkConfig()`. API throws on boot in production without `CLERK_SECRET_KEY` |
+| No role-based authorization | `lib/authorization.ts`, `requireAdmin`, `requireWrite`, `requireRead` on routes |
+| Header org fallback | `org-context.ts`, `X-Org-Slug` / `X-Clerk-Org-Id` ignored when auth enforced without Clerk session or internal secret |
 | Cross-tenant scan/sync IDOR | Repository, cloud, and identity scan routes require org-scoped resources + `requireMutation` |
-| Secret leakage in gaps/LLM | `lib/redact-secrets.ts` — redact before persist, API responses, and Claude prompts |
-| API keys not authenticated | `lib/api-key-auth.ts` + auth guard — `Bearer vk_*` resolves org; admin-only blocked |
+| Secret leakage in gaps/LLM | `lib/redact-secrets.ts`, redact before persist, API responses, and Claude prompts |
+| API keys not authenticated | `lib/api-key-auth.ts` + auth guard, `Bearer vk_*` resolves org; admin-only blocked |
 | Internal secret bypasses RBAC | Production blocks internal-secret writes without user session; read-only service auth restricted |
 | Git webhooks fail-open | GitHub/GitLab/Bitbucket webhooks reject unsigned or unconfigured requests in production |
 | AWS connect demo org default | `connectAwsAccount` requires explicit `orgSlug`; connect routes require `requireAdmin` |
 | Cloud/identity connect unguarded | Azure/GCP/JumpCloud connect + OAuth URLs require `requireAdmin` |
 | Org API key IP bypass | `Organization.settings.security.ipAllowlist` enforced in auth guard for `Bearer vk_*` requests |
 
-### P1 — Product
+### P1. Product
 
 | Item | Resolution |
 |------|------------|
 | Settings UI mock | `GET/PATCH /api/v1/settings`, API keys, webhooks CRUD; settings page uses API |
 | Vendor detail mock | `/vendors/[id]` RSC + extended `Vendor` fields in schema |
 | Billing UI hybrid | `GET /billing` returns real usage meters + Stripe invoices when configured |
-| Plan limits not enforced | `lib/plan-limits.ts` — scans/month, seats, integrations on connect/invite/scan |
+| Plan limits not enforced | `lib/plan-limits.ts`, scans/month, seats, integrations on connect/invite/scan |
 | Training progress mock | `TrainingAssignment` model + `GET /training/progress` |
 | Evidence upload E2E | `EvidenceUpload` component + Playwright multipart test |
 | Demo org confusion | Seed only applies to `demo` slug for local/dev; production requires Clerk org context (no silent `demo` fallback) |
@@ -81,14 +81,14 @@ This audit tracks what is **implemented**, what **still blocks production**, and
 | No onboarding path | Clerk onboarding routes + lite scan API + membership bootstrap paths |
 | No product analytics | PostHog client (web) + server events via `lib/product-events.ts` |
 
-### P1 — Infrastructure
+### P1. Infrastructure
 
 | Item | Resolution |
 |------|------------|
-| Deploy pipeline template | `deploy.yml` — Vercel web + Railway API hook + `db:migrate` step |
-| CI E2E limited | `ci.yml` — docker-compose Postgres/Redis, migrate, seed, dev servers, Playwright |
+| Deploy pipeline template | `deploy.yml`. Vercel web + Railway API hook + `db:migrate` step |
+| CI E2E limited | `ci.yml`, docker-compose Postgres/Redis, migrate, seed, dev servers, Playwright |
 | CORS allowlist | `CORS_ALLOWED_ORIGINS` env + `parseCorsOrigins()` in API bootstrap |
-| Local regression script | `scripts/smoke-api-local.sh` — 26 API checks against seeded local org (`VIKELA_DEV_ORG_SLUG`, often `demo`) |
+| Local regression script | `scripts/smoke-api-local.sh`, 26 API checks against seeded local org (`VIKELA_DEV_ORG_SLUG`, often `demo`) |
 
 ---
 
@@ -102,21 +102,21 @@ This audit tracks what is **implemented**, what **still blocks production**, and
 | Production Clerk requirement | `requireProductionClerkConfig()` in `index.ts` |
 | Role-based access | `lib/authorization.ts` applied to mutations, admin routes, policies, copilot, dashboard |
 | Public API routes | Health, `/api/v1/webhooks/*`, `/api/v1/auth/*`, CloudFormation template |
-| Web route protection | `middleware.ts` — app routes protected when Clerk publishable key is set; auditor redirect |
-| Org resolution | `org-context.ts` — Clerk session first; headers only with session or internal secret |
+| Web route protection | `middleware.ts`, app routes protected when Clerk publishable key is set; auditor redirect |
+| Org resolution | `org-context.ts`. Clerk session first; headers only with session or internal secret |
 | Membership gate | Auth guard blocks non-members except bootstrap paths (`lib/membership.ts`) |
 | Audit log | `AuditEvent` + `lib/audit-log.ts` on invites, integrations, settings, org updates, gap status |
 | Demo integrations | Blocked in production unless `ALLOW_DEMO_INTEGRATIONS=true` |
 | Token encryption | AES-256-GCM (`ENCRYPTION_KEY`) |
 | Secret redaction | `lib/redact-secrets.ts` on gap persist, API, copilot, Claude remediation |
 | Org API keys | `Bearer vk_*` hashed lookup; scoped to org; no admin actions; IP allowlist enforced |
-| Webhook verification | GitHub HMAC, GitLab token, Bitbucket HMAC — fail-closed in production |
+| Webhook verification | GitHub HMAC, GitLab token, Bitbucket HMAC, fail-closed in production |
 
 ### Product & API
 
 | Item | Implementation |
 |------|----------------|
-| Settings | `routes/settings.ts` — notifications JSON, security (IP allowlist), API keys, webhooks |
+| Settings | `routes/settings.ts`, notifications JSON, security (IP allowlist), API keys, webhooks |
 | Vendors | Extended schema + `GET /vendors/:id` with detail fields |
 | Billing | Usage from DB counts; Stripe invoices when customer exists |
 | Plan limits | `assertCanEnqueueScan`, `assertCanInviteMember`, `assertCanConnectIntegration` |
@@ -124,12 +124,12 @@ This audit tracks what is **implemented**, what **still blocks production**, and
 | Evidence | Org-scoped file/download/patch/delete; client upload; audit ZIP export |
 | Team | `GET /members`, `GET /members/invites`, `POST /members/invite` via Clerk + `PendingInvite` |
 | Onboarding | `GET /onboarding/status`, `POST /onboarding/ensure-membership`, lite scan start/status |
-| Lite scan | `services/scanner/lite-scan.ts` — stack detection, sample fallback, `isLiteScan` flag |
-| Scan hierarchy | `Scan.parentScanId` — child scans grouped under full-scan parent |
+| Lite scan | `services/scanner/lite-scan.ts`, stack detection, sample fallback, `isLiteScan` flag |
+| Scan hierarchy | `Scan.parentScanId`, child scans grouped under full-scan parent |
 | Trust center | `/trust` admin + public `/trust/[slug]` (publish/scores/tagline); report-request API persists + emails when Resend set |
-| Outbound webhooks | `lib/dispatch-org-webhooks.ts` — signed events to `OrgWebhook` endpoints |
-| Email notifications | `lib/notify-scan-emails.ts` — scan complete + gap alerts via Resend |
-| Product events | `lib/product-events.ts` — PostHog + optional `PRODUCT_EVENTS_WEBHOOK_URL` |
+| Outbound webhooks | `lib/dispatch-org-webhooks.ts`, signed events to `OrgWebhook` endpoints |
+| Email notifications | `lib/notify-scan-emails.ts`, scan complete + gap alerts via Resend |
+| Product events | `lib/product-events.ts`. PostHog + optional `PRODUCT_EVENTS_WEBHOOK_URL` |
 | Audit trail UI | `/audit` + `GET /api/v1/audit-events` (`routes/audit.ts`) |
 
 ### Infrastructure
@@ -139,11 +139,11 @@ This audit tracks what is **implemented**, what **still blocks production**, and
 | Migrations | `20250522140000_production_features`, `20250523120000_production_blockers`, `20250523180000_scan_parent_scan_id` |
 | CI | Build, lint, 16 API test modules, E2E job with services |
 | Deploy | Vercel + Railway placeholders with secret-gated steps |
-| Local smoke | `scripts/smoke-api-local.sh` — dev regression (not staging gate) |
+| Local smoke | `scripts/smoke-api-local.sh`, dev regression (not staging gate) |
 
 ---
 
-## Remaining — P2 Enterprise & Scale
+## Remaining. P2 Enterprise & Scale
 
 | Item | Status | Remediation |
 |------|--------|-------------|
@@ -160,19 +160,19 @@ This audit tracks what is **implemented**, what **still blocks production**, and
 
 ---
 
-## P3 — Polish
+## P3. Polish
 
 | Item | Notes |
 |------|--------|
 | OpenAPI spec | Generate from Fastify for partners |
-| ~~Legacy Next copilot route~~ | Removed — use API `/copilot/*` only |
+| ~~Legacy Next copilot route~~ | Removed, use API `/copilot/*` only |
 | Sidebar nav | Labels from `product-config.ts` `navItems` |
-| ~~Trust center report request~~ | Done — `POST /public/trust/:slug/report-request` persists + optional email |
+| ~~Trust center report request~~ | Done, `POST /public/trust/:slug/report-request` persists + optional email |
 | Risk owner display | `ownerId` may show "—" in UI (deferred) |
 
 ---
 
-## Environment Variables — Production Matrix
+## Environment Variables. Production Matrix
 
 | Variable | Production required? | Implemented? |
 |----------|---------------------|--------------|
@@ -209,14 +209,14 @@ Required before auditor invites work in each Clerk instance (dev, staging, prod)
 - [ ] Create custom organization role **`org:auditor`** in Clerk Dashboard → Organizations → Roles
 - [ ] Confirm role key matches API constants in `apps/api/src/lib/clerk-roles.ts`
 - [ ] Smoke test: invite with `"role": "org:auditor"` via Clerk API or Team → Send invite (Auditor)
-- [ ] If invite returns 422, the role is missing — not an application bug
+- [ ] If invite returns 422, the role is missing, not an application bug
 - [ ] Inviter must hold Clerk **`org:admin`** (Vikela ADMIN/OWNER)
 
 ---
 
 ## Launch Checklist
 
-### Phase A — Design partner
+### Phase A. Design partner
 
 - [x] API Clerk JWT auth + auth guard
 - [x] Production Clerk boot requirement
@@ -230,7 +230,7 @@ Required before auditor invites work in each Clerk instance (dev, staging, prod)
 - [ ] **Run** `npm run db:migrate && npm run db:seed`
 - [ ] **Pass** [STAGING_SMOKE_CHECKLIST.md](./STAGING_SMOKE_CHECKLIST.md) on staging
 
-### Phase B — Paid beta
+### Phase B. Paid beta
 
 - [x] Stripe checkout + webhooks
 - [x] Plan limit enforcement in API
@@ -246,7 +246,7 @@ Required before auditor invites work in each Clerk instance (dev, staging, prod)
 - [x] Scan/gap email notifications (when Resend set)
 - [x] Outbound org webhooks
 
-### Phase C — GA / enterprise
+### Phase C. GA / enterprise
 
 - [x] Audit event log (DB + `/audit` UI + list API)
 - [ ] Scanner accuracy + suppressions

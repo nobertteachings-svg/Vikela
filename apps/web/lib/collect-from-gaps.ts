@@ -18,9 +18,9 @@ export function formatCollectFromGapsMessage(result: CollectFromGapsResult): str
     return "Evidence already collected for all open gaps";
   }
   if (result.openGaps === 0) {
-    return "No open gaps to collect from — run a scan first";
+    return "No open gaps to collect from, run a scan first";
   }
-  return "No evidence created — open gaps aren't linked to controls yet";
+  return "No evidence created, open gaps aren't linked to controls yet";
 }
 
 export type CollectFromGapsMessageTone = "success" | "neutral" | "muted";

@@ -33,7 +33,7 @@ export function CoursePlayer({
   const [course, setCourse] = useState<CoursePayload | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [step, setStep] = useState(0); // 0..lessons-1, then quiz, then ack
+  const [step, setStep] = useState(0); // 0.lessons-1, then quiz, then ack
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [acknowledged, setAcknowledged] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -198,7 +198,7 @@ export function CoursePlayer({
                   checked={acknowledged}
                   onChange={(e) => setAcknowledged(e.target.checked)}
                 />
-                <span>I agree — mark this training complete</span>
+                <span>I agree, mark this training complete</span>
               </label>
               <p className="text-xs text-comply-text-tertiary">
                 A completion certificate will be available after you finish.

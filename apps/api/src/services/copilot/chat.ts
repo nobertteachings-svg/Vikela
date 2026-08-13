@@ -178,7 +178,7 @@ export async function explainGap(orgId: string, gapId: string): Promise<CopilotC
 function demoCopilotReply(message: string, orgName: string, context: string): string {
   const lower = message.toLowerCase();
   if (lower.includes("cc6.1") || lower.includes("mfa") || lower.includes("access")) {
-    return `**${orgName} — CC6.1 (Logical access security)**
+    return `**${orgName}. CC6.1 (Logical access security)**
 
 Based on your open gaps, CC6.1 is likely failing due to **IAM/MFA** issues across cloud and identity providers.
 

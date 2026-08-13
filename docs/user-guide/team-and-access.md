@@ -1,6 +1,6 @@
 # Team and access
 
-**Path:** Sidebar → **Team** (`/team`) — **hidden for auditors**  
+**Path:** Sidebar → **Team** (`/team`), **hidden for auditors**  
 **Who:** **Admin** manages invites and roles. Members see limited team context.
 
 ## Purpose
@@ -60,7 +60,7 @@ Upgrade under [Billing](./billing.md) if invites fail due to seat cap.
 |---------|-----|
 | Invite 403 | You are not admin |
 | Seat limit | Revoke pending invites or upgrade |
-| Auditor sees empty nav sections | Expected—read-only shell |
+| Auditor sees empty nav sections | Expected, read-only shell |
 | User in wrong org | Switch Clerk organization |
 
 Back to [User guide index](./README.md).

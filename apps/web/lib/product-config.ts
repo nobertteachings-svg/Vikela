@@ -1,4 +1,4 @@
-/** Production UI structure — nav, settings tabs, roles, status labels. */
+/** Production UI structure, nav, settings tabs, roles, status labels. */
 
 export const navItems = [
   { href: "/dashboard", label: "Dashboard", icon: "dashboard" },
@@ -51,7 +51,7 @@ export const teamRoles = [
   },
   {
     name: "Auditor" as TeamRole,
-    desc: "Read-only access for external auditors—no source code or secret values.",
+    desc: "Read-only access for external auditors, no source code or secret values.",
     permissions: ["View controls", "Export evidence", "View gaps (redacted)"],
   },
 ];

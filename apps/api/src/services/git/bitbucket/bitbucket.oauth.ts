@@ -54,7 +54,7 @@ export async function handleBitbucketOAuthCallback(code: string, orgSlug: string
     headers: { Authorization: `Bearer ${tokenData.access_token}` },
   });
   if (!userRes.ok) {
-    throw new Error(`Bitbucket API: ${userRes.status} — failed to load user profile`);
+    throw new Error(`Bitbucket API: ${userRes.status}, failed to load user profile`);
   }
   const user = (await userRes.json()) as {
     uuid: string;

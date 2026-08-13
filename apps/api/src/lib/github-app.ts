@@ -5,7 +5,7 @@ function getPrivateKey(): string {
   return raw.replace(/\\n/g, "\n");
 }
 
-/** PEM private key required — not a fingerprint (e.g. SHA256:... from GitHub UI). */
+/** PEM private key required, not a fingerprint (e.g. SHA256:.. from GitHub UI). */
 export function isGitHubAppPrivateKeyValid(): boolean {
   const raw = process.env.GITHUB_APP_PRIVATE_KEY ?? "";
   const key = raw.replace(/\\n/g, "\n").trim();

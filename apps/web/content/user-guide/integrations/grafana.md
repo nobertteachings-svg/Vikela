@@ -32,7 +32,7 @@ Dashboards and alert configuration context for compliance/operations.
 | Token type | Works? |
 |------------|--------|
 | Stack service account `glsa_…` | Yes |
-| grafana.com access-policy token | No — use stack SA token |
+| grafana.com access-policy token | No, use stack SA token |
 
 ## Customer vs platform
 
@@ -43,7 +43,7 @@ Dashboards and alert configuration context for compliance/operations.
 
 ## Verify success
 
-Connected; verify call succeeds (Play Grafana’s public `/api/org` is not sufficient alone — Vikela uses authenticated endpoints).
+Connected; verify call succeeds (Play Grafana’s public `/api/org` is not sufficient alone. Vikela uses authenticated endpoints).
 
 ## Disconnect
 

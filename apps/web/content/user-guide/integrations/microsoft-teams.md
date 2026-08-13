@@ -27,7 +27,7 @@ Post compliance / gap alerts into a Teams channel via an **Incoming Webhook**. T
 
 ## Permissions / scopes
 
-Channel members who can manage connectors. The webhook URL itself is the secret—treat it like a password.
+Channel members who can manage connectors. The webhook URL itself is the secret, treat it like a password.
 
 ## Customer vs platform
 

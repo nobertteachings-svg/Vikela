@@ -11,7 +11,7 @@ export function initSentry() {
       });
     })
     .catch(() => {
-      console.warn("Sentry SDK not installed — run npm install @sentry/node -w @vikela/api");
+      console.warn("Sentry SDK not installed, run npm install @sentry/node -w @vikela/api");
     });
 }
 

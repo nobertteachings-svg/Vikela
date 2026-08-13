@@ -19,7 +19,7 @@ Monitors, logs, and security signals context for compliance evidence and operati
 
 1. In Datadog: **Organization Settings** → **API Keys** → create an API key.
 2. **Organization Settings** → **Application Keys** → create an Application key (associated with a user that has needed read permissions).
-3. If you are in Datadog product onboarding (Agent / AWS), you can **skip** those steps for Vikela connect — keys are enough.
+3. If you are in Datadog product onboarding (Agent / AWS), you can **skip** those steps for Vikela connect, keys are enough.
 4. In Vikela: **Integrations** → **Datadog** → **Connect**.
 5. Enter **API key**, **Application key**, and **site**.
 6. Submit; Vikela verifies then encrypts credentials.

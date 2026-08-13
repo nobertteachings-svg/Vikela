@@ -30,7 +30,7 @@ FORCE_API = {
     "ALLOW_DEMO_INTEGRATIONS": "false",
     "DISABLE_SCAN_WORKER": "false",
     "API_RATE_LIMIT_MAX": "300",
-    # Railway service references — names must match Railway service names
+    # Railway service references, names must match Railway service names
     "DATABASE_URL": "${{Postgres.DATABASE_URL}}",
     "DIRECT_URL": "${{Postgres.DATABASE_URL}}",
     "REDIS_URL": "${{Redis.REDIS_URL}}",
@@ -105,7 +105,7 @@ def main() -> int:
 
     api.update(FORCE_API)
 
-    # Don't leave localhost URLs on API — placeholder until domains exist
+    # Don't leave localhost URLs on API, placeholder until domains exist
     for k in (
         "APP_URL",
         "API_URL",
@@ -161,7 +161,7 @@ def main() -> int:
     (out_dir / "api.keys.txt").write_text("\n".join(sorted(api.keys())) + "\n")
     (out_dir / "web.keys.txt").write_text("\n".join(sorted(web.keys())) + "\n")
     print(f"Wrote {len(api)} API vars and {len(web)} Web vars to .railway-deploy/")
-    print("API keys:", ", ".join(sorted(api.keys())[:20]), "...")
+    print("API keys:", ", ".join(sorted(api.keys())[:20]), "..")
     return 0
 
 

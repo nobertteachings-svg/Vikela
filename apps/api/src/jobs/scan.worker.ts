@@ -75,7 +75,7 @@ export function startScanWorker() {
         "NX"
       );
       if (acquired !== "OK") {
-        console.log("Scan worker skipped — another API process already owns the queue");
+        console.log("Scan worker skipped, another API process already owns the queue");
         await lockRedis.quit().catch(() => {});
         return;
       }

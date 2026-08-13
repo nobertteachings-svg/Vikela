@@ -1,4 +1,4 @@
-/** Framework-native control definitions — unique requirement IDs per standard. */
+/** Framework-native control definitions, unique requirement IDs per standard. */
 export type NativeControlDef = {
   code: string;
   title: string;
@@ -165,11 +165,11 @@ export const NATIVE_CONTROL_PACKS: Record<string, NativeControlDef[]> = {
   ]),
 
   soc3: pack([
-    { code: "SOC3-CC1", title: "Control environment (public)", description: "Public trust report — control environment.", category: "Trust Services", guidance: "Same as SOC 2 CC1 criteria.", testProcedure: "Review SOC 2 CC1 evidence.", autoSatisfiedBy: ["CC1.1"] },
-    { code: "SOC3-CC6", title: "Logical access (public)", description: "Public trust report — logical access.", category: "Trust Services", guidance: "Same as SOC 2 CC6 criteria.", testProcedure: "Review SOC 2 CC6 evidence.", autoSatisfiedBy: ["CC6.1"] },
-    { code: "SOC3-CC7", title: "System operations (public)", description: "Public trust report — system operations.", category: "Trust Services", guidance: "Same as SOC 2 CC7 criteria.", testProcedure: "Review SOC 2 CC7 evidence.", autoSatisfiedBy: ["CC7.1"] },
-    { code: "SOC3-A1", title: "Availability (public)", description: "Public trust report — availability.", category: "Trust Services", guidance: "Same as SOC 2 A1 criteria.", testProcedure: "Review availability controls.", autoSatisfiedBy: ["A1.1"] },
-    { code: "SOC3-P1", title: "Privacy (public)", description: "Public trust report — privacy.", category: "Trust Services", guidance: "Same as SOC 2 P criteria.", testProcedure: "Review privacy controls.", autoSatisfiedBy: ["P1.1"] },
+    { code: "SOC3-CC1", title: "Control environment (public)", description: "Public trust report, control environment.", category: "Trust Services", guidance: "Same as SOC 2 CC1 criteria.", testProcedure: "Review SOC 2 CC1 evidence.", autoSatisfiedBy: ["CC1.1"] },
+    { code: "SOC3-CC6", title: "Logical access (public)", description: "Public trust report, logical access.", category: "Trust Services", guidance: "Same as SOC 2 CC6 criteria.", testProcedure: "Review SOC 2 CC6 evidence.", autoSatisfiedBy: ["CC6.1"] },
+    { code: "SOC3-CC7", title: "System operations (public)", description: "Public trust report, system operations.", category: "Trust Services", guidance: "Same as SOC 2 CC7 criteria.", testProcedure: "Review SOC 2 CC7 evidence.", autoSatisfiedBy: ["CC7.1"] },
+    { code: "SOC3-A1", title: "Availability (public)", description: "Public trust report, availability.", category: "Trust Services", guidance: "Same as SOC 2 A1 criteria.", testProcedure: "Review availability controls.", autoSatisfiedBy: ["A1.1"] },
+    { code: "SOC3-P1", title: "Privacy (public)", description: "Public trust report, privacy.", category: "Trust Services", guidance: "Same as SOC 2 P criteria.", testProcedure: "Review privacy controls.", autoSatisfiedBy: ["P1.1"] },
   ]),
 };
 

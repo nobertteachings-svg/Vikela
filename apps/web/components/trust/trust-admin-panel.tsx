@@ -119,7 +119,7 @@ export function TrustAdminPanel({ initial }: { initial: TrustAdminData }) {
               <div>
                 <p className="text-sm font-medium text-comply-text-primary">Show readiness scores</p>
                 <p className="mt-0.5 text-xs text-comply-text-secondary">
-                  Off by default — scores can reveal internal posture to prospects.
+                  Off by default, scores can reveal internal posture to prospects.
                 </p>
               </div>
               <input

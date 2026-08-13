@@ -35,7 +35,7 @@ async function resolveOrg(orgSlug: string | null | undefined, clerkOrgId?: strin
 
   if (!org) {
     throw new Error(
-      `Organization not found${orgSlug ? `: ${orgSlug}` : ""} — create a workspace in Vikela first`
+      `Organization not found${orgSlug ? `: ${orgSlug}` : ""}, create a workspace in Vikela first`
     );
   }
   return org;
@@ -50,7 +50,7 @@ export async function handleGitHubInstallationCallback(
 
   if (!isGitHubAppConfigured()) {
     throw new Error(
-      "GitHub App PEM key is missing on the server — set GITHUB_APP_PRIVATE_KEY or use Connect with GitHub OAuth instead"
+      "GitHub App PEM key is missing on the server, set GITHUB_APP_PRIVATE_KEY or use Connect with GitHub OAuth instead"
     );
   }
 

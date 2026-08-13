@@ -47,7 +47,7 @@ Details: [Team and access](./team-and-access.md).
 
 ### Start here
 
-- [Getting started](./getting-started.md) — sign-up, org, onboarding, first scan, dashboard, scans, questionnaire, trust
+- [Getting started](./getting-started.md), sign-up, org, onboarding, first scan, dashboard, scans, questionnaire, trust
 
 ### Integrations
 
@@ -80,14 +80,14 @@ Coming soon in the product UI (not connectable yet): DigitalOcean, Oracle Cloud,
 
 ## Screenshot placeholders
 
-In-app: open **Help** in the sidebar (`/help`) — the same guide is rendered there for signed-in users.
+In-app: open **Help** in the sidebar (`/help`), the same guide is rendered there for signed-in users.
 
 Where a UI capture would help, pages include captions like:
 
-> **Screenshot:** Integrations grid — Connected vs Connect vs Coming soon / Not configured
+> **Screenshot:** Integrations grid. Connected vs Connect vs Coming soon / Not configured
 
 Capture those in your own environment when preparing customer-facing PDFs.
 
 ## Related developer docs
 
-Platform operators and engineers: see [`docs/DEVELOPER_HANDOVER.md`](../DEVELOPER_HANDOVER.md), [`docs/PRODUCTION_SETUP.md`](../PRODUCTION_SETUP.md), and the root [README](../../README.md).
+Platform operators and engineers: see [`docs/DEVELOPER_HANDOVER.md`](./DEVELOPER_HANDOVER.md), [`docs/PRODUCTION_SETUP.md`](./PRODUCTION_SETUP.md), and the root [README](././README.md).

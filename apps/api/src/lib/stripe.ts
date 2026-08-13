@@ -96,7 +96,7 @@ export function mapStripeSubscriptionStatus(
     case "incomplete_expired":
       return "CANCELED";
     default:
-      // incomplete, paused, etc. — treat as past_due until paid
+      // incomplete, paused, etc., treat as past_due until paid
       return "PAST_DUE";
   }
 }

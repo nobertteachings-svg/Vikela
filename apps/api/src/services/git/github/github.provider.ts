@@ -63,7 +63,7 @@ export class GithubProvider implements IGitProvider {
 
   async listRepositories(): Promise<RemoteRepo[]> {
     try {
-      // Installation tokens: return granted repos even when empty — do not fall through to /user/repos.
+      // Installation tokens: return granted repos even when empty, do not fall through to /user/repos.
       const installRepos = await this.fetchAllPages<{
         id: number;
         name: string;
@@ -75,7 +75,7 @@ export class GithubProvider implements IGitProvider {
 
       return installRepos.map((r) => this.mapRepo(r));
     } catch {
-      // OAuth user tokens cannot call /installation/repositories — list user repos instead.
+      // OAuth user tokens cannot call /installation/repositories, list user repos instead.
     }
 
     const userRepos = await this.fetchAllPages<{

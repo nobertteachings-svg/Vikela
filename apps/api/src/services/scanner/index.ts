@@ -10,7 +10,7 @@ import { runFrameworkCodeScans } from "./framework-scans.js";
 const SCANNABLE_EXT = /\.(ts|tsx|js|jsx|py|go|rb|java|json|ya?ml|env\.example|tf)$/i;
 const MAX_FILE_SIZE = 512_000;
 const MAX_FILES = 150;
-/** Parallel file fetches — keep modest to avoid GitHub secondary rate limits. */
+/** Parallel file fetches, keep modest to avoid GitHub secondary rate limits. */
 const FILE_FETCH_CONCURRENCY = 6;
 
 export type CodeScanRunResult = {
@@ -72,11 +72,7 @@ export async function runCodeScan(
 
     const lines = content.split("\n");
     const findings: ScanFinding[] = [
-      ...scanSecrets(filePath, content, lines),
-      ...scanEncryption(filePath, content, lines),
-      ...scanLogging(filePath, content, lines),
-      ...scanAccess(filePath, content, lines),
-      ...scanDependencies(filePath, content),
+      ...scanSecrets(filePath, content, lines), ...scanEncryption(filePath, content, lines), ...scanLogging(filePath, content, lines), ...scanAccess(filePath, content, lines), ...scanDependencies(filePath, content),
     ];
     if (opts?.frameworkSlugs?.length) {
       findings.push(...runFrameworkCodeScans(opts.frameworkSlugs, filePath, content, lines));

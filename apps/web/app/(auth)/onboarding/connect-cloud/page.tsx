@@ -19,7 +19,7 @@ export default function OnboardingConnectCloudPage() {
         Connect cloud infrastructure
       </h1>
       <p className="mt-1 max-w-md text-center text-xs text-comply-text-secondary">
-        AWS uses cross-account IAM AssumeRole — Vikela never stores your root credentials.
+        AWS uses cross-account IAM AssumeRole. Vikela never stores your root credentials.
       </p>
 
       <div className="mt-6 flex flex-wrap justify-center gap-2">

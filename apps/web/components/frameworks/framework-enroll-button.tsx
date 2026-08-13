@@ -33,7 +33,7 @@ export function FrameworkEnrollButton({
       );
       setMessage(
         result.controlsCreated > 0
-          ? `Enabled — ${result.controlsCreated} controls added`
+          ? `Enabled, ${result.controlsCreated} controls added`
           : "Enabled"
       );
       router.refresh();

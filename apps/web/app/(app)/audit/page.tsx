@@ -18,7 +18,7 @@ export default async function AuditPage() {
         <PageHeader
           eyebrow="Compliance"
           title="Audit trail"
-          description="Private activity log for your organization — not shared on the public trust page."
+          description="Private activity log for your organization, not shared on the public trust page."
         />
         <ConfidentialAuditBanner />
         <Card elevated>

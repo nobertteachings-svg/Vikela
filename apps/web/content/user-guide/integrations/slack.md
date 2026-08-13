@@ -54,8 +54,8 @@ Disconnect in Vikela; remove the app under Slack → Manage apps.
 | Symptom | Fix |
 |---------|-----|
 | Not configured | Set `SLACK_CLIENT_ID` **and** `SLACK_CLIENT_SECRET`; restart API |
-| Still Not configured after env edit | API process did not reload env — restart `apps/api` |
+| Still Not configured after env edit | API process did not reload env, restart `apps/api` |
 | OAuth error | Fix redirect URL on the Slack app to match deployment |
 | Limit reached | Free slot or upgrade |
 
-Related: [Microsoft Teams](./microsoft-teams.md), [Settings](../settings.md) notifications.
+Related: [Microsoft Teams](./microsoft-teams.md), [Settings](./settings.md) notifications.

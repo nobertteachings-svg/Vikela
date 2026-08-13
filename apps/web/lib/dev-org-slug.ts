@@ -1,6 +1,6 @@
 /**
  * Dev-only org slug for Clerk-less local flows.
- * Never silently defaults to "demo" — set VIKELA_DEV_ORG_SLUG (or NEXT_PUBLIC_*) explicitly.
+ * Never silently defaults to "demo", set VIKELA_DEV_ORG_SLUG (or NEXT_PUBLIC_*) explicitly.
  */
 export function resolveDevOrgSlug(): string | undefined {
   if (process.env.NODE_ENV === "production") return undefined;

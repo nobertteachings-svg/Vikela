@@ -36,7 +36,7 @@ export const COURSE_CATALOG: CatalogCourse[] = [
     key: "security-awareness-basics",
     name: "Security Awareness Basics",
     description:
-      "Phishing, passwords, device hygiene, and how to report incidents — required annual training for all staff.",
+      "Phishing, passwords, device hygiene, and how to report incidents, required annual training for all staff.",
     framework: "SOC 2 CC1.4",
     durationMin: 30,
     dueInDays: 30,
@@ -53,7 +53,7 @@ Attackers target busy employees with emails, texts, and fake login pages. One cl
 
 Your role:
 • Treat unexpected requests for money, data, or credentials as suspicious
-• Report anything odd — early reporting reduces impact
+• Report anything odd, early reporting reduces impact
 • Never assume “IT already knows”`,
       },
       {
@@ -189,7 +189,7 @@ Monitoring: activity on company systems may be logged for security and complianc
         choices: [
           "Yes, if they seem trustworthy",
           "Yes, for less than 24 hours",
-          "No — credentials must not be shared",
+          "No, credentials must not be shared",
           "Only if you CC your manager",
         ],
         correctIndex: 2,
@@ -223,12 +223,12 @@ Monitoring: activity on company systems may be logged for security and complianc
         title: "Types of phishing",
         minutes: 7,
         body: `Common forms:
-• Email phishing — bulk or targeted (spear phishing)
-• Smishing — SMS with malicious links
-• Vishing — phone calls impersonating IT or banks
-• Callback phishing — fake “support” numbers on malware popups
+• Email phishing, bulk or targeted (spear phishing)
+• Smishing. SMS with malicious links
+• Vishing, phone calls impersonating IT or banks
+• Callback phishing, fake “support” numbers on malware popups
 
-Business Email Compromise (BEC) often has no malware — just a convincing invoice or payroll change.`,
+Business Email Compromise (BEC) often has no malware, just a convincing invoice or payroll change.`,
       },
       {
         id: "ph-2",
@@ -238,7 +238,7 @@ Business Email Compromise (BEC) often has no malware — just a convincing invoi
 1. Check the real domain (not display name)
 2. Don't use contact details from the suspicious message
 3. Use a known-good channel (directory, prior email, ticket system)
-4. For money/data changes — require dual approval
+4. For money/data changes, require dual approval
 
 Never read MFA codes aloud to callers claiming to be IT.`,
       },
@@ -261,7 +261,7 @@ Do not permanently delete evidence until security confirms.`,
         prompt: "A caller says they are IT and need your MFA code to “unlock your account.” You should:",
         choices: [
           "Provide the code so you can keep working",
-          "Refuse and report the call — IT will never ask for MFA codes",
+          "Refuse and report the call. IT will never ask for MFA codes",
           "Give the code but change your password later",
           "Ask them to email you instead and then send the code",
         ],
@@ -299,7 +299,7 @@ Do not permanently delete evidence until security confirms.`,
 
 Special / sensitive categories need extra care (health, biometrics, government IDs).
 
-If you are unsure whether something is personal data — treat it as personal data.`,
+If you are unsure whether something is personal data, treat it as personal data.`,
       },
       {
         id: "dp-2",
@@ -308,14 +308,14 @@ If you are unsure whether something is personal data — treat it as personal da
         body: `Collect only what you need for a clear purpose.
 • Don't copy production personal data into personal notebooks or unsanctioned AI tools
 • Prefer aggregated or synthetic data for demos
-• Follow retention schedules — delete when no longer needed`,
+• Follow retention schedules, delete when no longer needed`,
       },
       {
         id: "dp-3",
         title: "Requests and incidents",
         minutes: 7,
         body: `Privacy rights may include access, deletion, and correction.
-• Route formal requests to the privacy/legal owner — don't improvise
+• Route formal requests to the privacy/legal owner, don't improvise
 • If personal data is exposed, escalate immediately as a security/privacy incident
 • Document what happened without spreading sensitive details further`,
       },
@@ -325,7 +325,7 @@ If you are unsure whether something is personal data — treat it as personal da
         id: "dp-q1",
         prompt: "You want to demo a feature using real customer emails. Best practice?",
         choices: [
-          "Use production data — it's more realistic",
+          "Use production data, it's more realistic",
           "Use anonymized/synthetic data or a sanctioned staging set",
           "Export the CRM to your personal Gmail",
           "Post a screenshot in a public Discord",
@@ -379,8 +379,8 @@ Even small identifiers combined with health context can be ePHI. When in doubt, 
         title: "Breaches and vendors",
         minutes: 8,
         body: `A breach can be as simple as emailing ePHI to the wrong person.
-• Notify security/privacy immediately — do not wait
-• Vendors handling ePHI need appropriate agreements (e.g. BAA) — don't onboard tools yourself
+• Notify security/privacy immediately, do not wait
+• Vendors handling ePHI need appropriate agreements (e.g. BAA), don't onboard tools yourself
 • Keep ePHI out of unsanctioned SaaS and personal devices`,
       },
     ],
@@ -391,7 +391,7 @@ Even small identifiers combined with health context can be ePHI. When in doubt, 
         choices: [
           "Fine if you don't change anything",
           "Allowed for employees with system access",
-          "A violation — access must be job-required and minimum necessary",
+          "A violation, access must be job-required and minimum necessary",
           "OK if you tell your manager afterward",
         ],
         correctIndex: 2,
@@ -498,7 +498,7 @@ Use environment variables, secret managers, and pre-commit scanners. Treat .env 
 • Accidental public exposure of a private repo or customer export
 • Ransomware / extortion attempts
 
-When unsure, escalate — security would rather triage a false alarm.`,
+When unsure, escalate, security would rather triage a false alarm.`,
       },
       {
         id: "ir-2",
@@ -520,7 +520,7 @@ Don't:
         minutes: 5,
         body: `Stick to facts. Legal/security own external messaging.
 Internal updates should avoid blame and focus on containment.
-Afterward, participate honestly in the postmortem — blameless culture improves defenses.`,
+Afterward, participate honestly in the postmortem, blameless culture improves defenses.`,
       },
     ],
     quiz: [
@@ -573,7 +573,7 @@ Afterward, participate honestly in the postmortem — blameless culture improves
         title: "Collaboration hygiene",
         minutes: 6,
         body: `• Stick to approved chat/video/file tools
-• Be careful screen-sharing — hide passwords and customer lists
+• Be careful screen-sharing, hide passwords and customer lists
 • Verify meeting links from calendars, not unexpected DMs
 • Shred or secure printed materials at home`,
       },
@@ -591,7 +591,7 @@ If a device is lost: report immediately for wipe/revocation.`,
         id: "rw-q1",
         prompt: "Working from a coffee shop on customer data, you should:",
         choices: [
-          "Join open Wi-Fi with no VPN — it's faster",
+          "Join open Wi-Fi with no VPN, it's faster",
           "Use VPN, lock your screen, and avoid shoulder surfing",
           "Print everything so you don't need the network",
           "Give your laptop password to the barista if asked",

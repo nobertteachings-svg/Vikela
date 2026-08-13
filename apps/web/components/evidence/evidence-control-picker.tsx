@@ -55,7 +55,7 @@ export function EvidenceControlPicker({ value, onChange, className }: EvidenceCo
       .slice(0, 50);
   }, [options, query]);
 
-  const displayValue = value ? `${value.code} — ${value.title}` : "";
+  const displayValue = value ? `${value.code}, ${value.title}` : "";
 
   return (
     <div ref={containerRef} className={cn("relative w-full max-w-md text-left", className)}>

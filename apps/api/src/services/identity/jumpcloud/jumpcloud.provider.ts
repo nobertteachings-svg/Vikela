@@ -13,7 +13,7 @@ import { isDemoIdentityToken } from "../types.js";
 
 const JC_BASE = "https://console.jumpcloud.com/api";
 
-/** JumpCloud — API key auth via X-Api-Key header. */
+/** JumpCloud. API key auth via X-Api-Key header. */
 export class JumpCloudProvider implements IIdentityProvider {
   constructor(private readonly credentials: IdentityCredentials) {}
 
@@ -96,12 +96,12 @@ export class JumpCloudProvider implements IIdentityProvider {
         },
       ];
     }
-    // API list does not include MFA factor state yet — report directory visibility only.
+    // API list does not include MFA factor state yet, report directory visibility only.
     return [
       {
         title: `JumpCloud: ${users.length} active user(s) listed; MFA factor status not verified`,
         description:
-          "Vikela connected successfully and listed system users. Per-user MFA enrollment is not available via the current API scope — enforce MFA in JumpCloud policies and confirm in the Admin Portal.",
+          "Vikela connected successfully and listed system users. Per-user MFA enrollment is not available via the current API scope, enforce MFA in JumpCloud policies and confirm in the Admin Portal.",
         severity: "MEDIUM",
         source: "IAM",
         resourceType: "JumpCloudOrg",

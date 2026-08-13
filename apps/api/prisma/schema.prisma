@@ -14,7 +14,7 @@ model Organization {
   slug                 String         @unique
   clerkOrgId           String         @unique
   plan                 Plan           @default(FREE)
-  /** Stripe subscription status mirror — source of truth for paid access. */
+  /** Stripe subscription status mirror, source of truth for paid access. */
   billingStatus        BillingStatus  @default(FREE)
   /** STRIPE = webhook-driven; MANUAL = sales/Enterprise override (webhooks must not clobber). */
   planSource           PlanSource     @default(STRIPE)

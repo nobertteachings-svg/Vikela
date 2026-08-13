@@ -65,7 +65,7 @@ export function sumSeverities(counts: Record<Severity, number>, keys: Severity[]
   return keys.reduce((s, k) => s + (counts[k] ?? 0), 0);
 }
 
-/** Count severities from a gap list — matches table/chip totals when filters are applied. */
+/** Count severities from a gap list, matches table/chip totals when filters are applied. */
 export function severityCountsFromGaps(
   gaps: { severity: string }[],
   keys: Severity[] = ["CRITICAL", "HIGH", "MEDIUM", "LOW", "INFO"]

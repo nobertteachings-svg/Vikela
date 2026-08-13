@@ -47,7 +47,7 @@ export async function resolveOrganization(
         where: { clerkOrgId: auth.orgId },
       });
       if (byClerk) return byClerk;
-      // Webhook lag / first connect — provision from the signed-in Clerk org.
+      // Webhook lag / first connect, provision from the signed-in Clerk org.
       const provisioned = await ensureOrganizationFromSession(req);
       if (provisioned) return provisioned;
     }

@@ -1,0 +1,13 @@
+---
+description: Ban vibecode copy tells (em dashes) and keep Vikela typography distinctive
+alwaysApply: true
+---
+
+# Copy and typography
+
+- Never use em dashes (U+2014) in user-facing copy, comments, docs, or commit messages. Prefer periods, commas, colons, or parentheses.
+- Empty table/UI placeholders may use a single em dash character only when meaning "no value".
+- Fonts: IBM Plex Sans (UI via `font-sans`), Source Serif 4 (headlines via `font-display`), IBM Plex Mono (`font-mono`).
+- Do not introduce DM Sans, Inter, Roboto, Arial, Geist, or system-ui as the primary brand face.
+- Do not use gradient `bg-clip-text` / transparent headline text.
+- Marketing H1 should stay around `text-3xl sm:text-4xl`, not giant `text-5xl` stacks. App page titles use `font-display` at about `text-2xl`.

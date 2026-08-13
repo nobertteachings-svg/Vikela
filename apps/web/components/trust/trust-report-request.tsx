@@ -51,7 +51,7 @@ export function TrustReportRequest({ orgSlug }: { orgSlug: string }) {
 
   return (
     <form onSubmit={(e) => void onSubmit(e)} className="mt-4 flex flex-col gap-3">
-      {/* Honeypot — leave empty */}
+      {/* Honeypot, leave empty */}
       <input
         type="text"
         name="website"

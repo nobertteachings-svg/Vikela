@@ -6,8 +6,7 @@ import { useAuth } from "@clerk/nextjs";
 const hasClerk = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
 
 /**
- * Header CTAs that switch when the visitor is already signed in —
- * so marketing home stays reachable from the app without a dead-end.
+ * Header CTAs that switch when the visitor is already signed in: * so marketing home stays reachable from the app without a dead-end.
  */
 export function MarketingAuthLinks({
   compact = false,

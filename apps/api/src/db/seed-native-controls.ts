@@ -8,7 +8,7 @@ export async function seedNativeControls(): Promise<number> {
   for (const [slug, controls] of Object.entries(NATIVE_CONTROL_PACKS)) {
     const framework = await prisma.framework.findUnique({ where: { slug } });
     if (!framework) {
-      console.warn(`  skip native controls — framework not found: ${slug}`);
+      console.warn(`  skip native controls, framework not found: ${slug}`);
       continue;
     }
 

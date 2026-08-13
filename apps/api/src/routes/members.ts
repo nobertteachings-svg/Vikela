@@ -236,7 +236,7 @@ export const membersRoutes: FastifyPluginAsync = async (app) => {
     });
     if (!pending) return reply.status(404).send(err("Invite not found"));
     if (pending.expiresAt <= new Date()) {
-      return reply.status(400).send(err("Invite has expired — create a new invite"));
+      return reply.status(400).send(err("Invite has expired, create a new invite"));
     }
 
     let userId: string;

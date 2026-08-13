@@ -1,6 +1,6 @@
 export type GitOAuthFrom = "onboarding";
 
-/** Browser links for git OAuth — same-origin on the web app, proxied to the API. */
+/** Browser links for git OAuth, same-origin on the web app, proxied to the API. */
 function webGitAuthPath(
   path: string,
   orgSlug: string | null | undefined,
@@ -20,7 +20,7 @@ function withFromOnboarding(base: string, from?: GitOAuthFrom): string {
   return `${base}${sep}from=onboarding`;
 }
 
-/** Browser OAuth start URLs — same-origin `/api/v1/...` (rewritten to the API). */
+/** Browser OAuth start URLs, same-origin `/api/v1/..` (rewritten to the API). */
 export function integrationOAuthUrl(
   path: string,
   orgSlug: string | null | undefined
@@ -35,7 +35,7 @@ export function githubManageInstallationsUrl(): string {
   return "https://github.com/settings/installations";
 }
 
-/** Primary GitHub connect — App install (Railway-style). Falls back to OAuth on the API if App PEM is missing. */
+/** Primary GitHub connect. App install (Railway-style). Falls back to OAuth on the API if App PEM is missing. */
 export function githubConnectUrl(
   orgSlug: string | null | undefined,
   opts?: { from?: GitOAuthFrom; clerkOrgId?: string | null }

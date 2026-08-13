@@ -20,7 +20,7 @@ test.describe("Regression testing", () => {
 
     if (!uploadRes.ok()) {
       const body = await uploadRes.text();
-      // Local .env may point at S3 without PutObject rights — skip env failure.
+      // Local .env may point at S3 without PutObject rights, skip env failure.
       test.skip(/s3:PutObject|not authorized/i.test(body), `S3 not writable in this env: ${body.slice(0, 120)}`);
     }
     expect(uploadRes.ok()).toBeTruthy();
@@ -57,7 +57,7 @@ test.describe("Regression testing", () => {
       const body = await res.text();
       test.skip(
         /ERR_INVALID_RETURN_PROPERTY_VALUE|load hook/i.test(body),
-        "Controls route hit a local tsx loader glitch — re-run after API restart"
+        "Controls route hit a local tsx loader glitch, re-run after API restart"
       );
     }
     expect(res.ok()).toBeTruthy();

@@ -1,11 +1,11 @@
 # Staging Smoke Checklist
 
 **Purpose:** Verify the full product loop on staging before any external session (design partner, demo, paid beta).  
-**Do not write the demo script until this checklist is complete** — the script will reference real staging URLs and a real gap ID from the member flow below.
+**Do not write the demo script until this checklist is complete**: the script will reference real staging URLs and a real gap ID from the member flow below.
 
-**Pass criteria (all required):** one completed scan · one resolved gap · dashboard numbers change · auditor can export · webhook HMAC validates — **all on staging, no local fallbacks**.
+**Pass criteria (all required):** one completed scan · one resolved gap · dashboard numbers change · auditor can export · webhook HMAC validates, **all on staging, no local fallbacks**.
 
-> **Hard dependency — Clerk first.** If staging Clerk is blocked (no app, no `org:auditor` role, no webhook endpoint registered), unblock that before anything else. The entire **auditor flow** section is untestable without it.
+> **Hard dependency. Clerk first.** If staging Clerk is blocked (no app, no `org:auditor` role, no webhook endpoint registered), unblock that before anything else. The entire **auditor flow** section is untestable without it.
 
 ---
 
@@ -15,7 +15,7 @@
 |-----|-------|
 | **Web URL** | `https://________________.vercel.app` |
 | **API URL** | `https://________________.up.railway.app` |
-| **Clerk instance** | `https://dashboard.clerk.com/...` |
+| **Clerk instance** | `https://dashboard.clerk.com/..` |
 | **PostHog project** | `https://app.posthog.com/project/____` |
 | **Smoke tester (member)** | `________________@________` |
 | **Smoke tester (auditor)** | `auditor@test.com` (or your inbox) |
@@ -49,14 +49,14 @@ Complete this section before running user flows.
 ### 1.1 Clerk
 
 - [ ] Staging Clerk app created (or dedicated dev instance) with **Organizations** enabled
-- [ ] Custom role **`org:auditor`** created: **Organizations → Roles** (Clerk key must be exactly `org:auditor` — maps to Vikela `AUDITOR` in DB)
+- [ ] Custom role **`org:auditor`** created: **Organizations → Roles** (Clerk key must be exactly `org:auditor`, maps to Vikela `AUDITOR` in DB)
 - [ ] **Web env:** `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` set on Vercel preview/production
 - [ ] **API env:** `CLERK_SECRET_KEY` set on Railway
 - [ ] **API env:** `CLERK_WEBHOOK_SECRET` set (from Clerk webhook endpoint)
 - [ ] Clerk webhook endpoint registered:
   - **URL:** `{API_URL}/api/v1/webhooks/clerk`
   - **Subscribe to:** `organization.created`, `organization.updated`, `organizationMembership.created`, `organizationMembership.updated`, `organizationMembership.deleted`
-- [ ] After first org signup, confirm org appears in DB (`Organization.clerkOrgId` populated) — webhook sync working
+- [ ] After first org signup, confirm org appears in DB (`Organization.clerkOrgId` populated), webhook sync working
 
 ### 1.2 Railway (API)
 
@@ -71,7 +71,7 @@ Complete this section before running user flows.
 | `ENCRYPTION_KEY` | ✓ | `openssl rand -hex 32` |
 | `CLERK_SECRET_KEY` | ✓ | |
 | `CLERK_WEBHOOK_SECRET` | ✓ | |
-| `APP_URL` | ✓ | **Web URL** — used in email links |
+| `APP_URL` | ✓ | **Web URL**: used in email links |
 | `CORS_ALLOWED_ORIGINS` | ✓ | **Web URL** (comma-separate if multiple previews) |
 | `RESEND_API_KEY` | ✓ | For notification smoke |
 | `RESEND_FROM_EMAIL` | ✓ | Verified domain in Resend |
@@ -106,24 +106,24 @@ Run as a **new org owner** (fresh signup or dedicated smoke org).
 - [ ] **2.1** Sign up at `/sign-up` → lands on `/onboarding/connect-repos`
 - [ ] **2.2** Connect GitHub (or skip) → `/onboarding/scan` → lite scan **completes** (note **scan ID** in `/scans` or network tab)
 - [ ] **2.3** Dashboard shows non-zero posture score (after scan), severity bar, framework readiness bars
-- [ ] **2.4** **`/frameworks`** — if SOC 2 is not auto-enrolled, click **Enable framework** on SOC 2 → **Enabled** chip appears (Clerk webhook usually auto-enrolls; verify at least one path works)
-- [ ] **2.5** **`/gaps?framework=soc2`** — severity chips **match the filtered table** (not org-wide totals)
-- [ ] **2.6** **`/controls?framework=soc2`** — derived status shows correctly (e.g. **Needs review** / **Implemented** after scan, not all **Not started**)
+- [ ] **2.4** **`/frameworks`**: if SOC 2 is not auto-enrolled, click **Enable framework** on SOC 2 → **Enabled** chip appears (Clerk webhook usually auto-enrolls; verify at least one path works)
+- [ ] **2.5** **`/gaps?framework=soc2`**: severity chips **match the filtered table** (not org-wide totals)
+- [ ] **2.6** **`/controls?framework=soc2`**: derived status shows correctly (e.g. **Needs review** / **Implemented** after scan, not all **Not started**)
 - [ ] **2.7** On controls list, click **gap count** on a control with open gaps → **`/gaps?control={code}`** → severity chips **match the filtered table**
 - [ ] **2.8** Open **`/controls/{code}`** (e.g. `CC6.1`) → **View all** / open-gaps link → **`/gaps?control={code}`** → filtered list matches detail
 - [ ] **2.9** Open a gap from a filtered list → detail loads with **GapStatusActions** (status dropdown + Mark resolved)
 - [ ] **2.10** **Mark resolved** on a gap **mapped to a SOC 2 control** (`controlCode` visible, e.g. `CC6.1`) → redirects to `/gaps` → gap gone from **Open** tab (note **gap ID** before resolve)
-- [ ] **2.11** **`/gaps`** — switch to **Resolved** tab → gap from **2.10** appears with **resolvedAt** timestamp (desc sort)
+- [ ] **2.11** **`/gaps`**: switch to **Resolved** tab → gap from **2.10** appears with **resolvedAt** timestamp (desc sort)
 - [ ] **2.12** Dashboard **Findings by source** → click **Cloud** card → `/gaps` opens with cloud sources pre-selected (toolbar **Cloud (all)**; list matches cloud bucket only)
 - [ ] **2.13** **`/gaps` Open** tab → severity filter to a level with **zero** matches (e.g. Critical if none) → filter-aware empty state (*"Nothing matches your filters…"*, not the clean-org copy)
-- [ ] **2.14** **`/frameworks`** — SOC 2 **Readiness %** increased vs step 2.4 (requires control-mapped gap resolved in **2.10**)
+- [ ] **2.14** **`/frameworks`**: SOC 2 **Readiness %** increased vs step 2.4 (requires control-mapped gap resolved in **2.10**)
 - [ ] **2.15** Dashboard **Controls met** count moved (may need framework with gap-mapped controls)
-- [ ] **2.16** Scan-complete email lands in inbox (check spam) — see §5 if skipped here
+- [ ] **2.16** Scan-complete email lands in inbox (check spam), see §5 if skipped here
 - [ ] **2.17** Dashboard → **Run full scan** → wait for completion → **`/scans`** → **FULL** row shows **summed `gapsFound`** (not 0 when child scans found gaps)
 - [ ] **2.18** On **`/scans`**, click **gapsFound** on a scan with gaps → **`/gaps?scanId=…`** → description **“Gaps from this scan run.”** and list matches that run
-- [ ] **2.19** **`/scans`** — onboarding **lite scan** row shows **Lite** badge on trigger column
-- [ ] **2.20** **`/scans`** — any **PENDING** row shows **Queued** (not raw `PENDING`)
-- [ ] **2.21** **`/policies`** — **Generate bundle** → policies appear in sidebar
+- [ ] **2.19** **`/scans`**: onboarding **lite scan** row shows **Lite** badge on trigger column
+- [ ] **2.20** **`/scans`**: any **PENDING** row shows **Queued** (not raw `PENDING`)
+- [ ] **2.21** **`/policies`**: **Generate bundle** → policies appear in sidebar
 - [ ] **2.22** Edit title/body → **Save** enabled → save → refresh page → edits persist
 - [ ] **2.23** **Regenerate with AI** → editor updates immediately (no second fetch); content differs from pre-regenerate
 - [ ] **2.24** **Export MD** → `.md` file downloads (authenticated fetch, not blank/401)
@@ -132,12 +132,12 @@ Run as a **new org owner** (fresh signup or dedicated smoke org).
 - [ ] **2.27** On **`/copilot`**, send a follow-up message → response **streams**; suggestion chips do **not** reference sample/lite finding titles on a fresh org
 - [ ] **2.28** Assistant message shows **Sources** / citations block (proves RAG retrieved chunks)
 
-- [ ] **2.29** **`/risks`** — **Add risk** → appears in matrix/table → change status → **Export register** CSV downloads
-- [ ] **2.30** **`/vendors`** — **Add vendor** → detail page → update review status → **Run questionnaire** opens `/questionnaire`
-- [ ] **2.31** **`/team`** — admin: invite sends; member role: page loads without error (no invite panel)
-- [ ] **2.32** **`/training`** — **Assign module** (create & assign) → **Mark complete** on a row → **Export training report** CSV
-- [ ] **2.33** **`/billing`** (admin) — plan name + usage stats match reality; no fake renewal email; **past_due** shows warning if testable in Stripe; invoice PDF opens when invoices exist; plan grid has no upgrade buttons (header only)
-- [ ] **2.34** **`/integrations`** (admin) — connect GitHub (or return from OAuth) → green **Connected** banner + card shows **Live**; **Disconnect** → card no longer **Live** (soft disconnect); OAuth failure shows red banner (not silent); AWS/Okta/JumpCloud show **Connect** (not “Coming soon”) when backend configured
+- [ ] **2.29** **`/risks`**: **Add risk** → appears in matrix/table → change status → **Export register** CSV downloads
+- [ ] **2.30** **`/vendors`**: **Add vendor** → detail page → update review status → **Run questionnaire** opens `/questionnaire`
+- [ ] **2.31** **`/team`**: admin: invite sends; member role: page loads without error (no invite panel)
+- [ ] **2.32** **`/training`**: **Assign module** (create & assign) → **Mark complete** on a row → **Export training report** CSV
+- [ ] **2.33** **`/billing`** (admin), plan name + usage stats match reality; no fake renewal email; **past_due** shows warning if testable in Stripe; invoice PDF opens when invoices exist; plan grid has no upgrade buttons (header only)
+- [ ] **2.34** **`/integrations`** (admin), connect GitHub (or return from OAuth) → green **Connected** banner + card shows **Live**; **Disconnect** → card no longer **Live** (soft disconnect); OAuth failure shows red banner (not silent); AWS/Okta/JumpCloud show **Connect** (not “Coming soon”) when backend configured
 
 **Member flow pass:** steps 2.2, 2.4–2.15, **2.17–2.18**, **2.21–2.24**, **2.26–2.28**, and at least one of 2.3/2.16 satisfied.
 
@@ -187,7 +187,7 @@ Requires §1.1 Clerk + §2 complete on same org.
 
 ---
 
-## Quick reference — API paths
+## Quick reference. API paths
 
 | Check | Endpoint |
 |-------|----------|
@@ -214,20 +214,20 @@ Requires §1.1 Clerk + §2 complete on same org.
 
 ---
 
-## After smoke — demo script inputs
+## After smoke, demo script inputs
 
 When all sections pass, record for demo script authoring:
 
 ```
 Web URL:     ____________________
 API URL:     ____________________
-Gap ID:      ____________________  (resolved during smoke — pick another OPEN gap for live demo)
+Gap ID:      ____________________  (resolved during smoke, pick another OPEN gap for live demo)
 Scan ID:     ____________________
 Demo org:    ____________________
 Auditor:     ____________________
 ```
 
-Then write the demo script against these values — no placeholders.
+Then write the demo script against these values, no placeholders.
 
 ---
 

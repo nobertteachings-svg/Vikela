@@ -50,7 +50,7 @@ const config: Config = {
           muted: "var(--text-muted)",
           "text-dark": "var(--text-dark)",
         },
-        /** Preferred namespace — same tokens as `comply` (legacy). */
+        /** Preferred namespace, same tokens as `comply` (legacy). */
         vikela: {
           app: "var(--bg-app)",
           card: "var(--bg-card)",
@@ -88,8 +88,9 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans: ['"DM Sans"', "system-ui", "sans-serif"],
-        mono: ['"DM Mono"', "ui-monospace", "monospace"],
+        sans: ["var(--font-sans)", "ui-sans-serif", "sans-serif"],
+        display: ["var(--font-display)", "var(--font-sans)", "ui-serif", "serif"],
+        mono: ["var(--font-mono)", "ui-monospace", "monospace"],
       },
       borderRadius: {
         lg: "var(--radius-lg)",

@@ -29,7 +29,7 @@ export function utcStartOfMonth(now = new Date()): Date {
   return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1, 0, 0, 0, 0));
 }
 
-/** Billable scans only — child rows under a FULL parent must not inflate quota. */
+/** Billable scans only, child rows under a FULL parent must not inflate quota. */
 function billableScanWhere(orgId: string, since: Date) {
   return {
     orgId,

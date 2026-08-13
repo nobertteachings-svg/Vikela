@@ -11,11 +11,11 @@ npm run test               # 79+ API unit tests
 npm run test:e2e           # Playwright (needs dev servers or CI)
 ```
 
-If `npm audit` still reports issues in `@next/eslint-plugin-next` / `glob`, those are dev-only ESLint deps — acceptable until you upgrade Next.js.
+If `npm audit` still reports issues in `@next/eslint-plugin-next` / `glob`, those are dev-only ESLint deps, acceptable until you upgrade Next.js.
 
 We removed unused `@clerk/ui` from the root package (it pulled in Solana wallet vulnerabilities).
 
-## 2. Clerk — switch from test to production
+## 2. Clerk, switch from test to production
 
 You currently use **test** keys (`pk_test_…`, `sk_test_…`). For production:
 
@@ -27,7 +27,7 @@ You currently use **test** keys (`pk_test_…`, `sk_test_…`). For production:
 
 ### B. Set environment variables
 
-**Web (Vercel)** — `apps/web` or project root:
+**Web (Vercel)**: `apps/web` or project root:
 
 | Variable | Value |
 |----------|--------|
@@ -60,21 +60,21 @@ In Clerk → **Domains**, add:
 - `https://app.yourdomain.com`
 - Production API URL if Clerk needs it for JWT
 
-Update OAuth redirect URIs for GitHub/GitLab/etc. to use `https://app.yourdomain.com/api/auth/...` (see `.env.production.example`).
+Update OAuth redirect URIs for GitHub/GitLab/etc. to use `https://app.yourdomain.com/api/auth/..` (see `.env.production.example`).
 
 ## 3. Required production environment variables
 
-Copy [`.env.production.example`](../.env.production.example) and fill every **required** section:
+Copy [`.env.production.example`](./.env.production.example) and fill every **required** section:
 
 ```bash
 cp .env.production.example .env.production
-# Edit values — do not commit
+# Edit values, do not commit
 ```
 
 | Variable | Why |
 |----------|-----|
 | `NODE_ENV=production` | Enables auth enforcement, blocks demo integrations |
-| `ENCRYPTION_KEY` | `openssl rand -hex 32` — encrypts integration tokens |
+| `ENCRYPTION_KEY` | `openssl rand -hex 32`, encrypts integration tokens |
 | `DATABASE_URL` / `DIRECT_URL` | Postgres (Supabase, Railway, Neon) |
 | `REDIS_URL` | BullMQ scan workers |
 | `APP_URL` / `API_URL` / `NEXT_PUBLIC_API_URL` | Must match deployed URLs |
@@ -103,8 +103,8 @@ npm run db:migrate          # on API host
 npm run db:seed             # first deploy only (framework catalog)
 ```
 
-- **Web**: Vercel — root `apps/web`, env from step 3  
-- **API**: Railway — `apps/api`, see [RAILWAY_DEPLOYMENT.md](../RAILWAY_DEPLOYMENT.md)  
+- **Web**: Vercel, root `apps/web`, env from step 3  
+- **API**: Railway, `apps/api`, see [RAILWAY_DEPLOYMENT.md](./RAILWAY_DEPLOYMENT.md)  
 - **Postgres + Redis**: Railway or managed services  
 
 ## 6. Verify production

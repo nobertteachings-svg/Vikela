@@ -14,7 +14,7 @@ export default async function CopilotPage() {
     plan = billing.plan;
     allowed = billing.features?.copilot ?? ["GROWTH", "ENTERPRISE"].includes(billing.plan);
   } catch {
-    /* billing optional — API still enforces */
+    /* billing optional. API still enforces */
   }
 
   if (!allowed) {
