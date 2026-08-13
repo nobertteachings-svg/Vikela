@@ -42,7 +42,7 @@ export function OnboardingShell({
                 continueDisabled ? "pointer-events-none opacity-40" : "hover:bg-comply-purple-dark"
               }`}
             >
-              Continue →
+              Continue
             </Link>
           )}
           {skipHref && (

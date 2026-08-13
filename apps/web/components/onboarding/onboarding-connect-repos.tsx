@@ -746,7 +746,7 @@ function ConnectPanel({
             "btn-purple-cta flex h-10 min-w-[160px] items-center justify-center px-4 text-sm font-medium disabled:pointer-events-none disabled:opacity-40"
           )}
         >
-          {saving ? "Saving…" : canContinue ? "Run first scan →" : "Select a repository"}
+          {saving ? "Saving…" : canContinue ? "Run first scan" : "Select a repository"}
         </button>
       </div>
     </div>

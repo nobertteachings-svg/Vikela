@@ -36,7 +36,7 @@ const STATUS_STYLES: Record<RiskStatus, string> = {
   Closed: "border-comply-green/30 bg-comply-green/10 text-comply-green",
 };
 
-/** Scores are likelihood × impact on a 1–3 scale (max 9). */
+/** Scores are likelihood × impact on a 1-3 scale (max 9). */
 function riskScoreColor(score: number) {
   if (score >= 6) return "text-comply-red";
   if (score >= 3) return "text-comply-amber-text";
@@ -363,7 +363,7 @@ export function RisksPageContent({
               </select>
             </label>
             <label className="text-sm">
-              <span className="text-comply-text-secondary">Likelihood (1–3)</span>
+              <span className="text-comply-text-secondary">Likelihood (1-3)</span>
               <input
                 type="number"
                 min={1}
@@ -376,7 +376,7 @@ export function RisksPageContent({
               />
             </label>
             <label className="text-sm">
-              <span className="text-comply-text-secondary">Impact (1–3)</span>
+              <span className="text-comply-text-secondary">Impact (1-3)</span>
               <input
                 type="number"
                 min={1}
@@ -469,7 +469,7 @@ export function RisksPageContent({
                 {categories.length > 1 ? ` across ${categories.length - 1} categories` : ""}
               </h2>
               <p className="mt-2 max-w-lg text-sm leading-relaxed text-comply-text-secondary">
-                Score = likelihood × impact (1–3 each). High priority starts at 6. Set owners and
+                Score = likelihood × impact (1-3 each). High priority starts at 6. Set owners and
                 next review dates to keep the register current.
               </p>
             </div>
@@ -504,7 +504,7 @@ export function RisksPageContent({
         <Card elevated>
           <CardHeader title="Risk matrix" />
           <CardBody>
-            <p className="mb-3 text-xs text-comply-text-tertiary">Impact → · Likelihood ↓</p>
+            <p className="mb-3 text-xs text-comply-text-tertiary">Impact, · Likelihood ↓</p>
             <div className="grid grid-cols-3 gap-1">
               {[...riskMatrixLabels.likelihood].reverse().map((lik, rowFromTop) => {
                 const likelihood = 3 - rowFromTop;

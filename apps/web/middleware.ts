@@ -32,7 +32,7 @@ export default hasClerk
       const { orgRole, userId } = await auth();
 
       // Marketing home (`/`) stays reachable while signed in. CTAs switch to "Open dashboard".
-      // (Previously we forced / → /dashboard, which trapped users with no way back to the site.)
+      // (Previously we forced /, /dashboard, which trapped users with no way back to the site.)
 
       if (userId && isAuditor(orgRole) && isAuditorBlockedPath(req.nextUrl.pathname)) {
         return NextResponse.redirect(new URL("/dashboard", req.url));

@@ -30,7 +30,7 @@ export function integrationOAuthUrl(
   return `${path}${sep}org=${encodeURIComponent(orgSlug)}`;
 }
 
-/** GitHub → Settings → Applications → Installed GitHub Apps → configure repository access */
+/** GitHub, Settings, Applications, Installed GitHub Apps, configure repository access */
 export function githubManageInstallationsUrl(): string {
   return "https://github.com/settings/installations";
 }

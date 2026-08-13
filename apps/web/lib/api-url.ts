@@ -10,7 +10,7 @@ export function getServerApiUrl(): string {
 /**
  * API base URL for fetch().
  * Prefer NEXT_PUBLIC_API_URL in the browser so long Copilot/LLM calls and SSE
- * are not killed by Next.js rewrite proxy timeouts (~30s → plain "Internal Server Error").
+ * are not killed by Next.js rewrite proxy timeouts (~30s, plain "Internal Server Error").
  * Falls back to same-origin `/api/v1` (rewritten) when unset.
  */
 export function getApiUrl(): string {

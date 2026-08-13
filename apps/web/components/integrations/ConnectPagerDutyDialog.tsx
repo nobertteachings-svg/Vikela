@@ -40,7 +40,7 @@ export function ConnectPagerDutyDialog({
       <div className="w-full max-w-md rounded-lg border border-border bg-card p-6 shadow-xl">
         <h2 className="text-lg font-semibold">Connect PagerDuty</h2>
         <p className="mt-2 text-sm text-muted">
-          In PagerDuty: your user icon → My Profile → User Settings → Create API Access Key. Copy
+          In PagerDuty: your user icon, My Profile, User Settings, Create API Access Key. Copy
           the REST API key and paste it here. No Vikela .env variables are required.
         </p>
         <label className="mt-4 block text-sm font-medium">API access key</label>

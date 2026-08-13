@@ -39,7 +39,7 @@ export default function OnboardingConnectCloudPage() {
           ← Back
         </Link>
         <Link href="/onboarding/frameworks" className="btn-purple-cta w-[120px]">
-          Next →
+          Next
         </Link>
       </div>
     </BrowserChrome>

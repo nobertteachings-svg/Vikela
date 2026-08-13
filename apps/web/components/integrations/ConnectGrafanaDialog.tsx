@@ -47,7 +47,7 @@ export function ConnectGrafanaDialog({
         <h2 className="text-lg font-semibold">Connect Grafana</h2>
         <p className="mt-2 text-sm text-muted">
           Use your Grafana Cloud stack URL (e.g. https://your-stack.grafana.net) or self-hosted
-          base URL. Create a token under Administration → Service accounts → Add service account →
+          base URL. Create a token under Administration, Service accounts, Add service account
           Add token (Viewer or higher).
         </p>
         <label className="mt-4 block text-sm font-medium">Grafana URL</label>

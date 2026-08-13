@@ -38,7 +38,7 @@ export function ConnectJumpCloudDialog({
       <div className="w-full max-w-md rounded-lg border border-border bg-card p-6 shadow-xl">
         <h2 className="text-lg font-semibold">Connect JumpCloud</h2>
         <p className="mt-2 text-sm text-muted">
-          JumpCloud Admin Portal → Settings (gear) → API Settings → Create new API key. Copy the
+          JumpCloud Admin Portal, Settings (gear), API Settings, Create new API key. Copy the
           key once and paste it here. No Vikela .env variables are required.
         </p>
         <label className="mt-4 block text-sm font-medium">API key</label>

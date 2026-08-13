@@ -40,7 +40,7 @@ export function ConnectMicrosoftTeamsDialog({
       <div className="w-full max-w-md rounded-lg border border-border bg-card p-6 shadow-xl">
         <h2 className="text-lg font-semibold">Connect Microsoft Teams</h2>
         <p className="mt-2 text-sm text-muted">
-          In Teams: open a channel → ⋯ → Connectors / Manage channel → Workflows → create an{" "}
+          In Teams: open a channel, ⋯, Connectors / Manage channel, Workflows, create an{" "}
           <span className="font-medium">Incoming Webhook</span> (or “Post to a channel when a
           webhook request is received”). Copy the URL and paste it here. A short test message will
           be posted on connect.

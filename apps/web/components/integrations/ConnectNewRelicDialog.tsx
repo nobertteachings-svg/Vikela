@@ -44,7 +44,7 @@ export function ConnectNewRelicDialog({
       <div className="w-full max-w-md rounded-lg border border-border bg-card p-6 shadow-xl">
         <h2 className="text-lg font-semibold">Connect New Relic</h2>
         <p className="mt-2 text-sm text-muted">
-          In New Relic: click your user menu → API keys → Create a key → type{" "}
+          In New Relic: click your user menu, API keys, Create a key, type{" "}
           <span className="font-medium">User</span> (starts with NRAK-). Account ID is optional if
           the key can see only one account. Match region to your New Relic URL (one.newrelic.com =
           US, one.eu.newrelic.com = EU).

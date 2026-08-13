@@ -183,7 +183,7 @@ export default function DocsPage() {
                 <code className="rounded bg-black/40 px-1.5 py-0.5 font-mono text-xs text-comply-purple-border">
                   http://localhost:3001
                 </code>
-                . Use an API key from Settings → API Keys.
+                . Use an API key from Settings, API Keys.
               </ProseP>
               <ProseUl>
                 <ProseLi>

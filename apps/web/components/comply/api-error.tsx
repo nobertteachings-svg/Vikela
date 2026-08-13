@@ -31,7 +31,7 @@ function RecoverySteps() {
           , plus <code className="font-mono text-xs">ENCRYPTION_KEY</code> and Clerk keys.
         </li>
         <li>
-          Seed once (API → Shell):{" "}
+          Seed once (API, Shell):{" "}
           <code className="rounded bg-comply-primary px-1.5 py-0.5 font-mono text-xs">npm run db:seed</code>
         </li>
         <li>

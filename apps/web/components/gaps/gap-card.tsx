@@ -33,7 +33,7 @@ export function GapCard({ gap }: { gap: GapSummary }) {
             href={`/gaps/${gap.id}`}
             className="shrink-0 text-xs text-emerald-500 hover:text-emerald-400"
           >
-            View →
+            View
           </Link>
         </div>
       </CardContent>

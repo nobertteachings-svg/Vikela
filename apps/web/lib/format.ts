@@ -118,7 +118,7 @@ export function gapsListEmptyState(params: {
   }
   return {
     title: "No open gaps",
-    body: "Connect Git, cloud, or identity under Integrations, run a Full scan from the Dashboard, then return here. See Help → Getting started for the full flow.",
+    body: "Connect Git, cloud, or identity under Integrations, run a Full scan from the Dashboard, then return here. See Help, Getting started for the full flow.",
   };
 }
 

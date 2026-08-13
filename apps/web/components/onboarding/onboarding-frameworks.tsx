@@ -274,7 +274,7 @@ export function OnboardingFrameworks() {
             disabled={!canContinue || saving || loading}
             className="btn-purple-cta flex h-10 min-w-[120px] items-center justify-center px-4 text-sm font-medium disabled:opacity-40"
           >
-            {saving ? "Saving…" : "Continue →"}
+            {saving ? "Saving…" : "Continue"}
           </button>
         </div>
       </div>

@@ -84,7 +84,7 @@ function resolveGuidePath(slugParts: string[]): string | null {
   return null;
 }
 
-/** Very small Markdown → HTML for help pages (headings, lists, tables, code, links). */
+/** Very small Markdown, HTML for help pages (headings, lists, tables, code, links). */
 export function markdownToHtml(md: string): string {
   const lines = md.replace(/\r\n/g, "\n").split("\n");
   const out: string[] = [];

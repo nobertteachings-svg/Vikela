@@ -347,7 +347,7 @@ export function VendorsPageContent({ vendors: initialVendors }: { vendors: UiVen
               <p className="mt-3 text-xs text-comply-muted">
                 {v.risk} risk · {v.dataAccess}
               </p>
-              <p className="mt-2 text-xs text-comply-purple-border">Review vendor →</p>
+              <p className="mt-2 text-xs text-comply-purple-border">Review vendor</p>
             </Link>
           ))}
       </div>

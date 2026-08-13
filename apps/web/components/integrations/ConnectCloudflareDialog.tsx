@@ -42,7 +42,7 @@ export function ConnectCloudflareDialog({
       <div className="w-full max-w-md rounded-lg border border-border bg-card p-6 shadow-xl">
         <h2 className="text-lg font-semibold">Connect Cloudflare</h2>
         <p className="mt-2 text-sm text-muted">
-          Create an API token in Cloudflare → My Profile → API Tokens. Include Account read, Zone
+          Create an API token in Cloudflare, My Profile, API Tokens. Include Account read, Zone
           read, SSL and Certificates read, and Access read (and WAF/Firewall read if available).
         </p>
         <label className="mt-4 block text-sm font-medium">API token</label>

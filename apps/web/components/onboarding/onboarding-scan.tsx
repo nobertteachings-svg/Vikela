@@ -141,7 +141,7 @@ export function OnboardingScan() {
           )}
 
           <Link href="/dashboard" className="btn-purple-cta w-full max-w-[280px] text-center">
-            View dashboard →
+            View dashboard
           </Link>
           <Link href="/onboarding/connect-cloud" className="text-xs text-comply-muted hover:underline">
             Continue onboarding (cloud)

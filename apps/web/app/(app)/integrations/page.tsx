@@ -72,7 +72,7 @@ export default async function IntegrationsPage() {
       <PageHeader
         eyebrow="Connections"
         title="Integrations"
-        description="Connect Git, cloud, identity, observability, and chat. Need API keys or AssumeRole steps? Open Help → Integrations."
+        description="Connect Git, cloud, identity, observability, and chat. Need API keys or AssumeRole steps? Open Help, Integrations."
       >
         <a
           href="/help/integrations"

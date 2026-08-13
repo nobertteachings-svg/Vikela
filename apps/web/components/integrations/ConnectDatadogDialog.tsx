@@ -57,7 +57,7 @@ export function ConnectDatadogDialog({
       <div className="w-full max-w-md rounded-lg border border-border bg-card p-6 shadow-xl">
         <h2 className="text-lg font-semibold">Connect Datadog</h2>
         <p className="mt-2 text-sm text-muted">
-          In Datadog: Organization Settings → API Keys (create/copy API key) and Application Keys
+          In Datadog: Organization Settings, API Keys (create/copy API key) and Application Keys
           (create/copy Application key). Pick the site that matches your Datadog org URL.
         </p>
         <label className="mt-4 block text-sm font-medium">API key</label>

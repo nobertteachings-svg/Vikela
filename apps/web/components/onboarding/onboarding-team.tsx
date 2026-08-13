@@ -113,7 +113,7 @@ export function OnboardingTeam() {
           Skip for now
         </Link>
         <Link href="/dashboard" className="btn-purple-cta w-[160px]">
-          Launch dashboard →
+          Launch dashboard
         </Link>
       </div>
     </BrowserChrome>

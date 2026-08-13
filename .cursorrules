@@ -12,4 +12,4 @@
 - Provider brand colors only on badges; never as primary UI palette
 - ENCRYPTION_KEY must be set; throw on startup if missing
 - No em dashes (U+2014) in copy or comments. Use periods, commas, colons, or parentheses. Empty-value placeholders may use a single em dash character in tables/UI only.
-- Typography: IBM Plex Sans for UI and headlines, IBM Plex Mono for code. Do not use DM Sans, Inter, Roboto, Geist, Source Serif display pairing, or gradient clipped headline text. Keep marketing H1 around text-3xl/sm:text-4xl, not oversized 5xl stacks.
+- Typography: IBM Plex Sans for UI and headlines, IBM Plex Mono for code. Do not use DM Sans, Inter, Roboto, Geist, Source Serif display pairing, or gradient clipped headline text. Marketing H1 around text-2xl/sm:text-3xl. App titles about text-2xl.

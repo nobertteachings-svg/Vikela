@@ -223,7 +223,7 @@ export function SettingsPageContent({
       return;
     }
     setDangerMessage(
-      "Organization deletion is managed in Clerk (Organization settings → Delete). Vikela does not hard-delete orgs from this screen yet."
+      "Organization deletion is managed in Clerk (Organization settings, Delete). Vikela does not hard-delete orgs from this screen yet."
     );
   }
 
@@ -425,10 +425,10 @@ export function SettingsPageContent({
                   <label className="block text-sm">
                     <span className="text-comply-text-secondary">Company size</span>
                     <select defaultValue={org.employeeCount} className="comply-input mt-1.5">
-                      <option>1–10</option>
-                      <option>11–50</option>
-                      <option>51–200</option>
-                      <option>201–1000</option>
+                      <option>1-10</option>
+                      <option>11-50</option>
+                      <option>51-200</option>
+                      <option>201-1000</option>
                       <option>1000+</option>
                     </select>
                   </label>
@@ -899,7 +899,7 @@ export function SettingsPageContent({
                     ))}
                   </div>
                   <p className="text-xs text-comply-muted">
-                    PDF downloads a printable HTML report (use Print → Save as PDF).
+                    PDF downloads a printable HTML report (use Print, Save as PDF).
                   </p>
                   {dangerMessage ? (
                     <p className="text-xs text-comply-text-secondary">{dangerMessage}</p>

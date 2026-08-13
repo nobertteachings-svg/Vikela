@@ -138,19 +138,21 @@ export function LandingPage() {
       </header>
 
       <main>
-        <section className="mx-auto max-w-5xl px-6 pb-16 pt-20 sm:pt-28">
-          <p className="text-sm font-medium text-comply-purple-border">Vikela</p>
-          <h1 className="mt-4 max-w-2xl text-3xl font-semibold tracking-tight text-comply-text-primary sm:text-4xl">
+        <section className="mx-auto max-w-5xl px-6 pb-14 pt-16 sm:pt-20">
+          <p className="text-xs font-medium uppercase tracking-wide text-comply-text-tertiary">
+            Vikela
+          </p>
+          <h1 className="mt-3 max-w-xl text-2xl font-semibold tracking-tight text-comply-text-primary sm:text-3xl">
             Get audit ready in weeks, not months
           </h1>
-          <p className="mt-5 max-w-xl text-base leading-relaxed text-comply-text-secondary">
+          <p className="mt-4 max-w-lg text-sm leading-relaxed text-comply-text-secondary">
             Map code, cloud, and identity into the frameworks buyers ask for. Answer the security
             questionnaire from live controls, not a blank spreadsheet.
           </p>
-          <div className="mt-8">
+          <div className="mt-7">
             <MarketingAuthLinks />
           </div>
-          <p className="mt-6 text-sm text-comply-text-tertiary">
+          <p className="mt-5 text-xs text-comply-text-tertiary">
             Free to start. Published prices. No sales call required.
           </p>
         </section>
@@ -176,7 +178,7 @@ export function LandingPage() {
         </section>
 
         <section id="how" className="mx-auto max-w-5xl px-6 py-20">
-          <h2 className="text-2xl font-semibold tracking-tight text-comply-text-primary">
+          <h2 className="text-lg font-semibold tracking-tight text-comply-text-primary">
             How it works
           </h2>
           <ol className="mt-10 grid gap-10 md:grid-cols-3">
@@ -202,7 +204,7 @@ export function LandingPage() {
 
         <section id="integrations" className="border-t border-white/[0.08] py-20">
           <div className="mx-auto max-w-5xl px-6">
-            <h2 className="text-2xl font-semibold tracking-tight text-comply-text-primary">
+            <h2 className="text-lg font-semibold tracking-tight text-comply-text-primary">
               Evidence from the stack auditors review
             </h2>
             <p className="mt-2 max-w-2xl text-sm text-comply-text-secondary">
@@ -241,7 +243,7 @@ export function LandingPage() {
 
         <section id="pricing" className="border-t border-white/[0.08] py-20">
           <div className="mx-auto max-w-5xl px-6">
-            <h2 className="text-2xl font-semibold tracking-tight text-comply-text-primary">
+            <h2 className="text-lg font-semibold tracking-tight text-comply-text-primary">
               Pricing
             </h2>
             <p className="mt-2 max-w-lg text-sm text-comply-text-secondary">
@@ -303,7 +305,7 @@ export function LandingPage() {
 
         <section id="faq" className="border-t border-white/[0.08] py-20">
           <div className="mx-auto max-w-3xl px-6">
-            <h2 className="text-2xl font-semibold tracking-tight text-comply-text-primary">FAQ</h2>
+            <h2 className="text-lg font-semibold tracking-tight text-comply-text-primary">FAQ</h2>
             <dl className="mt-10 space-y-2">
               {FAQ_ITEMS.map((item) => (
                 <details

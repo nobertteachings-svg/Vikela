@@ -543,7 +543,7 @@ export const settingsOrganization = {
   trustCenterSlug: "acme",
   dataRegion: "US",
   legalName: "Acme Corp, Inc.",
-  employeeCount: "11–50",
+  employeeCount: "11-50",
 };
 
 export const settingsNotifications = [
