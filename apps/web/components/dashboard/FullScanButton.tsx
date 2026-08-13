@@ -164,7 +164,7 @@ export function FullScanButton() {
   return (
     <div className="flex flex-col items-end gap-2">
       <ComplyButton
-        variant="secondary"
+        variant="primary"
         onClick={runFullScan}
         disabled={busy}
         className="text-sm"

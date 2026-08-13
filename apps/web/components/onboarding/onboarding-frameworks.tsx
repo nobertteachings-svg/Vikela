@@ -49,7 +49,7 @@ function FrameworkToggle({
       className={cn(
         "relative flex w-full flex-col rounded-md border px-4 py-3 text-left transition-all duration-200",
         selected
-          ? "border-comply-purple-border/60 bg-comply-purple/15 shadow-[0_0_20px_-8px_rgba(83,74,183,0.45)]"
+          ? "border-comply-green/40 bg-comply-green/10"
           : "border-white/[0.08] bg-black/25 hover:border-white/[0.14]"
       )}
     >

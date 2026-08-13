@@ -85,26 +85,26 @@ export function ScansClient({
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={trend}>
               <defs>
-                <linearGradient id="purpleFill" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#534AB7" stopOpacity={0.35} />
-                  <stop offset="100%" stopColor="#534AB7" stopOpacity={0} />
+                <linearGradient id="scoreFill" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#16a34a" stopOpacity={0.35} />
+                  <stop offset="100%" stopColor="#16a34a" stopOpacity={0} />
                 </linearGradient>
               </defs>
               <CartesianGrid stroke="rgba(255,255,255,0.06)" />
-              <XAxis dataKey="week" tick={{ fill: "#888780", fontSize: 10 }} />
-              <YAxis domain={[0, 100]} tick={{ fill: "#888780", fontSize: 10 }} />
+              <XAxis dataKey="week" tick={{ fill: "#a8a29e", fontSize: 10 }} />
+              <YAxis domain={[0, 100]} tick={{ fill: "#a8a29e", fontSize: 10 }} />
               <Tooltip
                 contentStyle={{
-                  background: "rgba(40,40,38,0.95)",
+                  background: "rgba(28,28,26,0.95)",
                   border: "1px solid rgba(255,255,255,0.1)",
-                  borderRadius: "6px",
+                  borderRadius: "8px",
                 }}
               />
               <Area
                 type="monotone"
                 dataKey="score"
-                stroke="#534AB7"
-                fill="url(#purpleFill)"
+                stroke="#16a34a"
+                fill="url(#scoreFill)"
                 strokeWidth={2}
               />
             </AreaChart>

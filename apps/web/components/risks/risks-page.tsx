@@ -504,7 +504,7 @@ export function RisksPageContent({
         <Card elevated>
           <CardHeader title="Risk matrix" />
           <CardBody>
-            <p className="mb-3 text-xs text-comply-text-tertiary">Impact, · Likelihood ↓</p>
+            <p className="mb-3 text-xs text-comply-text-tertiary">Impact across, likelihood down</p>
             <div className="grid grid-cols-3 gap-1">
               {[...riskMatrixLabels.likelihood].reverse().map((lik, rowFromTop) => {
                 const likelihood = 3 - rowFromTop;

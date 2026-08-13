@@ -2,7 +2,6 @@ import Link from "next/link";
 import {
   IconAlertTriangle,
   IconBrandAws,
-  IconCircleCheck,
   IconCloud,
   IconCode,
   IconFingerprint,
@@ -31,11 +30,10 @@ import {
   timeAgo,
 } from "@/lib/format";
 import type { Severity } from "@vikela/shared";
-import { cn } from "@/lib/utils";
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-comply-purple-border">
+    <p className="text-[11px] font-medium uppercase tracking-wider text-comply-text-tertiary">
       {children}
     </p>
   );
@@ -159,13 +157,13 @@ export function DashboardPageContent({
       <PageHeader
         eyebrow="Overview"
         title="Dashboard"
-        description="One platform for every framework your customers ask for, mapped from code, cloud, and identity."
+        description={`${org.name}. Posture from code, cloud, and identity.`}
       >
         <FullScanButton />
       </PageHeader>
 
       {stats.hasSampleGaps && (
-        <div className="rounded-md border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-100/90">
+        <div className="rounded-md border border-comply-amber/30 bg-comply-amber/10 px-4 py-3 text-sm text-comply-text-primary">
           <strong>Sample preview active.</strong> Some findings below are labeled examples from your
           onboarding scan
           {stats.liteScanSource === "mixed" ? " (mixed with real results)" : ""}. Run a full scan or
@@ -173,114 +171,49 @@ export function DashboardPageContent({
         </div>
       )}
 
-      {/* Product hero, live API data */}
-      <div className="marketing-panel marketing-panel-highlight relative overflow-hidden p-6 sm:p-8">
-        <div
-          className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-comply-purple/25 blur-3xl"
-          aria-hidden
-        />
-        <div
-          className="pointer-events-none absolute -bottom-12 left-1/4 h-32 w-64 rounded-full bg-comply-green/10 blur-3xl"
-          aria-hidden
-        />
-        <div className="relative grid gap-8 lg:grid-cols-[1fr_auto] lg:items-start">
-          <div>
-            <SectionLabel>Universal Compliance Engine</SectionLabel>
-            <h2 className="mt-3 max-w-2xl font-display text-xl font-semibold text-comply-text-primary sm:text-2xl">
-              One platform for every framework your customers ask for
-            </h2>
-            <p className="mt-4 max-w-2xl text-sm leading-relaxed text-comply-text-secondary">
-              Vikela maps findings from code, cloud, and identity into{" "}
-              {enrolledFrameworks.length > 0
-                ? enrolledFrameworks.map((f) => f.name).join(", ")
-                : "SOC 2, HIPAA, ISO 27001, GDPR, PCI DSS, FedRAMP, CMMC, and more"}
-              . So you run one program, not ten spreadsheets.
+      <div className="grid gap-4 lg:grid-cols-[220px_1fr]">
+        <Card elevated>
+          <CardBody className="flex flex-col items-center py-6">
+            <PostureArc score={stats.postureScore} />
+            <p className="mt-3 text-xs text-comply-text-tertiary">
+              {lastScanAt ? `Last scan ${timeAgo(lastScanAt)}` : "No completed scan yet"}
             </p>
-            <p className="mt-2 text-xs text-comply-text-tertiary">
-              Workspace: <span className="font-medium text-comply-text-secondary">{org.name}</span>
-            </p>
-            <div className="mt-6 flex flex-wrap gap-2">
-              {enrolledFrameworks.length === 0 ? (
-                <span className="text-xs text-comply-text-tertiary">
-                  Enable frameworks below to start mapping controls
-                </span>
-              ) : (
-                enrolledFrameworks.map((fw) => (
-                  <Link
-                    key={fw.id}
-                    href="/frameworks"
-                    className={cn(
-                      "rounded-sm border px-2 py-0.5 font-mono text-[10px] backdrop-blur-sm transition-colors hover:border-comply-purple-border/50",
-                      fw.score > 0 || fw.status !== "NOT_STARTED"
-                        ? "border-comply-purple-border/50 bg-comply-purple/15 text-comply-purple-light"
-                        : "border-white/[0.08] bg-white/[0.04] text-comply-text-secondary"
-                    )}
-                  >
-                    {fw.name}
-                    {fw.score > 0 ? ` · ${fw.score}%` : ""}
-                  </Link>
-                ))
-              )}
-            </div>
-          </div>
-          <div className="flex flex-col gap-3 sm:min-w-[200px]">
-            <div className="rounded-md border border-white/[0.08] bg-black/25 px-4 py-3 backdrop-blur-sm">
-              <p className="text-[10px] font-semibold uppercase tracking-wider text-comply-text-tertiary">
-                Posture score
-              </p>
-              <p className="mt-1 font-mono text-3xl font-semibold text-comply-purple">
-                {stats.postureScore}
-              </p>
-            </div>
-            <ul className="space-y-2 text-xs text-comply-text-secondary">
-              <li className="flex gap-2">
-                <IconCircleCheck size={14} className="shrink-0 text-comply-green" stroke={2} />
-                {stats.connectedIntegrations} integrations connected
-              </li>
-              <li className="flex gap-2">
-                <IconCircleCheck size={14} className="shrink-0 text-comply-green" stroke={2} />
-                {openGaps} open gaps across your stack
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-1 border-t border-white/[0.08] pt-4 text-xs text-comply-text-secondary">
-          <span>
-            <span className="font-mono font-medium text-comply-text-primary">
-              {evidenceCoverage.controlsWithEvidence}/{evidenceCoverage.totalControls}
-            </span>{" "}
-            controls covered
-          </span>
-          <span className="text-comply-text-tertiary" aria-hidden>
-            ·
-          </span>
-          <span>
-            <span className="font-mono font-medium text-comply-text-primary">{openGaps}</span> gaps open
-          </span>
-          {lastScanAt && (
-            <>
+          </CardBody>
+        </Card>
+        <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+          <StatCard label="Open gaps" value={String(openGaps)} accent="red" />
+          <StatCard
+            label="Controls met"
+            value={`${stats.controlsImplemented}/${stats.controlsTotal}`}
+            accent="green"
+          />
+          <StatCard label="Active frameworks" value={String(activeFrameworks)} accent="purple" />
+          <StatCard
+            label="Integrations"
+            value={String(stats.connectedIntegrations)}
+            accent="amber"
+          />
+          <div className="col-span-2 rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-card)] px-4 py-3 lg:col-span-4">
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-comply-text-secondary">
+              <span>
+                Evidence on{" "}
+                <span className="font-mono font-medium text-comply-text-primary">
+                  {evidenceCoverage.controlsWithEvidence}/{evidenceCoverage.totalControls}
+                </span>{" "}
+                controls
+              </span>
               <span className="text-comply-text-tertiary" aria-hidden>
                 ·
               </span>
-              <span>Last scan {timeAgo(lastScanAt)}</span>
-            </>
-          )}
+              <span>
+                Frameworks:{" "}
+                {enrolledFrameworks.length > 0
+                  ? enrolledFrameworks.map((f) => f.name).join(", ")
+                  : "none enrolled yet"}
+              </span>
+            </div>
+          </div>
         </div>
-      </div>
-
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-        <StatCard label="Open gaps" value={String(openGaps)} accent="red" />
-        <StatCard
-          label="Controls met"
-          value={`${stats.controlsImplemented}/${stats.controlsTotal}`}
-          accent="green"
-        />
-        <StatCard label="Active frameworks" value={String(activeFrameworks)} accent="purple" />
-        <StatCard
-          label="Integrations"
-          value={String(stats.connectedIntegrations)}
-          accent="amber"
-        />
       </div>
 
       <Card>
@@ -329,13 +262,13 @@ export function DashboardPageContent({
               <Link
                 key={item.label}
                 href={item.href}
-                className="marketing-panel group flex items-center gap-4 p-5 transition-all hover:border-comply-purple-border/40"
+                className="group flex items-center gap-4 rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-card)] p-5 transition-colors hover:border-comply-green/35"
               >
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-comply-purple-border/30 bg-comply-purple/10 text-comply-purple-border">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md border border-[var(--border)] bg-[var(--bg-elevated)] text-comply-green">
                   <Icon size={22} stroke={1.5} />
                 </span>
                 <div>
-                  <p className="text-sm font-medium text-comply-text-primary group-hover:text-comply-purple-border">
+                  <p className="text-sm font-medium text-comply-text-primary group-hover:text-comply-green">
                     {item.label}
                   </p>
                   <p className="font-mono text-2xl font-semibold tracking-tight text-comply-text-primary">
@@ -351,11 +284,6 @@ export function DashboardPageContent({
 
       <div className="grid gap-6 xl:grid-cols-5">
         <div className="space-y-6 xl:col-span-3">
-          <Card elevated>
-            <CardBody className="flex justify-center py-6">
-              <PostureArc score={stats.postureScore} />
-            </CardBody>
-          </Card>
           <DashboardFrameworkPicker frameworks={frameworks} lastScanAt={lastScanAt} />
 
           {stats.cloudAccounts.length > 0 && (
@@ -365,10 +293,10 @@ export function DashboardPageContent({
                 {stats.cloudAccounts.map((ca) => (
                   <div
                     key={ca.id}
-                    className="flex items-center justify-between rounded-md border border-white/[0.06] bg-black/20 px-4 py-3"
+                    className="flex items-center justify-between rounded-md border border-[var(--border)] bg-[var(--bg-elevated)] px-4 py-3"
                   >
                     <div className="flex items-center gap-3">
-                      <IconBrandAws size={18} className="text-comply-purple-border" />
+                      <IconBrandAws size={18} className="text-comply-green" />
                       <div>
                         <p className="text-sm font-medium text-comply-text-primary">{ca.accountName}</p>
                         <p className="font-mono text-[10px] text-comply-text-tertiary">{ca.accountId}</p>
@@ -408,7 +336,7 @@ export function DashboardPageContent({
                   const Icon = activityIcons[a.icon] ?? IconScan;
                   return (
                     <li key={i} className="flex gap-3">
-                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-comply-elevated text-comply-purple-border">
+                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-[var(--bg-elevated)] text-comply-green">
                         <Icon size={16} />
                       </span>
                       <div className="min-w-0">
@@ -464,7 +392,7 @@ export function DashboardPageContent({
                     <td>
                       <Link
                         href={`/gaps/${g.id}`}
-                        className="font-medium text-comply-text-primary hover:text-comply-purple-border"
+                        className="font-medium text-comply-text-primary hover:text-comply-green"
                       >
                         {g.title}
                         {g.isSample ? <GapSampleBadge /> : null}
@@ -473,7 +401,7 @@ export function DashboardPageContent({
                         <p className="text-[10px] text-comply-text-tertiary">{g.repoName}</p>
                       )}
                     </td>
-                    <td className="font-mono text-xs text-comply-purple-border">{g.controlCode ?? "—"}</td>
+                    <td className="font-mono text-xs text-comply-green">{g.controlCode ?? "—"}</td>
                     <td className="text-comply-text-secondary">{formatGapSource(g.source)}</td>
                     <td className="text-comply-text-secondary">{formatGapStatus(g.status as Parameters<typeof formatGapStatus>[0])}</td>
                   </tr>

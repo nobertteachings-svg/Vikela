@@ -63,11 +63,11 @@ export function Sidebar() {
   let dividerIdx = 0;
 
   return (
-    <aside className="sidebar-panel fixed left-0 top-0 z-40 flex h-screen w-[4.5rem] flex-col lg:w-52">
+    <aside className="sidebar-panel fixed left-0 top-0 z-40 flex h-screen w-[4.5rem] flex-col lg:w-56">
       <div className="flex h-full flex-col p-3 lg:p-4">
         <Link
           href="/dashboard"
-          className="mb-6 px-1 lg:px-2"
+          className="mb-5 px-1 lg:px-2"
           title="Dashboard"
         >
           <LogoPill
@@ -81,13 +81,13 @@ export function Sidebar() {
             if ("divider" in item && item.divider) {
               const label = dividerLabels[dividerIdx++];
               return (
-                <div key={`d-${i}`} className="my-3">
+                <div key={`d-${i}`} className="my-2.5">
                   {label && (
-                    <p className="mb-2 hidden px-2 text-[10px] font-semibold uppercase tracking-widest text-comply-text-tertiary lg:block">
+                    <p className="mb-1.5 hidden px-2 text-[10px] font-medium uppercase tracking-wider text-comply-text-tertiary lg:block">
                       {label}
                     </p>
                   )}
-                  <hr className="border-white/[0.06]" />
+                  <hr className="border-[var(--border)]" />
                 </div>
               );
             }
@@ -102,9 +102,9 @@ export function Sidebar() {
                 href={href}
                 title={item.label}
                 className={cn(
-                  "group relative flex items-center gap-3 rounded-lg px-2 py-2 text-sm transition-all duration-150 lg:px-3",
+                  "group relative flex items-center gap-3 rounded-md px-2 py-2 text-sm transition-colors duration-150 lg:px-3",
                   active
-                    ? "bg-comply-purple font-medium text-white nav-active-glow"
+                    ? "bg-comply-green/15 font-medium text-comply-green-light"
                     : "text-comply-text-secondary hover:bg-white/[0.04] hover:text-comply-text-primary"
                 )}
               >
@@ -114,8 +114,8 @@ export function Sidebar() {
                   className={cn(
                     "shrink-0",
                     active
-                      ? "text-white"
-                      : "text-comply-text-tertiary group-hover:text-comply-purple-border"
+                      ? "text-comply-green"
+                      : "text-comply-text-tertiary group-hover:text-comply-text-secondary"
                   )}
                 />
                 <span className="hidden truncate lg:inline">{item.label}</span>
@@ -124,16 +124,16 @@ export function Sidebar() {
           })}
         </nav>
 
-        <div className="mt-auto border-t border-white/[0.06] pt-3">
+        <div className="mt-auto border-t border-[var(--border)] pt-3">
           <Link
             href="/"
             title="Vikela website"
-            className="group flex items-center gap-3 rounded-lg px-2 py-2 text-sm text-comply-text-secondary transition-all hover:bg-white/[0.04] hover:text-comply-text-primary lg:px-3"
+            className="group flex items-center gap-3 rounded-md px-2 py-2 text-sm text-comply-text-secondary transition-colors hover:bg-white/[0.04] hover:text-comply-text-primary lg:px-3"
           >
             <IconHome
               size={18}
               stroke={1.75}
-              className="shrink-0 text-comply-text-tertiary group-hover:text-comply-purple-border"
+              className="shrink-0 text-comply-text-tertiary group-hover:text-comply-text-secondary"
             />
             <span className="hidden truncate lg:inline">Website</span>
           </Link>

@@ -307,7 +307,7 @@ export function SettingsPageContent({
         />
         <div className="relative grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
           <div className="flex items-start gap-4">
-            <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg border border-comply-purple-border/50 bg-comply-purple/20 shadow-[0_0_24px_-4px_rgba(83,74,183,0.5)]">
+            <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg border border-comply-green/40 bg-comply-green/15">
               <IconShieldCheck size={28} className="text-comply-purple-border" stroke={1.5} />
             </span>
             <div>

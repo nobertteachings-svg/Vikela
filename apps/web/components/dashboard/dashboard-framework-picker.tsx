@@ -70,8 +70,8 @@ function FrameworkChip({
       className={cn(
         "relative flex w-full flex-col rounded-md border px-3 py-2.5 text-left transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-60",
         fw.enrolled
-          ? "border-comply-purple-border/60 bg-comply-purple/15 shadow-[0_0_20px_-8px_rgba(83,74,183,0.45)]"
-          : "border-white/[0.08] bg-black/25 hover:border-white/[0.14]"
+          ? "border-comply-green/40 bg-comply-green/10"
+          : "border-[var(--border)] bg-[var(--bg-card)] hover:border-[var(--border-strong)]"
       )}
     >
       <div className="flex items-start justify-between gap-2">
@@ -84,7 +84,7 @@ function FrameworkChip({
             "shrink-0 rounded-sm border px-1.5 py-0.5 text-[9px] font-medium uppercase tracking-wide",
             fw.enrolled
               ? "border-[var(--green-dark)] bg-[var(--green)] text-[var(--green-light)]"
-              : "border-white/[0.1] text-comply-muted"
+              : "border-[var(--border)] text-comply-muted"
           )}
         >
           {fw.enrolled ? "On" : "Add"}
@@ -92,17 +92,17 @@ function FrameworkChip({
       </div>
       <div className="mt-2 flex flex-wrap gap-1">
         {fw.recommended && (
-          <span className="rounded-sm border border-comply-purple-border/40 bg-comply-purple/10 px-1.5 py-0.5 text-[9px] text-comply-purple-light">
+          <span className="rounded-sm border border-comply-green/30 bg-comply-green/10 px-1.5 py-0.5 text-[9px] text-comply-green">
             Popular
           </span>
         )}
         {fw.isNew && (
-          <span className="rounded-sm border border-comply-amber-dark/40 bg-comply-amber-light/20 px-1.5 py-0.5 text-[9px] text-comply-amber-text">
+          <span className="rounded-sm border border-comply-amber/40 bg-comply-amber/10 px-1.5 py-0.5 text-[9px] text-comply-amber">
             New
           </span>
         )}
         {fw.enrolled && fw.score > 0 && (
-          <span className="rounded-sm bg-comply-purple/10 px-1.5 py-0.5 font-mono text-[9px] text-comply-purple-light">
+          <span className="rounded-sm bg-comply-green/10 px-1.5 py-0.5 font-mono text-[9px] text-comply-green">
             {fw.score}%
           </span>
         )}

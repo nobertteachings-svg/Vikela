@@ -2,10 +2,10 @@ import { cn } from "@/lib/utils";
 
 const accentMap = {
   red: "text-comply-red",
-  green: "text-comply-green-text",
-  purple: "text-comply-purple",
-  amber: "text-comply-amber-text",
-  dark: "text-comply-text-dark",
+  green: "text-comply-green",
+  purple: "text-comply-green",
+  amber: "text-comply-amber",
+  dark: "text-comply-text-primary",
 } as const;
 
 export function StatCard({
@@ -20,16 +20,12 @@ export function StatCard({
   hint?: React.ReactNode;
 }) {
   return (
-    <div className="comply-stat group">
-      <div
-        className="absolute -right-6 -top-6 h-24 w-24 rounded-full transition-transform group-hover:scale-110"
-        style={{ backgroundColor: "color-mix(in srgb, var(--purple) 8%, transparent)" }}
-      />
-      <p className="comply-stat-label relative">{label}</p>
-      <p className={cn("comply-stat-value relative", accentMap[accent])}>{value}</p>
-      {hint != null && hint !== "" && (
-        <p className="relative mt-1 text-xs text-comply-text-tertiary">{hint}</p>
-      )}
+    <div className="comply-stat">
+      <p className="comply-stat-label">{label}</p>
+      <p className={cn("comply-stat-value", accentMap[accent])}>{value}</p>
+      {hint != null && hint !== "" ? (
+        <p className="mt-1 text-xs text-comply-text-tertiary">{hint}</p>
+      ) : null}
     </div>
   );
 }
