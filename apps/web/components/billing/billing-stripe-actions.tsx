@@ -2,17 +2,20 @@
 
 import { useState } from "react";
 import { apiPost } from "@/lib/api";
+import type { BillingInterval } from "@/lib/billing-plans";
 
-type CheckoutPlan = "STARTER" | "GROWTH";
+type CheckoutPlan = "SOLO" | "STARTER" | "GROWTH";
 
 export function BillingStripeActions({
   stripeConfigured,
   currentPlan,
   hasStripeSubscription = false,
+  interval = "monthly",
 }: {
   stripeConfigured: boolean;
   currentPlan: string;
   hasStripeSubscription?: boolean;
+  interval?: BillingInterval;
 }) {
   const [loading, setLoading] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
@@ -27,7 +30,7 @@ export function BillingStripeActions({
     try {
       const result = await apiPost<{ url: string; via?: string; message?: string }>(
         "/api/v1/billing/checkout",
-        { plan }
+        { plan, interval }
       );
       if (result.url) {
         window.location.href = result.url;
@@ -65,26 +68,37 @@ export function BillingStripeActions({
   if (!stripeConfigured) return null;
 
   const plan = currentPlan.toUpperCase();
+  const showSolo = plan !== "SOLO" || !hasStripeSubscription;
   const showStarter = plan !== "STARTER" || !hasStripeSubscription;
   const showGrowth = plan !== "GROWTH" || !hasStripeSubscription;
-  const starterLabel =
-    plan === "STARTER" && !hasStripeSubscription
-      ? "Activate Starter"
-      : hasStripeSubscription
-        ? "Switch to Starter"
-        : "Upgrade to Starter";
-  const growthLabel =
-    plan === "GROWTH" && !hasStripeSubscription
-      ? "Activate Growth"
-      : hasStripeSubscription && plan === "STARTER"
-        ? "Upgrade to Growth"
-        : hasStripeSubscription
-          ? "Switch to Growth"
-          : "Upgrade to Growth";
+
+  function upgradeLabel(target: CheckoutPlan, name: string): string {
+    if (plan === target && !hasStripeSubscription) return `Activate ${name}`;
+    if (hasStripeSubscription) {
+      const rank = { FREE: 0, SOLO: 1, STARTER: 2, GROWTH: 3, ENTERPRISE: 4 } as Record<
+        string,
+        number
+      >;
+      const currentRank = rank[plan] ?? 0;
+      const targetRank = rank[target] ?? 0;
+      return targetRank > currentRank ? `Upgrade to ${name}` : `Switch to ${name}`;
+    }
+    return `Upgrade to ${name}`;
+  }
 
   return (
     <div className="flex flex-col items-end gap-2">
       <div className="flex flex-wrap justify-end gap-2">
+        {showSolo ? (
+          <button
+            type="button"
+            disabled={loading !== null}
+            onClick={() => void checkout("SOLO")}
+            className="comply-btn-secondary text-sm"
+          >
+            {loading === "SOLO" ? "Loading…" : upgradeLabel("SOLO", "Solo")}
+          </button>
+        ) : null}
         {showStarter ? (
           <button
             type="button"
@@ -92,7 +106,7 @@ export function BillingStripeActions({
             onClick={() => void checkout("STARTER")}
             className="comply-btn-secondary text-sm"
           >
-            {loading === "STARTER" ? "Loading…" : starterLabel}
+            {loading === "STARTER" ? "Loading…" : upgradeLabel("STARTER", "Starter")}
           </button>
         ) : null}
         {showGrowth ? (
@@ -102,7 +116,7 @@ export function BillingStripeActions({
             onClick={() => void checkout("GROWTH")}
             className="comply-btn-primary text-sm"
           >
-            {loading === "GROWTH" ? "Loading…" : growthLabel}
+            {loading === "GROWTH" ? "Loading…" : upgradeLabel("GROWTH", "Growth")}
           </button>
         ) : null}
         <button
@@ -129,11 +143,13 @@ export function BillingPlanCheckoutButton({
   label,
   stripeConfigured,
   disabled,
+  interval = "monthly",
 }: {
   plan: CheckoutPlan;
   label: string;
   stripeConfigured: boolean;
   disabled?: boolean;
+  interval?: BillingInterval;
 }) {
   const [loading, setLoading] = useState(false);
 
@@ -141,7 +157,10 @@ export function BillingPlanCheckoutButton({
     if (!stripeConfigured || disabled) return;
     setLoading(true);
     try {
-      const result = await apiPost<{ url: string }>("/api/v1/billing/checkout", { plan });
+      const result = await apiPost<{ url: string }>("/api/v1/billing/checkout", {
+        plan,
+        interval,
+      });
       if (result.url) window.location.href = result.url;
     } catch (e) {
       alert(e instanceof Error ? e.message : "Checkout failed");

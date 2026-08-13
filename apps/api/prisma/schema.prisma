@@ -9,16 +9,23 @@ datasource db {
 }
 
 model Organization {
-  id                   String   @id @default(cuid())
+  id                   String         @id @default(cuid())
   name                 String
-  slug                 String   @unique
-  clerkOrgId           String   @unique
-  plan                 Plan     @default(FREE)
-  stripeCustomerId     String?  @unique
+  slug                 String         @unique
+  clerkOrgId           String         @unique
+  plan                 Plan           @default(FREE)
+  /** Stripe subscription status mirror — source of truth for paid access. */
+  billingStatus        BillingStatus  @default(FREE)
+  /** STRIPE = webhook-driven; MANUAL = sales/Enterprise override (webhooks must not clobber). */
+  planSource           PlanSource     @default(STRIPE)
+  /** monthly | annual when billed via Stripe; null for free/manual. */
+  billingInterval      String?
+  currentPeriodEnd     DateTime?
+  stripeCustomerId     String?        @unique
   stripeSubscriptionId String?
   settings             Json?
-  createdAt            DateTime @default(now())
-  updatedAt            DateTime @updatedAt
+  createdAt            DateTime       @default(now())
+  updatedAt            DateTime       @updatedAt
 
   members              Member[]
   integrations         Integration[]
@@ -284,6 +291,8 @@ model Evidence {
   fileUrl         String?
   fileKey         String?
   mimeType        String?
+  /** Uploaded file size in bytes (null for metadata-only evidence). */
+  sizeBytes       Int?
   collectedAt     DateTime       @default(now())
   expiresAt       DateTime?
   isAutoCollected Boolean        @default(false)
@@ -521,9 +530,24 @@ model Risk {
 
 enum Plan {
   FREE
+  SOLO
   STARTER
   GROWTH
   ENTERPRISE
+}
+
+enum BillingStatus {
+  FREE
+  TRIALING
+  ACTIVE
+  PAST_DUE
+  CANCELED
+  COMPED
+}
+
+enum PlanSource {
+  STRIPE
+  MANUAL
 }
 
 enum Role {

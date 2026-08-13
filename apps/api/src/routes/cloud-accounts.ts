@@ -6,6 +6,7 @@ import { executeCloudScan } from "../services/scanner/execute-cloud-scan.js";
 import { requireOrganization } from "../lib/org-context.js";
 import { requireMutation, requireRead } from "../lib/authorization.js";
 import { assertCanEnqueueScan } from "../lib/plan-limits.js";
+import { assertBillingAllowsUsage } from "../lib/plan-features.js";
 
 export const cloudAccountsRoutes: FastifyPluginAsync = async (app) => {
   app.get("/cloud-accounts", async (req, reply) => {
@@ -73,6 +74,7 @@ export const cloudAccountsRoutes: FastifyPluginAsync = async (app) => {
     }
 
     try {
+      assertBillingAllowsUsage(org);
       await assertCanEnqueueScan(org.id, org.plan);
     } catch (e) {
       const status = (e as { statusCode?: number }).statusCode ?? 402;

@@ -84,7 +84,7 @@ export async function connectGrafanaAccount(params: {
     externalId = login ? `${new URL(baseUrl).host}:${login}` : new URL(baseUrl).host;
   }
 
-  await gateNewProviderConnection(org.id, org.plan, "GRAFANA");
+  await gateNewProviderConnection(org, "GRAFANA");
 
   const metadata = { baseUrl, orgName };
   const displayName =

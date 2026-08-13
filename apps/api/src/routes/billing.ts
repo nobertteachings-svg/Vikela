@@ -3,22 +3,36 @@ import type { Plan } from "@prisma/client";
 import { ok, err } from "../lib/response.js";
 import { requireOrganization } from "../lib/org-context.js";
 import { prisma } from "../lib/prisma.js";
-import { getStripe, priceIdForPlan, stripeEnabled } from "../lib/stripe.js";
+import {
+  getStripe,
+  isStripeBillablePlan,
+  priceIdForPlan,
+  stripeEnabled,
+  type BillingInterval,
+} from "../lib/stripe.js";
 import { getOrgUsage, getPlanLimits } from "../lib/plan-limits.js";
+import { planHasFeature } from "../lib/plan-features.js";
 import { requireAdmin, requireRead } from "../lib/authorization.js";
 import { getAppUrl } from "../lib/app-url.js";
 
 const PLAN_LABELS: Record<string, string> = {
   FREE: "Free",
+  SOLO: "Solo",
   STARTER: "Starter",
   GROWTH: "Growth",
   ENTERPRISE: "Enterprise",
 };
 
-function defaultBillingStatus(plan: Plan, stripeSubscriptionId: string | null): string {
-  if (stripeSubscriptionId) return "active";
-  // Plan may be seeded/comped without a Stripe subscription — don't imply payment is live.
-  return plan === "FREE" ? "free" : "comped";
+function defaultBillingStatus(org: {
+  plan: Plan;
+  billingStatus: string;
+  stripeSubscriptionId: string | null;
+}): string {
+  if (org.billingStatus && org.billingStatus !== "FREE") {
+    return org.billingStatus.toLowerCase();
+  }
+  if (org.stripeSubscriptionId) return "active";
+  return org.plan === "FREE" ? "free" : "comped";
 }
 
 /** Prefer browser Origin so local checkout returns to localhost, not a stale APP_URL tunnel. */
@@ -53,10 +67,11 @@ export const billingRoutes: FastifyPluginAsync = async (app) => {
     }> = [];
     let paymentMethod: { brand: string; last4: string; expMonth: number; expYear: number } | null =
       null;
-    let subscriptionStatus = defaultBillingStatus(org.plan, org.stripeSubscriptionId);
-    let renewalDate: string | null = null;
+    let subscriptionStatus = defaultBillingStatus(org);
+    let renewalDate: string | null = org.currentPeriodEnd?.toISOString() ?? null;
     let renewalAmountCents: number | null = null;
     let billingEmail: string | null = null;
+    let billingCycle = org.billingInterval === "annual" ? "annual" : "monthly";
 
     if (stripeEnabled()) {
       try {
@@ -69,6 +84,9 @@ export const billingRoutes: FastifyPluginAsync = async (app) => {
           subscriptionStatus = sub.status;
           renewalDate = new Date(sub.current_period_end * 1000).toISOString();
           renewalAmountCents = sub.items.data[0]?.price?.unit_amount ?? null;
+          const interval = sub.items.data[0]?.price?.recurring?.interval;
+          if (interval === "year") billingCycle = "annual";
+          if (interval === "month") billingCycle = "monthly";
 
           const subPm = sub.default_payment_method;
           if (subPm && typeof subPm !== "string" && subPm.type === "card" && subPm.card) {
@@ -157,8 +175,10 @@ export const billingRoutes: FastifyPluginAsync = async (app) => {
         plan: org.plan,
         planLabel: PLAN_LABELS[org.plan] ?? org.plan,
         status: subscriptionStatus,
+        billingStatus: org.billingStatus,
+        planSource: org.planSource,
         seats: usage.seats,
-        billingCycle: "monthly",
+        billingCycle,
         renewalDate,
         nextInvoiceDate: renewalDate ? renewalDate.slice(0, 10) : null,
         renewalAmountCents,
@@ -167,6 +187,13 @@ export const billingRoutes: FastifyPluginAsync = async (app) => {
         stripeConfigured: stripeEnabled(),
         stripeCustomerId: org.stripeCustomerId,
         hasStripeSubscription: Boolean(org.stripeSubscriptionId),
+        features: {
+          frameworkDashboards: planHasFeature(org.plan, "framework_dashboards"),
+          copilot: planHasFeature(org.plan, "copilot"),
+          policyGenerator: planHasFeature(org.plan, "policy_generator"),
+          evidenceExports: planHasFeature(org.plan, "evidence_exports"),
+          questionnaires: planHasFeature(org.plan, "questionnaires"),
+        },
         usage: {
           integrations: usage.integrations,
           scans: usage.scans,
@@ -199,11 +226,27 @@ export const billingRoutes: FastifyPluginAsync = async (app) => {
       return reply.status(503).send(err("Stripe is not configured"));
     }
 
-    const body = (req.body as { plan?: Plan }) ?? {};
-    const plan = body.plan ?? "STARTER";
-    const priceId = priceIdForPlan(plan);
+    if (org.planSource === "MANUAL" && org.plan === "ENTERPRISE") {
+      return reply
+        .status(400)
+        .send(err("This workspace is on a negotiated Enterprise plan. Contact sales to change it."));
+    }
+
+    const body = (req.body as { plan?: string; interval?: BillingInterval }) ?? {};
+    const planRaw = (body.plan ?? "STARTER").toUpperCase();
+    if (!isStripeBillablePlan(planRaw)) {
+      return reply.status(400).send(err(`Plan ${planRaw} is not available for self-serve checkout`));
+    }
+    const interval: BillingInterval = body.interval === "annual" ? "annual" : "monthly";
+    const priceId = priceIdForPlan(planRaw, interval);
     if (!priceId) {
-      return reply.status(400).send(err(`No Stripe price configured for plan ${plan}`));
+      return reply
+        .status(400)
+        .send(
+          err(
+            `No Stripe price configured for ${planRaw} (${interval}). Set STRIPE_PRICE_${planRaw}${interval === "annual" ? "_ANNUAL" : ""}.`
+          )
+        );
     }
 
     const stripe = await getStripe();
@@ -242,10 +285,10 @@ export const billingRoutes: FastifyPluginAsync = async (app) => {
       mode: "subscription",
       customer: customerId,
       line_items: [{ price: priceId, quantity: 1 }],
-      success_url: `${returnBase}/billing?checkout=success&plan=${encodeURIComponent(plan)}`,
+      success_url: `${returnBase}/billing?checkout=success&plan=${encodeURIComponent(planRaw)}`,
       cancel_url: `${returnBase}/billing?checkout=cancelled`,
-      metadata: { orgId: org.id, plan },
-      subscription_data: { metadata: { orgId: org.id, plan } },
+      metadata: { orgId: org.id, plan: planRaw, interval },
+      subscription_data: { metadata: { orgId: org.id, plan: planRaw, interval } },
       allow_promotion_codes: true,
     });
 
@@ -290,7 +333,6 @@ export const billingRoutes: FastifyPluginAsync = async (app) => {
     const body = (req.body as { flow?: string }) ?? {};
     const returnUrl = `${billingReturnBase(req)}/billing`;
 
-    // Deep-link into payment method update when requested (Stripe Customer Portal).
     if (body.flow === "payment_method_update") {
       try {
         const session = await stripe.billingPortal.sessions.create({

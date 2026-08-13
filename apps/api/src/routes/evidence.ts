@@ -12,6 +12,7 @@ import { getClerkAuth } from "../lib/auth.js";
 import { parseAuditDateRange, optionalDateFilter } from "../lib/audit-date-range.js";
 import { streamAuditEvidenceExport } from "../services/evidence/export-audit-package.js";
 import { captureProductEvent } from "../lib/product-events.js";
+import { assertPlanFeature } from "../lib/plan-features.js";
 import type { EvidenceSource, EvidenceType } from "@prisma/client";
 
 const MAX_FILE_BYTES = 10 * 1024 * 1024;
@@ -108,6 +109,13 @@ export const evidenceRoutes: FastifyPluginAsync = async (app) => {
 
     const org = await resolveOrganization(req);
     if (!org) return reply.status(404).send(err("Organization not found"));
+
+    try {
+      assertPlanFeature(org, "evidence_exports");
+    } catch (e) {
+      const status = (e as { statusCode?: number }).statusCode ?? 402;
+      return reply.status(status).send(err(e instanceof Error ? e.message : "Plan upgrade required"));
+    }
 
     const body = req.body as { from?: string; to?: string };
     let range;
@@ -263,6 +271,7 @@ export const evidenceRoutes: FastifyPluginAsync = async (app) => {
         source: "MANUAL",
         fileKey,
         mimeType: storedMime,
+        sizeBytes: buffer?.length ?? null,
         controlId: controlId || undefined,
       },
     });

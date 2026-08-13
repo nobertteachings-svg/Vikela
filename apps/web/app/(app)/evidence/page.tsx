@@ -38,12 +38,20 @@ export default async function EvidencePage({
   let items;
   let coverage;
   let dashboard;
+  let canExportPackage = true;
   try {
-    [items, coverage, dashboard] = await Promise.all([
+    const [evidenceItems, evidenceCoverage, dash, billing] = await Promise.all([
       complianceApi.evidence(period),
       complianceApi.evidenceCoverage(hasPeriod ? period : undefined),
       complianceApi.dashboard(),
+      complianceApi.billing().catch(() => null),
     ]);
+    items = evidenceItems;
+    coverage = evidenceCoverage;
+    dashboard = dash;
+    canExportPackage =
+      billing?.features?.evidenceExports ??
+      (billing ? ["GROWTH", "ENTERPRISE"].includes(billing.plan) : true);
   } catch (e) {
     return (
       <div className="comply-page">
@@ -76,7 +84,7 @@ export default async function EvidencePage({
       </PageHeader>
 
       <Suspense fallback={null}>
-        <AuditPeriodToolbar className="mb-2" />
+        <AuditPeriodToolbar className="mb-2" canExportPackage={canExportPackage} />
       </Suspense>
 
       {dashboard.hasSampleGaps && (

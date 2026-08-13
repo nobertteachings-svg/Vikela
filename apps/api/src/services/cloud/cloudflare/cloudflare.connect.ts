@@ -65,7 +65,7 @@ export async function connectCloudflareAccount(params: {
     account = match;
   }
 
-  await gateNewProviderConnection(org.id, org.plan, "CLOUDFLARE");
+  await gateNewProviderConnection(org, "CLOUDFLARE");
 
   const metadata = { accountId: account.id, accountName: account.name };
 

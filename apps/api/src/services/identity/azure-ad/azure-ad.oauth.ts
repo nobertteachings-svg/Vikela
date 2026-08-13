@@ -103,7 +103,7 @@ export async function handleAzureAdOAuthCallback(
   const org = await prisma.organization.findFirst({ where: { slug: orgSlug } });
   if (!org) throw new Error(`Organization not found: ${orgSlug}`);
 
-  await gateNewProviderConnection(org.id, org.plan, "AZURE_AD");
+  await gateNewProviderConnection(org, "AZURE_AD");
 
   const tokens = await exchangeAzureAdCode(code);
 

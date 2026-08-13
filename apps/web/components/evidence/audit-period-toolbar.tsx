@@ -23,9 +23,14 @@ const INITIAL_PERIOD = defaultPeriod();
 
 type AuditPeriodToolbarProps = {
   className?: string;
+  /** When false, export CTA links to billing (Growth+ feature). */
+  canExportPackage?: boolean;
 };
 
-export function AuditPeriodToolbar({ className }: AuditPeriodToolbarProps) {
+export function AuditPeriodToolbar({
+  className,
+  canExportPackage = true,
+}: AuditPeriodToolbarProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -118,12 +123,18 @@ export function AuditPeriodToolbar({ className }: AuditPeriodToolbarProps) {
           className="rounded-md border border-white/10 bg-white/[0.04] px-3 py-2 text-sm text-comply-text-primary"
         />
       </label>
-      {showExport && (
+      {showExport && canExportPackage ? (
         <ComplyButton variant="secondary" disabled={exporting} onClick={exportPackage}>
           <IconDownload size={18} />
           {exporting ? "Preparing export…" : "Export audit package"}
         </ComplyButton>
-      )}
+      ) : null}
+      {showExport && !canExportPackage ? (
+        <a href="/billing" className="comply-btn-secondary inline-flex h-9 items-center gap-2 px-3 text-xs">
+          <IconDownload size={16} />
+          Export on Growth+
+        </a>
+      ) : null}
       {exporting && (
         <p className="text-xs text-comply-text-tertiary" role="status">
           Building ZIP — this may take a moment for large evidence sets.

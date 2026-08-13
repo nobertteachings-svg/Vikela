@@ -6,6 +6,7 @@ import { scanQueue } from "../jobs/scan.job.js";
 import { resolveOrganization, requireOrganization } from "../lib/org-context.js";
 import { requireAdmin, requireMutation, requireRead } from "../lib/authorization.js";
 import { assertCanEnqueueScan } from "../lib/plan-limits.js";
+import { assertBillingAllowsUsage } from "../lib/plan-features.js";
 
 export const repositoriesRoutes: FastifyPluginAsync = async (app) => {
   app.get("/repositories", async (req, reply) => {
@@ -100,6 +101,7 @@ export const repositoriesRoutes: FastifyPluginAsync = async (app) => {
     }
 
     try {
+      assertBillingAllowsUsage(org);
       await assertCanEnqueueScan(org.id, org.plan);
     } catch (e) {
       const status = (e as { statusCode?: number }).statusCode ?? 402;

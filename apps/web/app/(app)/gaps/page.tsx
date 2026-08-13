@@ -54,12 +54,13 @@ export default async function GapsPage({
   let gaps;
   let dashboard;
   let frameworkName: string | null = null;
+  let canExportPackage = true;
   try {
     if (frameworkSlug) {
       const frameworks = await complianceApi.frameworks();
       frameworkName = frameworks.find((f) => f.slug === frameworkSlug)?.name ?? frameworkSlug;
     }
-    [gaps, dashboard] = await Promise.all([
+    const [gapRows, dash, billing] = await Promise.all([
       complianceApi.gaps({
         status: listStatus,
         severity,
@@ -70,7 +71,13 @@ export default async function GapsPage({
         ...period,
       }),
       complianceApi.dashboard(),
+      complianceApi.billing().catch(() => null),
     ]);
+    gaps = gapRows;
+    dashboard = dash;
+    canExportPackage =
+      billing?.features?.evidenceExports ??
+      (billing ? ["GROWTH", "ENTERPRISE"].includes(billing.plan) : true);
   } catch (e) {
     return (
       <div className="comply-page">
@@ -112,7 +119,7 @@ export default async function GapsPage({
       </PageHeader>
 
       <Suspense fallback={null}>
-        <AuditPeriodToolbar className="mb-4" />
+        <AuditPeriodToolbar className="mb-4" canExportPackage={canExportPackage} />
       </Suspense>
 
       <Suspense fallback={null}>

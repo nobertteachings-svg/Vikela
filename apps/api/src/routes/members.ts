@@ -10,6 +10,7 @@ import {
   requireRead,
 } from "../lib/authorization.js";
 import { assertCanInviteMember } from "../lib/plan-limits.js";
+import { assertBillingAllowsUsage } from "../lib/plan-features.js";
 import { logAuditEvent } from "../lib/audit-log.js";
 import { requireApiAuth, getClerkAuth } from "../lib/auth.js";
 import { parseInviteRole, toClerkRole } from "../lib/clerk-roles.js";
@@ -134,6 +135,7 @@ export const membersRoutes: FastifyPluginAsync = async (app) => {
     }
 
     try {
+      assertBillingAllowsUsage(org);
       await assertCanInviteMember(org.id, org.plan);
     } catch (e) {
       const status = (e as { statusCode?: number }).statusCode ?? 402;

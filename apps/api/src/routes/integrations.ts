@@ -7,6 +7,7 @@ import { resolveOrganization } from "../lib/org-context.js";
 import { isDemoConnectAllowed } from "../lib/auth.js";
 import { requireAdmin, requireRead } from "../lib/authorization.js";
 import { assertCanConnectIntegration } from "../lib/plan-limits.js";
+import { assertBillingAllowsUsage } from "../lib/plan-features.js";
 import { logAuditEvent } from "../lib/audit-log.js";
 import {
   awsPlatformReady,
@@ -116,6 +117,7 @@ export const integrationsRoutes: FastifyPluginAsync = async (app) => {
 
     if (!existing) {
       try {
+        assertBillingAllowsUsage(org);
         await assertCanConnectIntegration(org.id, org.plan, {
           provider: providerId as IntegrationProvider,
         });

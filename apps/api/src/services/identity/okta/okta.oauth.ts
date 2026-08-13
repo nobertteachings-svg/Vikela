@@ -82,7 +82,7 @@ export async function handleOktaOAuthCallback(
   const org = await prisma.organization.findFirst({ where: { slug: orgSlug } });
   if (!org) throw new Error(`Organization not found: ${orgSlug}`);
 
-  await gateNewProviderConnection(org.id, org.plan, "OKTA");
+  await gateNewProviderConnection(org, "OKTA");
 
   const tokens = await exchangeOktaCode(code, domain);
 

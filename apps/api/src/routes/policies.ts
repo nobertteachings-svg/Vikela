@@ -12,6 +12,7 @@ import { getPolicyCoverage } from "../services/policy/coverage.js";
 import { generatePolicyBundle } from "../services/policy/bundle.js";
 import { publishPolicyAsEvidence } from "../services/policy/publish.js";
 import { ingestOrgKnowledge } from "../services/rag/ingest.js";
+import { assertPlanFeature } from "../lib/plan-features.js";
 import type { PolicyStatus, PolicyType } from "@prisma/client";
 import { getClerkAuth } from "../lib/auth.js";
 
@@ -130,6 +131,13 @@ export const policiesRoutes: FastifyPluginAsync = async (app) => {
     const org = await resolveOrganization(req);
     if (!org) return reply.status(404).send(err("Organization not found"));
 
+    try {
+      assertPlanFeature(org, "policy_generator");
+    } catch (e) {
+      const status = (e as { statusCode?: number }).statusCode ?? 402;
+      return reply.status(status).send(err(e instanceof Error ? e.message : "Plan upgrade required"));
+    }
+
     const body = req.body as {
       type: PolicyType;
       industry?: string;
@@ -199,6 +207,13 @@ export const policiesRoutes: FastifyPluginAsync = async (app) => {
     const org = await resolveOrganization(req);
     if (!org) return reply.status(404).send(err("Organization not found"));
 
+    try {
+      assertPlanFeature(org, "policy_generator");
+    } catch (e) {
+      const status = (e as { statusCode?: number }).statusCode ?? 402;
+      return reply.status(status).send(err(e instanceof Error ? e.message : "Plan upgrade required"));
+    }
+
     const body = (req.body as { industry?: string; employeeCount?: string }) ?? {};
     const result = await generatePolicyBundle(org.id, body);
     return reply.send(ok(result));
@@ -214,6 +229,12 @@ export const policiesRoutes: FastifyPluginAsync = async (app) => {
 
     const org = await resolveOrganization(req);
     if (!org) return reply.status(404).send(err("Organization not found"));
+    try {
+      assertPlanFeature(org, "policy_generator");
+    } catch (e) {
+      const status = (e as { statusCode?: number }).statusCode ?? 402;
+      return reply.status(status).send(err(e instanceof Error ? e.message : "Plan upgrade required"));
+    }
     const { id } = req.params as { id: string };
 
     const policy = await prisma.policy.findFirst({

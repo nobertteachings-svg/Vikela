@@ -71,7 +71,7 @@ export async function handleGoogleWorkspaceOAuthCallback(
   const org = await prisma.organization.findFirst({ where: { slug: orgSlug } });
   if (!org) throw new Error(`Organization not found: ${orgSlug}`);
 
-  await gateNewProviderConnection(org.id, org.plan, "GOOGLE_WORKSPACE");
+  await gateNewProviderConnection(org, "GOOGLE_WORKSPACE");
 
   const tokens = await exchangeGoogleWorkspaceCode(code);
 

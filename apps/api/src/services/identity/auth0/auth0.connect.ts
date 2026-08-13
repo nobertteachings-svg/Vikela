@@ -76,7 +76,7 @@ export async function connectAuth0Account(params: {
   const org = await prisma.organization.findFirst({ where: { slug: params.orgSlug } });
   if (!org) throw new Error(`Organization not found: ${params.orgSlug}`);
 
-  await gateNewProviderConnection(org.id, org.plan, "AUTH0");
+  await gateNewProviderConnection(org, "AUTH0");
 
   const accessToken = await fetchAuth0ManagementToken(domain);
 

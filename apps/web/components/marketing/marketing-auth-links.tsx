@@ -72,13 +72,13 @@ export function MarketingAuthLinks({
   return (
     <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
       <Link href="/sign-up" className="btn-purple-cta h-11 px-6 text-sm">
-        Start free assessment
+        Start free
       </Link>
       <a
-        href="#how-it-works"
+        href="#pricing"
         className="inline-flex h-11 items-center justify-center px-4 text-sm text-comply-text-secondary transition-colors hover:text-comply-text-primary"
       >
-        See the workflow
+        View pricing
       </a>
     </div>
   );

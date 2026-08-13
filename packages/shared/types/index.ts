@@ -8,7 +8,7 @@ export type ApiResponse<T> = {
   meta?: Record<string, unknown>;
 };
 
-export type Plan = "FREE" | "STARTER" | "GROWTH" | "ENTERPRISE";
+export type Plan = "FREE" | "SOLO" | "STARTER" | "GROWTH" | "ENTERPRISE";
 export type Role = "OWNER" | "ADMIN" | "MEMBER" | "AUDITOR";
 export type FrameworkStatus = "NOT_STARTED" | "IN_PROGRESS" | "READY" | "CERTIFIED";
 export type ControlStatus = "NOT_STARTED" | "IN_PROGRESS" | "IMPLEMENTED" | "NEEDS_REVIEW";

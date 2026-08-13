@@ -8,6 +8,7 @@ import { executeFullScan } from "../services/scanner/execute-full-scan.js";
 import { resolveOrganization, requireOrganization } from "../lib/org-context.js";
 import { requireMutation, requireRead } from "../lib/authorization.js";
 import { assertCanEnqueueScan } from "../lib/plan-limits.js";
+import { assertBillingAllowsUsage } from "../lib/plan-features.js";
 import { gapsFoundForScan } from "../lib/scan-query.js";
 
 export const scansRoutes: FastifyPluginAsync = async (app) => {
@@ -30,6 +31,7 @@ export const scansRoutes: FastifyPluginAsync = async (app) => {
     }
 
     try {
+      assertBillingAllowsUsage(org);
       await assertCanEnqueueScan(org.id, org.plan);
     } catch (e) {
       const status = (e as { statusCode?: number }).statusCode ?? 402;
@@ -86,6 +88,7 @@ export const scansRoutes: FastifyPluginAsync = async (app) => {
     }
 
     try {
+      assertBillingAllowsUsage(org);
       await assertCanEnqueueScan(org.id, org.plan);
     } catch (e) {
       const status = (e as { statusCode?: number }).statusCode ?? 402;
@@ -127,6 +130,7 @@ export const scansRoutes: FastifyPluginAsync = async (app) => {
     if (!org) return reply.status(404).send(err("Organization not found"));
 
     try {
+      assertBillingAllowsUsage(org);
       await assertCanEnqueueScan(org.id, org.plan);
     } catch (e) {
       const status = (e as { statusCode?: number }).statusCode ?? 402;

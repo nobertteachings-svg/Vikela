@@ -10,6 +10,7 @@ import { ensureOrganizationFromSession } from "../lib/clerk-org-provision.js";
 import { ensureMembershipFromSession } from "../lib/membership.js";
 import { requireAdmin } from "../lib/authorization.js";
 import { assertCanConnectIntegration } from "../lib/plan-limits.js";
+import { assertBillingAllowsUsage } from "../lib/plan-features.js";
 import { logAuditEvent } from "../lib/audit-log.js";
 
 function loadCloudFormationTemplate(): string {
@@ -83,6 +84,7 @@ export const awsRoutes: FastifyPluginAsync = async (app) => {
     }
 
     try {
+      assertBillingAllowsUsage(org);
       await assertCanConnectIntegration(org.id, org.plan, { provider: "AWS" });
     } catch (e) {
       const status = (e as { statusCode?: number }).statusCode ?? 402;

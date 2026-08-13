@@ -62,7 +62,7 @@ export async function connectDatadogAccount(params: {
     throw new Error("Datadog reported the API key as invalid");
   }
 
-  await gateNewProviderConnection(org.id, org.plan, "DATADOG");
+  await gateNewProviderConnection(org, "DATADOG");
 
   const metadata = { site };
   const displayName = params.name?.trim() || `Datadog (${site})`;

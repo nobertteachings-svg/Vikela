@@ -17,7 +17,13 @@ type PolicyEditorPayload = {
   updatedAt: string;
 };
 
-export function PoliciesClient({ initialPolicies }: { initialPolicies: PolicyListItem[] }) {
+export function PoliciesClient({
+  initialPolicies,
+  canGenerate = true,
+}: {
+  initialPolicies: PolicyListItem[];
+  canGenerate?: boolean;
+}) {
   const [policies, setPolicies] = useState(initialPolicies);
   const [selectedId, setSelectedId] = useState(initialPolicies[0]?.id ?? "");
   const [content, setContent] = useState("");
@@ -216,10 +222,22 @@ export function PoliciesClient({ initialPolicies }: { initialPolicies: PolicyLis
         description="Generate, edit, and publish policies mapped to your frameworks."
         className="border-b-0 pb-0"
       >
-        <ComplyButton variant="secondary" onClick={generateBundle} disabled={working}>
-          {generatingBundle ? "Generating…" : "Generate bundle"}
-        </ComplyButton>
+        {canGenerate ? (
+          <ComplyButton variant="secondary" onClick={generateBundle} disabled={working}>
+            {generatingBundle ? "Generating…" : "Generate bundle"}
+          </ComplyButton>
+        ) : (
+          <a href="/billing" className="comply-btn-secondary text-sm">
+            Upgrade for generator
+          </a>
+        )}
       </PageHeader>
+
+      {!canGenerate ? (
+        <p className="rounded-lg border border-comply-amber/30 bg-comply-amber/10 px-4 py-3 text-sm text-comply-amber-text">
+          Policy generation requires Growth or higher. You can still view and edit existing drafts.
+        </p>
+      ) : null}
 
       {message ? (
         <p
@@ -292,7 +310,7 @@ export function PoliciesClient({ initialPolicies }: { initialPolicies: PolicyLis
               variant="secondary"
               className="text-xs"
               onClick={regenerate}
-              disabled={!selectedId || working}
+              disabled={!selectedId || working || !canGenerate}
             >
               {regenerating ? "Regenerating…" : "Regenerate with AI"}
             </ComplyButton>

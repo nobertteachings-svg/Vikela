@@ -8,8 +8,13 @@ export type PlanLimitConfig = {
   evidenceStorageMb: number;
 };
 
+/**
+ * Entitlement caps aligned to public pricing:
+ * Free $0 · Solo $59 · Starter $329 · Growth $949 · Enterprise custom
+ */
 export const PLAN_LIMITS: Record<Plan, PlanLimitConfig> = {
   FREE: { seats: 3, integrations: 1, scansPerMonth: 5, evidenceStorageMb: 100 },
+  SOLO: { seats: 3, integrations: 2, scansPerMonth: 15, evidenceStorageMb: 256 },
   STARTER: { seats: 10, integrations: 5, scansPerMonth: 50, evidenceStorageMb: 1024 },
   GROWTH: { seats: 25, integrations: 20, scansPerMonth: 500, evidenceStorageMb: 5120 },
   ENTERPRISE: { seats: 100, integrations: 999, scansPerMonth: 99999, evidenceStorageMb: 51200 },
@@ -47,7 +52,6 @@ export async function assertCanInviteMember(orgId: string, plan: Plan): Promise<
       where: { orgId, acceptedAt: null, expiresAt: { gt: new Date() } },
     }),
   ]);
-  // Pending invites reserve seats until they expire or are revoked.
   if (memberCount + pendingCount >= limits.seats) {
     planLimitError(
       `Seat limit reached (${limits.seats} on ${plan}: ${memberCount} members + ${pendingCount} pending invites). Upgrade your plan or revoke an invite.`
@@ -103,26 +107,33 @@ export async function getOrgUsage(orgId: string, plan: Plan) {
   const limits = getPlanLimits(plan);
   const startOfMonth = utcStartOfMonth();
 
-  const [members, activeProviders, scansThisMonth, evidenceCount, openGaps] =
+  const [memberCount, pendingCount, activeProviders, scansThisMonth, evidenceCount, storageAgg, openGaps] =
     await Promise.all([
       prisma.member.count({ where: { orgId } }),
+      prisma.pendingInvite.count({
+        where: { orgId, acceptedAt: null, expiresAt: { gt: new Date() } },
+      }),
       prisma.integration.groupBy({
         by: ["provider"],
         where: { orgId, isActive: true },
       }),
       prisma.scan.count({ where: billableScanWhere(orgId, startOfMonth) }),
       prisma.evidence.count({ where: { orgId } }),
-      prisma.gap.count({ where: { orgId, status: "OPEN" } }),
+      prisma.evidence.aggregate({
+        where: { orgId },
+        _sum: { sizeBytes: true },
+      }),
+      prisma.gap.count({ where: { orgId, status: "OPEN", isSample: false } }),
     ]);
 
-  const integrations = activeProviders.length;
+  const storageMbUsed = Math.round(((storageAgg._sum.sizeBytes ?? 0) / (1024 * 1024)) * 10) / 10;
 
   return {
-    seats: { used: members, limit: limits.seats },
-    integrations: { used: integrations, limit: limits.integrations },
+    seats: { used: memberCount + pendingCount, limit: limits.seats },
+    integrations: { used: activeProviders.length, limit: limits.integrations },
     scans: { used: scansThisMonth, limit: limits.scansPerMonth },
     evidence: { used: evidenceCount, limit: null as number | null },
+    storageMb: { used: storageMbUsed, limit: limits.evidenceStorageMb },
     openGaps,
-    storageMb: { used: evidenceCount * 2, limit: limits.evidenceStorageMb },
   };
 }

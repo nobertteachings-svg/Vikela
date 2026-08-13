@@ -8,9 +8,18 @@ import "./globals.css";
 const hasClerk = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
 
 export const metadata: Metadata = {
-  title: "Vikela — Universal Compliance Engine",
+  title: {
+    default: "Vikela — Audit-ready in weeks, not months",
+    template: "%s · Vikela",
+  },
   description:
-    "Map code, cloud, and identity findings to SOC 2, HIPAA, ISO 27001, GDPR, PCI DSS, FedRAMP, CMMC, and more—one platform for your entire compliance program.",
+    "Compliance automation for startups and scale-ups. Connect your stack, see SOC 2 / ISO 27001 / HIPAA gaps in minutes, and close the deal stuck on a security questionnaire. Self-serve, transparent pricing, free to start.",
+  openGraph: {
+    title: "Vikela — Get audit-ready in weeks, not months",
+    description:
+      "Compliance automation built for startup and scale-up teams. Self-serve. Transparent pricing. Free to start.",
+    type: "website",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

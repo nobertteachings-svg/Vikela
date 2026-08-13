@@ -17,7 +17,7 @@ export async function handleBitbucketOAuthCallback(code: string, orgSlug: string
   const org = await prisma.organization.findFirst({ where: { slug: orgSlug } });
   if (!org) throw new Error(`Organization not found: ${orgSlug}`);
 
-  await gateNewProviderConnection(org.id, org.plan, "BITBUCKET");
+  await gateNewProviderConnection(org, "BITBUCKET");
 
   const redirectUri =
     process.env.BITBUCKET_REDIRECT_URI ??

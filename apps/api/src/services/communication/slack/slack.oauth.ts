@@ -82,7 +82,7 @@ export async function handleSlackOAuthCallback(
   const teamId = tokenJson.team?.id;
   if (!teamId) throw new Error("Slack OAuth response missing team id");
 
-  await gateNewProviderConnection(org.id, org.plan, "SLACK");
+  await gateNewProviderConnection(org, "SLACK");
 
   const teamName = tokenJson.team?.name;
   const metadata = {

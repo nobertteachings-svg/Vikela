@@ -48,3 +48,9 @@ apps/api/uploads
 
 playwright/.clerk
 clerk-nextjs
+
+# Local Railway env export (secrets)
+.railway-deploy/
+
+# Playwright / local test artifacts
+test-results/

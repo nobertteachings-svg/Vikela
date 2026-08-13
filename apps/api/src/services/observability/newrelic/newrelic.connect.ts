@@ -103,7 +103,7 @@ export async function connectNewRelicAccount(params: {
     account = match;
   }
 
-  await gateNewProviderConnection(org.id, org.plan, "NEW_RELIC");
+  await gateNewProviderConnection(org, "NEW_RELIC");
 
   const accountId = String(account.id);
   const metadata = {

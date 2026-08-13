@@ -54,7 +54,7 @@ export async function handleGitHubInstallationCallback(
     );
   }
 
-  await gateNewProviderConnection(org.id, org.plan, "GITHUB");
+  await gateNewProviderConnection(org, "GITHUB");
 
   const accessToken = await getInstallationAccessToken(installationId);
   const accountLogin = await getInstallationAccountLogin(installationId);
@@ -99,7 +99,7 @@ export async function handleGitHubOAuthCallback(
 ) {
   const org = await resolveOrg(orgSlug, clerkOrgId);
 
-  await gateNewProviderConnection(org.id, org.plan, "GITHUB");
+  await gateNewProviderConnection(org, "GITHUB");
 
   const { accessToken, scope } = await exchangeGitHubOAuthCode(code);
 

@@ -74,7 +74,7 @@ export async function connectMicrosoftTeamsAccount(params: {
   if (!org) throw new Error(`Organization not found: ${params.orgSlug}`);
 
   await probeWebhook(webhookUrl);
-  await gateNewProviderConnection(org.id, org.plan, "MICROSOFT_TEAMS");
+  await gateNewProviderConnection(org, "MICROSOFT_TEAMS");
 
   const externalId = createHash("sha256").update(webhookUrl).digest("hex").slice(0, 32);
   const displayName = params.name?.trim() || "Microsoft Teams";

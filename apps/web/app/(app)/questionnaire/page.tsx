@@ -1,5 +1,6 @@
 import { ApiError } from "@/components/comply/api-error";
 import { PageHeader } from "@/components/comply/page-header";
+import { PlanUpgradePanel } from "@/components/billing/plan-upgrade-panel";
 import { QuestionnairePageContent } from "@/components/questionnaire/questionnaire-page";
 import { complianceApi } from "@/lib/compliance-api";
 
@@ -12,6 +13,24 @@ export default async function QuestionnairePage({
 }) {
   const vendorId = searchParams?.vendorId;
   try {
+    const billing = await complianceApi.billing().catch(() => null);
+    const allowed =
+      billing?.features?.questionnaires ??
+      (billing ? ["GROWTH", "ENTERPRISE"].includes(billing.plan) : true);
+
+    if (billing && !allowed) {
+      return (
+        <div className="comply-page">
+          <PageHeader
+            eyebrow="Audit"
+            title="Security questionnaire"
+            description="Answer customer questionnaires from your live posture."
+          />
+          <PlanUpgradePanel feature="questionnaires" currentPlan={billing.plan} />
+        </div>
+      );
+    }
+
     const list = await complianceApi.questionnaires(vendorId);
     const byQid = searchParams?.qid
       ? list.find((q) => q.id === searchParams.qid) ?? null

@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import {
   IconAlertTriangle,
   IconCircleCheck,
@@ -10,7 +11,12 @@ import { Card, CardBody, CardHeader } from "@/components/comply/card";
 import { DataTable } from "@/components/comply/data-table";
 import { PageHeader } from "@/components/comply/page-header";
 import { StatCard } from "@/components/comply/stat-card";
-import { billingPlans, type BillingPlanId } from "@/lib/billing-plans";
+import {
+  billingPlans,
+  displayPlanPrice,
+  type BillingInterval,
+  type BillingPlanId,
+} from "@/lib/billing-plans";
 import { cn } from "@/lib/utils";
 import { BillingCheckoutBanner } from "./billing-checkout-banner";
 import {
@@ -141,6 +147,7 @@ export function BillingPageContent({
 }: {
   subscription: BillingSubscriptionProp;
 }) {
+  const [billingInterval, setBillingInterval] = useState<BillingInterval>("monthly");
   const planId = subscription.plan.toLowerCase() as BillingPlanId;
   const seatLimit = subscription.seats.limit ?? subscription.seats.included ?? 3;
   const usage = subscription.usage;
@@ -210,6 +217,7 @@ export function BillingPageContent({
           stripeConfigured={subscription.stripeConfigured ?? false}
           currentPlan={subscription.plan}
           hasStripeSubscription={hasStripeSubscription}
+          interval={billingInterval}
         />
       </PageHeader>
 
@@ -352,21 +360,56 @@ export function BillingPageContent({
       </div>
 
       <div>
-        <div>
-          <SectionLabel>Plans</SectionLabel>
-          <h2 className="mt-2 text-lg font-medium tracking-tight text-comply-text-primary">
-            Compare plans
-          </h2>
-          <p className="mt-1 text-sm text-comply-text-secondary">
-            Feature comparison by tier.{" "}
-            {subscription.stripeConfigured
-              ? "Choose a plan below or use the actions at the top of this page."
-              : "Contact sales for paid plans in this environment."}
-          </p>
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <SectionLabel>Plans</SectionLabel>
+            <h2 className="mt-2 text-lg font-medium tracking-tight text-comply-text-primary">
+              Compare plans
+            </h2>
+            <p className="mt-1 text-sm text-comply-text-secondary">
+              Feature comparison by tier.{" "}
+              {subscription.stripeConfigured
+                ? "Choose a plan below or use the actions at the top of this page."
+                : "Contact sales for paid plans in this environment."}
+            </p>
+          </div>
+          {subscription.stripeConfigured ? (
+            <div
+              className="inline-flex rounded-md border border-white/[0.1] bg-black/20 p-0.5"
+              role="group"
+              aria-label="Billing interval"
+            >
+              <button
+                type="button"
+                onClick={() => setBillingInterval("monthly")}
+                className={cn(
+                  "rounded-sm px-3 py-1.5 text-xs font-medium transition-colors",
+                  billingInterval === "monthly"
+                    ? "bg-comply-purple/30 text-comply-purple-border"
+                    : "text-comply-text-tertiary hover:text-comply-text-secondary"
+                )}
+              >
+                Monthly
+              </button>
+              <button
+                type="button"
+                onClick={() => setBillingInterval("annual")}
+                className={cn(
+                  "rounded-sm px-3 py-1.5 text-xs font-medium transition-colors",
+                  billingInterval === "annual"
+                    ? "bg-comply-purple/30 text-comply-purple-border"
+                    : "text-comply-text-tertiary hover:text-comply-text-secondary"
+                )}
+              >
+                Annual · save ~17%
+              </button>
+            </div>
+          ) : null}
         </div>
-        <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-5">
           {billingPlans.map((plan) => {
             const isCurrent = plan.id === planId;
+            const shown = displayPlanPrice(plan, billingInterval);
             const showPrice = subscription.stripeConfigured && plan.price != null;
             const priceLabel = !showPrice
               ? isCurrent
@@ -374,11 +417,19 @@ export function BillingPageContent({
                 : plan.id === "enterprise"
                   ? "Custom"
                   : "—"
-              : plan.price === 0
+              : shown.amount === 0
                 ? "$0"
-                : `$${plan.price}`;
+                : shown.amount != null
+                  ? `$${shown.amount}`
+                  : "Custom";
             const checkoutPlan =
-              plan.id === "starter" ? "STARTER" : plan.id === "growth" ? "GROWTH" : null;
+              plan.id === "solo"
+                ? "SOLO"
+                : plan.id === "starter"
+                  ? "STARTER"
+                  : plan.id === "growth"
+                    ? "GROWTH"
+                    : null;
             const needsActivation = isCurrent && !hasStripeSubscription && checkoutPlan != null;
             const canCheckout =
               Boolean(subscription.stripeConfigured) &&
@@ -402,9 +453,9 @@ export function BillingPageContent({
                 <p className="text-sm font-medium text-comply-text-secondary">{plan.name}</p>
                 <p className="mt-2 font-mono text-2xl tracking-tight text-comply-text-primary">
                   {priceLabel}
-                  {showPrice && plan.price != null && plan.price > 0 && (
+                  {showPrice && shown.amount != null && shown.amount > 0 && (
                     <span className="text-sm font-sans font-normal text-comply-text-tertiary">
-                      {plan.period}
+                      {shown.suffix}
                     </span>
                   )}
                 </p>
@@ -422,6 +473,7 @@ export function BillingPageContent({
                 ) : canCheckout && checkoutPlan ? (
                   <BillingPlanCheckoutButton
                     plan={checkoutPlan}
+                    interval={billingInterval}
                     label={
                       needsActivation
                         ? `Activate ${plan.name}`

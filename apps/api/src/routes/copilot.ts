@@ -10,12 +10,24 @@ import { createThread, getThread, listThreads } from "../services/copilot/thread
 import { ingestOrgKnowledge } from "../services/rag/ingest.js";
 import { resolveOrganization } from "../lib/org-context.js";
 import { requireAdmin, requireMutation, requireRead } from "../lib/authorization.js";
+import { assertPlanFeature } from "../lib/plan-features.js";
+
+function featureDenied(e: unknown) {
+  const status = (e as { statusCode?: number }).statusCode ?? 402;
+  return { status, message: e instanceof Error ? e.message : "Plan upgrade required" };
+}
 
 export const copilotRoutes: FastifyPluginAsync = async (app) => {
   app.get("/copilot/suggestions", async (req, reply) => {
     await requireRead(req);
     const org = await resolveOrganization(req);
     if (!org) return reply.status(404).send(err("Organization not found"));
+    try {
+      assertPlanFeature(org, "copilot");
+    } catch (e) {
+      const { status, message } = featureDenied(e);
+      return reply.status(status).send(err(message));
+    }
     const suggestions = await getCopilotSuggestions(org.id);
     return reply.send(ok({ suggestions }));
   });
@@ -48,6 +60,12 @@ export const copilotRoutes: FastifyPluginAsync = async (app) => {
 
     const org = await resolveOrganization(req);
     if (!org) return reply.status(404).send(err("Organization not found"));
+    try {
+      assertPlanFeature(org, "copilot");
+    } catch (e) {
+      const { status, message } = featureDenied(e);
+      return reply.status(status).send(err(message));
+    }
     const body = (req.body as { title?: string }) ?? {};
     const thread = await createThread(org.id, body.title);
     return reply.send(ok({ id: thread.id, title: thread.title }));
@@ -79,6 +97,12 @@ export const copilotRoutes: FastifyPluginAsync = async (app) => {
     await requireRead(req);
     const org = await resolveOrganization(req);
     if (!org) return reply.status(404).send(err("Organization not found"));
+    try {
+      assertPlanFeature(org, "copilot");
+    } catch (e) {
+      const { status, message } = featureDenied(e);
+      return reply.status(status).send(err(message));
+    }
 
     const body = req.body as {
       message: string;
@@ -109,6 +133,12 @@ export const copilotRoutes: FastifyPluginAsync = async (app) => {
     await requireRead(req);
     const org = await resolveOrganization(req);
     if (!org) return reply.status(404).send(err("Organization not found"));
+    try {
+      assertPlanFeature(org, "copilot");
+    } catch (e) {
+      const { status, message } = featureDenied(e);
+      return reply.status(status).send(err(message));
+    }
 
     const body = req.body as {
       message: string;
@@ -154,6 +184,12 @@ export const copilotRoutes: FastifyPluginAsync = async (app) => {
     await requireRead(req);
     const org = await resolveOrganization(req);
     if (!org) return reply.status(404).send(err("Organization not found"));
+    try {
+      assertPlanFeature(org, "copilot");
+    } catch (e) {
+      const { status, message } = featureDenied(e);
+      return reply.status(status).send(err(message));
+    }
     const { gapId } = req.params as { gapId: string };
 
     try {
@@ -174,6 +210,12 @@ export const copilotRoutes: FastifyPluginAsync = async (app) => {
 
     const org = await resolveOrganization(req);
     if (!org) return reply.status(404).send(err("Organization not found"));
+    try {
+      assertPlanFeature(org, "copilot");
+    } catch (e) {
+      const { status, message } = featureDenied(e);
+      return reply.status(status).send(err(message));
+    }
     const count = await ingestOrgKnowledge(org.id);
     return reply.send(ok({ chunks: count }));
   });

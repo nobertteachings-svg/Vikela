@@ -1,11 +1,17 @@
-import type { IntegrationProvider, Plan } from "@prisma/client";
+import type { BillingStatus, IntegrationProvider, Plan, PlanSource } from "@prisma/client";
 import { assertCanConnectIntegration } from "./plan-limits.js";
+import { assertBillingAllowsUsage } from "./plan-features.js";
 
 /** Call before creating a brand-new provider connection (OAuth callbacks). */
 export async function gateNewProviderConnection(
-  orgId: string,
-  plan: Plan,
+  org: {
+    id: string;
+    plan: Plan;
+    billingStatus: BillingStatus;
+    planSource: PlanSource;
+  },
   provider: IntegrationProvider
 ): Promise<void> {
-  await assertCanConnectIntegration(orgId, plan, { provider });
+  assertBillingAllowsUsage(org);
+  await assertCanConnectIntegration(org.id, org.plan, { provider });
 }

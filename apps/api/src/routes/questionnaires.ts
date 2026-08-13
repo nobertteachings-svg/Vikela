@@ -6,6 +6,7 @@ import { requireOrganization } from "../lib/org-context.js";
 import { requireMutation, requireRead } from "../lib/authorization.js";
 import { computeVendorScore } from "../services/vendors/vendor-score.js";
 import { catalogCreateRows } from "../services/questionnaires/catalog.js";
+import { assertPlanFeature } from "../lib/plan-features.js";
 
 function mapItemStatus(s: string): string {
   const map: Record<string, string> = {
@@ -194,6 +195,13 @@ export const questionnairesRoutes: FastifyPluginAsync = async (app) => {
       org = await requireOrganization(req);
     } catch {
       return reply.status(404).send(err("Organization not found"));
+    }
+
+    try {
+      assertPlanFeature(org, "questionnaires");
+    } catch (e) {
+      const status = (e as { statusCode?: number }).statusCode ?? 402;
+      return reply.status(status).send(err(e instanceof Error ? e.message : "Plan upgrade required"));
     }
 
     const body = (req.body as { title?: string; vendorId?: string; forceNew?: boolean }) ?? {};

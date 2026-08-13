@@ -64,7 +64,7 @@ export async function connectPagerDutyAccount(params: {
   if (!org) throw new Error(`Organization not found: ${params.orgSlug}`);
 
   const user = await validatePagerDutyToken(apiToken);
-  await gateNewProviderConnection(org.id, org.plan, "PAGERDUTY");
+  await gateNewProviderConnection(org, "PAGERDUTY");
 
   const metadata = {
     userId: user.id,

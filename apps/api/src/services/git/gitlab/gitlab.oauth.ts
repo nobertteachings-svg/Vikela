@@ -19,7 +19,7 @@ export async function handleGitLabOAuthCallback(code: string, orgSlug: string = 
   const org = await prisma.organization.findFirst({ where: { slug: orgSlug } });
   if (!org) throw new Error(`Organization not found: ${orgSlug}`);
 
-  await gateNewProviderConnection(org.id, org.plan, "GITLAB");
+  await gateNewProviderConnection(org, "GITLAB");
 
   const redirectUri =
     process.env.GITLAB_REDIRECT_URI ??

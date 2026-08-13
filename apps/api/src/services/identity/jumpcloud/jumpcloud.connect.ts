@@ -34,7 +34,7 @@ export async function connectJumpCloudAccount(params: {
     throw new Error(`JumpCloud API error (${res.status})${body ? `: ${body.slice(0, 120)}` : ""}`);
   }
 
-  await gateNewProviderConnection(org.id, org.plan, "JUMPCLOUD");
+  await gateNewProviderConnection(org, "JUMPCLOUD");
 
   const integration = await prisma.integration.upsert({
     where: {

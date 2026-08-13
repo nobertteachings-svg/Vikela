@@ -429,6 +429,13 @@ export const complianceApi = {
       stripeConfigured: boolean;
       stripeCustomerId?: string | null;
       hasStripeSubscription?: boolean;
+      features?: {
+        frameworkDashboards: boolean;
+        copilot: boolean;
+        policyGenerator: boolean;
+        evidenceExports: boolean;
+        questionnaires: boolean;
+      };
       usage: {
         integrations: { used: number; limit: number };
         scans: { used: number; limit: number };

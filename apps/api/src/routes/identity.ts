@@ -6,6 +6,7 @@ import { executeIdentityScan } from "../services/scanner/execute-identity-scan.j
 import { requireOrganization } from "../lib/org-context.js";
 import { requireAdmin, requireMutation, requireRead } from "../lib/authorization.js";
 import { assertCanEnqueueScan } from "../lib/plan-limits.js";
+import { assertBillingAllowsUsage } from "../lib/plan-features.js";
 import { connectAuth0Account, isAuth0Configured } from "../services/identity/auth0/auth0.connect.js";
 import { connectJumpCloudAccount } from "../services/identity/jumpcloud/jumpcloud.connect.js";
 import { ensureOrganizationFromSession } from "../lib/clerk-org-provision.js";
@@ -82,6 +83,7 @@ export const identityRoutes: FastifyPluginAsync = async (app) => {
     }
 
     try {
+      assertBillingAllowsUsage(org);
       await assertCanEnqueueScan(org.id, org.plan);
     } catch (e) {
       const status = (e as { statusCode?: number }).statusCode ?? 402;

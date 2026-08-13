@@ -12,11 +12,12 @@ View plan, usage meters, upgrade via Stripe Checkout, manage payment methods/inv
 | Plan | Price (list) | Seats | Integrations | Scans / month | Evidence storage |
 |------|--------------|-------|--------------|---------------|------------------|
 | Free | $0 | 3 | 1 | 5 | 100 MB |
-| Starter | $299/mo | 10 | 5 | 50 | 1 GB |
-| Growth | $799/mo | 25 | 20 | 500 | 5 GB |
+| Solo | $59/mo ($49/mo annual) | 3 | 2 | 15 | 256 MB |
+| Starter | $329/mo ($274/mo annual) | 10 | 5 | 50 | 1 GB |
+| Growth | $949/mo ($789/mo annual) | 25 | 20 | 500 | 5 GB |
 | Enterprise | Custom | 100 | 999 | High | 50 GB |
 
-List prices appear in the billing UI; Enterprise uses **Contact sales**.
+List prices appear in the billing UI (monthly/annual toggle); Enterprise uses **Contact sales**. Copilot, policy generator, evidence exports, and questionnaires require **Growth** or higher.
 
 ### Usage rules
 

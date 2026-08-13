@@ -109,7 +109,7 @@ export async function handleAzureCloudOAuthCallback(code: string, state: string)
 
   const org = await prisma.organization.findFirst({ where: { slug: orgSlug } });
   if (!org) throw new Error(`Organization not found: ${orgSlug}`);
-  await gateNewProviderConnection(org.id, org.plan, "AZURE");
+  await gateNewProviderConnection(org, "AZURE");
 
   const result = await connectAzureCloudAccount({
     accessToken: tokens.access_token,
