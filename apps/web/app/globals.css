@@ -189,7 +189,7 @@
   .vikela-btn-secondary.comply-btn-secondary {
     @apply inline-flex items-center justify-center gap-2 rounded-[var(--radius-md)] px-4 py-2 text-sm font-medium transition-colors duration-150;
     @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-comply-green focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-app)];
-    @apply border border-[var(--border-strong)] bg-[var(--bg-elevated)] text-comply-text-primary hover:border-comply-green/40;
+    @apply border border-[var(--border-strong)] bg-[var(--bg-elevated)] text-comply-text-primary hover:border-comply-green-border;
   }
 
   .vikela-btn-ghost.comply-btn-ghost {
@@ -211,7 +211,7 @@
 
   .vikela-input.comply-input {
     @apply w-full rounded-[var(--radius-md)] border border-[var(--border-strong)] bg-[var(--bg-app)] px-3 py-2.5 text-sm text-comply-text-primary placeholder:text-comply-text-tertiary;
-    @apply transition-colors focus:border-comply-green/50 focus:outline-none focus:ring-2;
+    @apply transition-colors focus:border-comply-green-border focus:outline-none focus:ring-2;
     --tw-ring-color: color-mix(in srgb, var(--green) 28%, transparent);
   }
 
