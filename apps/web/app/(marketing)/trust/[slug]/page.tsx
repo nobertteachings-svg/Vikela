@@ -37,10 +37,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return { title: "Trust center", robots: { index: false, follow: false } };
   }
   return {
-    title: `${data.name}. Trust center`,
+    title: `${data.name} — Trust center`,
     description: data.tagline?.trim() || `Security and compliance information for ${data.name}`,
     openGraph: {
-      title: `${data.name}. Trust center`,
+      title: `${data.name} — Trust center`,
       description: data.tagline?.trim() || `Security and compliance information for ${data.name}`,
     },
   };

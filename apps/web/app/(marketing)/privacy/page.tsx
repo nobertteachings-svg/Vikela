@@ -49,7 +49,7 @@ export default function PrivacyPage() {
                 <ProseLi>
                   <strong>Integration metadata:</strong> repository names, cloud account IDs,
                   configuration snapshots, scan results, and evidence artifacts needed for
-                  compliance posture: not your application source code stored long-term unless
+                  compliance posture—not your application source code stored long-term unless
                   you enable features that require it.
                 </ProseLi>
                 <ProseLi>

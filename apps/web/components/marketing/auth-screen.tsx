@@ -69,7 +69,7 @@ const COPY = {
     asideHeadline: "Universal Compliance Engine",
     asideHeadline2: "Get audit-ready across every framework",
     asideBody:
-      "Start with one integration and one framework. Expand to HIPAA, PCI DSS, FedRAMP, or CMMC when contracts require it, all from the same control graph.",
+      "Start with one integration and one framework. Expand to HIPAA, PCI DSS, FedRAMP, or CMMC when contracts require it—all from the same control graph.",
   },
   login: {
     formTitle: "Welcome back",
@@ -82,7 +82,7 @@ const COPY = {
     asideHeadline: "Universal Compliance Engine",
     asideHeadline2: "Your posture dashboard is waiting",
     asideBody:
-      "SOC 2, HIPAA, ISO 27001, GDPR, PCI DSS, FedRAMP, CMMC, and more, tracked from the same control graph.",
+      "SOC 2, HIPAA, ISO 27001, GDPR, PCI DSS, FedRAMP, CMMC, and more—tracked from the same control graph.",
   },
 } as const;
 
@@ -123,7 +123,7 @@ function SignupAside() {
       </div>
       <ul className="mt-8 space-y-3">
         {[
-          "GitHub, GitLab, or Bitbucket, not GitHub only",
+          "GitHub, GitLab, or Bitbucket—not GitHub only",
           "AWS, Azure, GCP, and identity providers after signup",
           "Framework mapping packs on every plan",
         ].map((line) => (
@@ -189,7 +189,7 @@ export function AuthScreen({ mode }: { mode: keyof typeof COPY }) {
         <div className="flex flex-1 flex-col items-center justify-center pb-12 lg:flex-row lg:items-center lg:gap-16 xl:gap-24">
           <div className="mb-12 max-w-md lg:mb-0 lg:flex-1">
             <SectionLabel>{copy.asideHeadline}</SectionLabel>
-            <h1 className="mt-4 font-display text-2xl font-semibold text-comply-text-primary sm:text-3xl">
+            <h1 className="mt-4 bg-gradient-to-br from-[#faf9f5] via-[#d8d6ce] to-[#888780] bg-clip-text text-3xl font-medium leading-tight tracking-tight text-transparent sm:text-4xl">
               {copy.asideHeadline2}
             </h1>
             <p className="mt-4 text-sm leading-relaxed text-comply-text-secondary">
@@ -237,7 +237,7 @@ export function AuthScreen({ mode }: { mode: keyof typeof COPY }) {
               </p>
 
               <p className="relative mt-6 text-[11px] font-semibold uppercase tracking-wider text-comply-text-tertiary">
-                Sign up with source control, create account first
+                Sign up with source control — create account first
               </p>
               <div className="relative mt-3 grid grid-cols-3 gap-2">
                 {GIT_PROVIDERS.map((provider) => {
@@ -248,7 +248,7 @@ export function AuthScreen({ mode }: { mode: keyof typeof COPY }) {
                       href={hasClerk ? "/sign-up" : "/onboarding/connect-repos"}
                       title={
                         hasClerk
-                          ? "Create an account first, then connect from Integrations"
+                          ? "Create an account first — then connect from Integrations"
                           : "Continue onboarding in local dev mode"
                       }
                       className={cn(

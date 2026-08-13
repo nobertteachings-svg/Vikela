@@ -51,10 +51,10 @@ export function DocPage({
           )}
 
           <article className="min-w-0">
-            <p className="text-xs font-medium uppercase tracking-wide text-comply-text-tertiary">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-comply-purple-border">
               Vikela
             </p>
-            <h1 className="mt-2 font-display text-2xl font-semibold text-comply-text-primary sm:text-3xl">
+            <h1 className="mt-2 text-3xl font-medium tracking-tight text-comply-text-primary">
               {title}
             </h1>
             <p className="mt-3 max-w-2xl text-sm leading-relaxed text-comply-text-secondary">

@@ -101,7 +101,7 @@ function buildRecentActivity(stats: DashboardStats, topGaps: GapRow[]) {
     items.push({
       time: when,
       icon: "scan",
-      text: `${SCAN_TYPE_LABEL[scan.scanType]}${scan.target ? `, ${scan.target}` : ""} · ${scan.gapsFound} gaps${scan.score != null ? ` · score ${scan.score}` : ""}`,
+      text: `${SCAN_TYPE_LABEL[scan.scanType]}${scan.target ? ` — ${scan.target}` : ""} · ${scan.gapsFound} gaps${scan.score != null ? ` · score ${scan.score}` : ""}`,
     });
   }
 
@@ -109,7 +109,7 @@ function buildRecentActivity(stats: DashboardStats, topGaps: GapRow[]) {
     items.push({
       time: timeAgo(gap.createdAt),
       icon: "alert",
-      text: `${gap.severity} gap, ${gap.title}${gap.filePath ? ` in ${gap.filePath}` : ""}`,
+      text: `${gap.severity} gap — ${gap.title}${gap.filePath ? ` in ${gap.filePath}` : ""}`,
     });
   }
 
@@ -118,7 +118,7 @@ function buildRecentActivity(stats: DashboardStats, topGaps: GapRow[]) {
     items.unshift({
       time: "Latest",
       icon: "document",
-      text: `Posture score ${last.score}, ${new Date(last.date).toLocaleDateString("en-US", { month: "short", day: "numeric" })}`,
+      text: `Posture score ${last.score} — ${new Date(last.date).toLocaleDateString("en-US", { month: "short", day: "numeric" })}`,
     });
   }
 
@@ -159,7 +159,7 @@ export function DashboardPageContent({
       <PageHeader
         eyebrow="Overview"
         title="Dashboard"
-        description="One platform for every framework your customers ask for, mapped from code, cloud, and identity."
+        description="One platform for every framework your customers ask for—mapped from code, cloud, and identity."
       >
         <FullScanButton />
       </PageHeader>
@@ -173,7 +173,7 @@ export function DashboardPageContent({
         </div>
       )}
 
-      {/* Product hero, live API data */}
+      {/* Product hero — live API data */}
       <div className="marketing-panel marketing-panel-highlight relative overflow-hidden p-6 sm:p-8">
         <div
           className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-comply-purple/25 blur-3xl"
@@ -186,7 +186,7 @@ export function DashboardPageContent({
         <div className="relative grid gap-8 lg:grid-cols-[1fr_auto] lg:items-start">
           <div>
             <SectionLabel>Universal Compliance Engine</SectionLabel>
-            <h2 className="mt-3 max-w-2xl font-display text-xl font-semibold text-comply-text-primary sm:text-2xl">
+            <h2 className="mt-3 max-w-2xl bg-gradient-to-br from-[#faf9f5] via-[#d8d6ce] to-[#888780] bg-clip-text text-2xl font-medium leading-tight tracking-tight text-transparent sm:text-3xl">
               One platform for every framework your customers ask for
             </h2>
             <p className="mt-4 max-w-2xl text-sm leading-relaxed text-comply-text-secondary">
@@ -194,7 +194,7 @@ export function DashboardPageContent({
               {enrolledFrameworks.length > 0
                 ? enrolledFrameworks.map((f) => f.name).join(", ")
                 : "SOC 2, HIPAA, ISO 27001, GDPR, PCI DSS, FedRAMP, CMMC, and more"}
-              . So you run one program, not ten spreadsheets.
+              —so you run one program, not ten spreadsheets.
             </p>
             <p className="mt-2 text-xs text-comply-text-tertiary">
               Workspace: <span className="font-medium text-comply-text-secondary">{org.name}</span>
@@ -297,7 +297,7 @@ export function DashboardPageContent({
         </CardBody>
       </Card>
 
-      {/* Findings by stack, from API gapsBySource */}
+      {/* Findings by stack — from API gapsBySource */}
       <div>
         <SectionLabel>Findings by source</SectionLabel>
         <div className="mt-4 grid gap-4 sm:grid-cols-3">
@@ -440,8 +440,8 @@ export function DashboardPageContent({
             <div className="comply-empty border-0 bg-transparent">
               <p className="text-sm text-comply-text-secondary">
                 {stats.recentScans?.some((s) => s.status === "COMPLETED")
-                  ? "No open gaps in this list, great posture, or check Gaps for the full inventory."
-                  : "No findings yet, connect a repository and run a scan to see your posture."}
+                  ? "No open gaps in this list — great posture, or check Gaps for the full inventory."
+                  : "No findings yet — connect a repository and run a scan to see your posture."}
               </p>
             </div>
           ) : (

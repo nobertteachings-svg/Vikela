@@ -1,46 +1,22 @@
 import type { Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
-import { IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
+import "@fontsource/dm-sans/400.css";
+import "@fontsource/dm-sans/500.css";
+import "@fontsource/dm-mono/400.css";
 import "./globals.css";
-
-const sans = IBM_Plex_Sans({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-sans",
-  display: "swap",
-});
-
-const mono = IBM_Plex_Mono({
-  subsets: ["latin"],
-  weight: ["400", "500"],
-  variable: "--font-mono",
-  display: "swap",
-});
 
 const hasClerk = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
 
 export const metadata: Metadata = {
-  title: {
-    default: "Vikela. Audit-ready in weeks, not months",
-    template: "%s · Vikela",
-  },
+  title: "Vikela — Universal Compliance Engine",
   description:
-    "Multi-framework compliance for startups and scale-ups. Connect your stack, map gaps across SOC 2, ISO, HIPAA, GDPR, PCI DSS and more, and close the deal stuck on a security questionnaire. Self-serve, transparent pricing, free to start.",
-  openGraph: {
-    title: "Vikela. Get audit-ready in weeks, not months",
-    description:
-      "One compliance program for every framework your customers ask for. Self-serve. Transparent pricing. Free to start.",
-    type: "website",
-  },
+    "Map code, cloud, and identity findings to SOC 2, HIPAA, ISO 27001, GDPR, PCI DSS, FedRAMP, CMMC, and more—one platform for your entire compliance program.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const body = (
-    <html
-      lang="en"
-      className={`dark ${sans.variable} ${mono.variable}`}
-    >
-      <body className="font-sans antialiased">{children}</body>
+    <html lang="en" className="dark">
+      <body className="font-sans">{children}</body>
     </html>
   );
 

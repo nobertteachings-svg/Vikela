@@ -161,7 +161,7 @@ export function DashboardFrameworkPicker({
           );
           setMessage(
             result.controlsCreated > 0
-              ? `${fw.name} enabled, ${result.controlsCreated} controls added`
+              ? `${fw.name} enabled — ${result.controlsCreated} controls added`
               : `${fw.name} enabled`
           );
         }

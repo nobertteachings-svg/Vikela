@@ -18,26 +18,10 @@ const SIDEBAR = [
 ];
 
 const PILLARS = [
-  {
-    icon: IconLock,
-    title: "Encryption",
-    desc: "TLS in transit; AES-256-GCM for provider tokens at rest",
-  },
-  {
-    icon: IconKey,
-    title: "Least privilege",
-    desc: "Role-based access and scoped integration credentials",
-  },
-  {
-    icon: IconCloudLock,
-    title: "Tenant isolation",
-    desc: "Logical separation per organization workspace",
-  },
-  {
-    icon: IconUserShield,
-    title: "Audit logging",
-    desc: "Administrative and security-relevant events logged",
-  },
+  { icon: IconLock, title: "Encryption", desc: "TLS 1.2+ in transit; encrypted storage at rest" },
+  { icon: IconKey, title: "Least privilege", desc: "Role-based access and scoped integration tokens" },
+  { icon: IconCloudLock, title: "Tenant isolation", desc: "Logical separation per organization workspace" },
+  { icon: IconUserShield, title: "Audit logging", desc: "Administrative and security-relevant events logged" },
 ];
 
 export default function SecurityPage() {
@@ -45,7 +29,7 @@ export default function SecurityPage() {
     <DocPage
       title="Security"
       description="How Vikela protects your compliance data, credentials, and connected systems."
-      updated="August 13, 2026"
+      updated="May 22, 2025"
       sidebar={SIDEBAR}
       sections={[
         {
@@ -55,7 +39,7 @@ export default function SecurityPage() {
             <>
               <ProseP>
                 Vikela is built for teams that handle sensitive security posture data. Security
-                is not a checkbox on our roadmap. It is a constraint on every feature we ship.
+                is not a checkbox on our roadmap—it is a constraint on every feature we ship.
               </ProseP>
               <div className="mt-6 grid gap-3 sm:grid-cols-2">
                 {PILLARS.map((p) => {
@@ -82,22 +66,10 @@ export default function SecurityPage() {
           title: "Platform architecture",
           content: (
             <ProseUl>
-              <ProseLi>
-                API and web application hosted on hardened cloud infrastructure with network
-                segmentation
-              </ProseLi>
-              <ProseLi>
-                Provider tokens encrypted with AES-256-GCM before storage; encryption key required
-                at process start
-              </ProseLi>
-              <ProseLi>
-                Background workers process compliance checks in isolated job queues with retry
-                limits and timeouts
-              </ProseLi>
-              <ProseLi>
-                Production access restricted to authorized personnel on a need-to-know basis with
-                MFA
-              </ProseLi>
+              <ProseLi>API and web application hosted on hardened cloud infrastructure with network segmentation</ProseLi>
+              <ProseLi>Secrets and integration credentials encrypted with industry-standard algorithms; keys managed via secure vault patterns</ProseLi>
+              <ProseLi>Background workers process scans in isolated job queues with retry limits and timeouts</ProseLi>
+              <ProseLi>Production access restricted to authorized personnel on a need-to-know basis with MFA</ProseLi>
             </ProseUl>
           ),
         },
@@ -108,16 +80,13 @@ export default function SecurityPage() {
             <>
               <ProseP>
                 We collect the minimum data required to assess compliance posture: configuration
-                metadata, policy findings, IAM settings, and evidence artifacts, not bulk source
+                metadata, policy findings, IAM settings, and evidence artifacts—not bulk source
                 code archives unless a specific feature you enable requires temporary analysis.
               </ProseP>
               <ProseUl>
                 <ProseLi>Customer data is not used to train shared AI models without opt-in</ProseLi>
-                <ProseLi>Evidence files are stored in object storage (S3), not in the application database</ProseLi>
-                <ProseLi>
-                  After cancellation you can export evidence you collected; workspace data is
-                  deleted per retention terms in our Privacy Policy
-                </ProseLi>
+                <ProseLi>Backups are encrypted and tested on a regular schedule</ProseLi>
+                <ProseLi>Data deletion available on workspace termination per our Privacy Policy</ProseLi>
               </ProseUl>
             </>
           ),
@@ -130,9 +99,9 @@ export default function SecurityPage() {
               <ProseLi>
                 <strong>Admin, Member, and Auditor</strong> roles with least-privilege defaults
               </ProseLi>
-              <ProseLi>SSO available on Enterprise plans</ProseLi>
-              <ProseLi>Session management via our identity provider</ProseLi>
-              <ProseLi>Org-scoped API access with auditable administrative actions</ProseLi>
+              <ProseLi>SSO and SCIM available on Enterprise plans</ProseLi>
+              <ProseLi>Session management and optional IP allowlisting for sensitive deployments</ProseLi>
+              <ProseLi>API keys scoped to read or write operations with rotation support</ProseLi>
             </ProseUl>
           ),
         },
@@ -142,10 +111,9 @@ export default function SecurityPage() {
           content: (
             <>
               <ProseP>
-                Integrations use OAuth, app installations, or short-lived credentials, never stored
-                in plain text. AWS connections use cross-account IAM roles (AssumeRole only). We do
-                not store long-lived AWS access keys for customer accounts. You control revocation
-                from your cloud console.
+                Integrations use OAuth, app installations, or short-lived credentials—never
+                stored in plain text. Cloud connections such as AWS use cross-account IAM roles
+                (AssumeRole) so you control revocation from your side.
               </ProseP>
               <ProseP>
                 See <Link href="/docs#integrations">documentation</Link> for required permissions
@@ -178,16 +146,14 @@ export default function SecurityPage() {
           content: (
             <>
               <ProseP>
-                Vikela operates its own security program aligned with SOC 2 control objectives. We
-                practice what we sell: continuous monitoring, documented policies, and evidence
-                collection through the same engine our customers use.
+                Vikela operates its own security program aligned with SOC 2 control objectives.
+                We practice what we sell: continuous monitoring, documented policies, and
+                evidence collection through the same engine our customers use.
               </ProseP>
               <ProseP>
-                We are building toward formal third-party attestation. Until a Type II report is
-                available, security questionnaire responses and architecture details are shared with
-                prospects on request via{" "}
-                <a href="mailto:security@vikela.com">security@vikela.com</a> or your{" "}
-                <Link href="/trust">trust center</Link>.
+                SOC 2 Type II report and security questionnaire responses are available to
+                customers on Growth and Enterprise plans via the{" "}
+                <Link href="/trust">trust center</Link> or your account team.
               </ProseP>
             </>
           ),

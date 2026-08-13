@@ -24,8 +24,8 @@ export function PageHeader({
         {eyebrow && <p className="page-eyebrow">{eyebrow}</p>}
         <h1
           className={cn(
-            "font-display font-semibold text-comply-text-primary text-balance",
-            eyebrow ? "mt-2 text-2xl" : "text-2xl"
+            "font-medium tracking-tight text-comply-text-primary text-balance",
+            eyebrow ? "mt-2 text-2xl sm:text-[1.75rem]" : "text-2xl sm:text-[1.75rem]"
           )}
         >
           {title}

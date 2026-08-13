@@ -2,15 +2,11 @@
 
 import Link from "next/link";
 import { useAuth } from "@clerk/nextjs";
-import { cn } from "@/lib/utils";
 
 const hasClerk = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
 
-const GREEN_CTA =
-  "inline-flex items-center justify-center rounded-md bg-comply-green font-medium text-comply-green-light transition-opacity hover:opacity-90";
-
 /**
- * Header CTAs that switch when the visitor is already signed in,
+ * Header CTAs that switch when the visitor is already signed in —
  * so marketing home stays reachable from the app without a dead-end.
  */
 export function MarketingAuthLinks({
@@ -33,7 +29,10 @@ export function MarketingAuthLinks({
     if (compact) {
       return (
         <div className="flex items-center gap-3">
-          <Link href="/dashboard" className={cn(GREEN_CTA, "h-8 px-4 text-xs")}>
+          <Link
+            href="/dashboard"
+            className="btn-purple-cta px-4"
+          >
             Open dashboard
           </Link>
         </div>
@@ -41,12 +40,12 @@ export function MarketingAuthLinks({
     }
     return (
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-        <Link href="/dashboard" className={cn(GREEN_CTA, "h-11 px-6 text-sm")}>
+        <Link href="/dashboard" className="btn-purple-cta h-11 px-6 text-sm">
           Open dashboard
         </Link>
         <Link
           href="/help"
-          className={cn(GREEN_CTA, "h-11 px-6 text-sm")}
+          className="inline-flex h-11 items-center justify-center px-4 text-sm text-comply-text-secondary transition-colors hover:text-comply-text-primary"
         >
           Help center
         </Link>
@@ -63,7 +62,7 @@ export function MarketingAuthLinks({
         >
           Sign in
         </Link>
-        <Link href="/sign-up" className={cn(GREEN_CTA, "h-8 px-4 text-xs")}>
+        <Link href="/sign-up" className="btn-purple-cta px-4">
           Get started
         </Link>
       </div>
@@ -72,11 +71,14 @@ export function MarketingAuthLinks({
 
   return (
     <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-      <Link href="/sign-up" className={cn(GREEN_CTA, "h-11 px-6 text-sm")}>
-        Start free
+      <Link href="/sign-up" className="btn-purple-cta h-11 px-6 text-sm">
+        Start free assessment
       </Link>
-      <a href="#pricing" className={cn(GREEN_CTA, "h-11 px-6 text-sm")}>
-        View pricing
+      <a
+        href="#how-it-works"
+        className="inline-flex h-11 items-center justify-center px-4 text-sm text-comply-text-secondary transition-colors hover:text-comply-text-primary"
+      >
+        See the workflow
       </a>
     </div>
   );

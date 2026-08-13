@@ -25,7 +25,7 @@ type ScanSnapshot = {
 };
 
 const POLL_MS = 2000;
-/** Soft warning only, keep polling while scan is still PENDING/RUNNING. */
+/** Soft warning only — keep polling while scan is still PENDING/RUNNING. */
 const SOFT_WARN_MS = 8 * 60 * 1000;
 /** Hard stop only if the scan disappears or stays non-terminal this long. */
 const HARD_STOP_MS = 45 * 60 * 1000;
@@ -99,7 +99,7 @@ export function FullScanButton() {
           return;
         }
         setPhase("running");
-        // Still PENDING/RUNNING, never treat as failed just because it's slow.
+        // Still PENDING/RUNNING — never treat as failed just because it's slow.
         if (elapsed > HARD_STOP_MS) {
           clearTimers();
           setPhase("failed");
@@ -217,7 +217,7 @@ export function FullScanButton() {
                   </p>
                   <p className="mt-1 text-xs text-comply-text-secondary">
                     Scanning connected repos, cloud accounts, and identity providers.
-                    This panel updates automatically, leave it open.
+                    This panel updates automatically — leave it open.
                   </p>
                   <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-comply-border/60">
                     <div className="comply-scan-progress h-full rounded-full bg-comply-purple-border" />
@@ -228,7 +228,7 @@ export function FullScanButton() {
                   </p>
                   {slowHint ? (
                     <p className="mt-2 text-[11px] text-comply-amber">
-                      Large repos can take several minutes. Still working, not stuck yet.
+                      Large repos can take several minutes. Still working — not stuck yet.
                     </p>
                   ) : null}
                 </>
