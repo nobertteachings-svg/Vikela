@@ -1,19 +1,12 @@
 import type { Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
-import { IBM_Plex_Mono, IBM_Plex_Sans, Source_Serif_4 } from "next/font/google";
+import { IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
 import "./globals.css";
 
 const sans = IBM_Plex_Sans({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
   variable: "--font-sans",
-  display: "swap",
-});
-
-const display = Source_Serif_4({
-  subsets: ["latin"],
-  weight: ["500", "600", "700"],
-  variable: "--font-display",
   display: "swap",
 });
 
@@ -45,7 +38,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const body = (
     <html
       lang="en"
-      className={`dark ${sans.variable} ${display.variable} ${mono.variable}`}
+      className={`dark ${sans.variable} ${mono.variable}`}
     >
       <body className="font-sans antialiased">{children}</body>
     </html>
