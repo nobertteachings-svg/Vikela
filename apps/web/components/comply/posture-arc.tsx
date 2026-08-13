@@ -11,8 +11,8 @@ export function PostureArc({ score, max = 100 }: { score: number; max?: number }
       <svg width="180" height="130" viewBox="0 0 180 130" className="overflow-visible">
         <defs>
           <linearGradient id="arcGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#15803d" />
-            <stop offset="100%" stopColor="#16a34a" />
+            <stop offset="0%" stopColor="#3C3489" />
+            <stop offset="100%" stopColor="#534AB7" />
           </linearGradient>
         </defs>
         <path

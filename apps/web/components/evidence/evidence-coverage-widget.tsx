@@ -19,7 +19,7 @@ export function EvidenceCoverageWidget({
     <Card elevated>
       <CardBody className="flex flex-col items-center gap-4 py-8 sm:flex-row sm:items-start sm:justify-between sm:px-8">
         <div className="max-w-md text-center sm:text-left">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-comply-green-border">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-comply-purple-border">
             Control coverage
           </p>
           <p className="mt-1 text-[10px] uppercase tracking-wide text-comply-muted">{scopeSubtitle}</p>

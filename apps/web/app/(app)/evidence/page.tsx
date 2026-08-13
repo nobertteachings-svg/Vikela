@@ -103,7 +103,7 @@ export default async function EvidencePage({
         periodLabel={hasPeriod ? "period" : "all"}
       />
 
-      <Card elevated className="border-dashed border-comply-green-border/35">
+      <Card elevated className="border-dashed border-comply-purple-border/35">
         <CardBody className="flex flex-col items-center py-10 text-center">
           <p className="text-sm text-comply-text-secondary">
             Upload PDFs, images, or exports linked to your audit.
@@ -130,7 +130,7 @@ export default async function EvidencePage({
             return (
               <Card key={e.id} className="transition-transform hover:-translate-y-0.5">
                 <CardBody>
-                  <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-comply-green/15 text-comply-green-border">
+                  <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-comply-purple/15 text-comply-purple-border">
                     <Icon size={20} />
                   </span>
                   <p className="mt-4 truncate font-medium text-comply-text-primary">{e.title}</p>

@@ -88,7 +88,7 @@ export function OnboardingTeam() {
             key={inv.id}
             className="flex items-center gap-3 rounded-md border border-[var(--border)] bg-comply-card px-3 py-2"
           >
-            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-comply-green-light text-xs font-medium text-comply-green">
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-comply-purple-light text-xs font-medium text-comply-purple">
               {inv.initials}
             </span>
             <span className="min-w-0 flex-1 truncate text-sm text-comply-text-primary">{inv.email}</span>

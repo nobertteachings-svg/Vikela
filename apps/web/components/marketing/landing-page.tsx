@@ -63,19 +63,19 @@ const STEPS = [
     icon: IconCloud,
     title: "Connect your stack",
     description:
-      "Link GitHub, cloud, and identity in minutes. Vikela pulls the signals auditors actually review.",
+      "Link GitHub, GitLab, or Bitbucket with AWS, Azure, GCP, and identity. Most teams finish the first connection in under 10 minutes.",
   },
   {
     icon: IconShieldCheck,
     title: "See mapped gaps",
     description:
-      "Findings land against every framework you enable, with severity and remediation context.",
+      "Findings map to SOC 2, ISO 27001, HIPAA, and the rest, with context so you know what to fix first.",
   },
   {
     icon: IconFileCertificate,
     title: "Close the questionnaire",
     description:
-      "Draft answers from live posture, generate policies, and export evidence when you are ready.",
+      "Draft answers from live posture, generate policies, and export evidence when you are ready for review.",
   },
 ] as const;
 
@@ -106,28 +106,30 @@ const FAQ_ITEMS = [
   },
 ] as const;
 
-const GREEN_CTA =
-  "inline-flex h-10 items-center justify-center rounded-md bg-comply-green px-5 text-sm font-medium text-comply-green-light transition-opacity hover:opacity-90";
+function FrameworkPill({ name }: { name: string }) {
+  return (
+    <span className="inline-flex items-center rounded-sm border border-white/[0.1] bg-white/[0.03] px-2.5 py-1 font-mono text-[11px] font-medium tracking-tight text-comply-text-secondary">
+      {name}
+    </span>
+  );
+}
 
 export function LandingPage() {
   return (
-    <div className="marketing-bg relative min-h-screen text-comply-text-primary antialiased">
-      <header className="marketing-header sticky top-0 z-20">
-        <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-6">
+    <div className="relative min-h-screen bg-[var(--bg-app)] text-comply-text-primary antialiased">
+      <header className="relative z-10 border-b border-white/[0.08] bg-[var(--bg-app)]/90 backdrop-blur-sm">
+        <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-6">
           <Link href="/" className="shrink-0">
             <LogoPill />
           </Link>
-          <nav className="hidden items-center gap-7 text-sm text-comply-text-secondary md:flex">
-            <a href="#frameworks" className="transition-colors hover:text-comply-text-primary">
-              Frameworks
-            </a>
-            <a href="#how" className="transition-colors hover:text-comply-text-primary">
+          <nav className="hidden items-center gap-6 text-sm text-comply-text-secondary md:flex">
+            <a href="#how" className="hover:text-comply-text-primary">
               How it works
             </a>
-            <a href="#pricing" className="transition-colors hover:text-comply-text-primary">
+            <a href="#pricing" className="hover:text-comply-text-primary">
               Pricing
             </a>
-            <a href="#faq" className="transition-colors hover:text-comply-text-primary">
+            <a href="#faq" className="hover:text-comply-text-primary">
               FAQ
             </a>
           </nav>
@@ -136,59 +138,61 @@ export function LandingPage() {
       </header>
 
       <main>
-        <section className="mx-auto max-w-6xl px-6 pb-20 pt-20 sm:pt-28">
-          <h1 className="max-w-2xl text-3xl font-semibold tracking-tight text-comply-text-primary sm:text-4xl">
+        <section className="mx-auto max-w-5xl px-6 pb-14 pt-16 sm:pt-20">
+          <p className="text-xs font-medium uppercase tracking-wide text-comply-text-tertiary">
+            Vikela
+          </p>
+          <h1 className="mt-3 max-w-xl text-2xl font-semibold tracking-tight text-comply-text-primary sm:text-3xl">
             Get audit ready in weeks, not months
           </h1>
-          <p className="mt-5 max-w-xl text-base leading-relaxed text-comply-text-secondary">
+          <p className="mt-4 max-w-lg text-sm leading-relaxed text-comply-text-secondary">
             Map code, cloud, and identity into the frameworks buyers ask for. Answer the security
             questionnaire from live controls, not a blank spreadsheet.
           </p>
-          <div className="mt-8">
+          <div className="mt-7">
             <MarketingAuthLinks />
           </div>
+          <p className="mt-5 text-xs text-comply-text-tertiary">
+            Free to start. Published prices. No sales call required.
+          </p>
         </section>
 
-        <section id="frameworks" className="border-y border-[var(--border)] py-14">
-          <div className="mx-auto max-w-6xl px-6">
-            <h2 className="text-xl font-semibold tracking-tight text-comply-text-primary">
-              One program for every framework the deal asks for
+        <section
+          id="frameworks"
+          className="border-y border-white/[0.08] bg-black/20 py-10"
+        >
+          <div className="mx-auto max-w-5xl px-6">
+            <h2 className="text-sm font-medium text-comply-text-primary">
+              Frameworks on one control graph
             </h2>
-            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-comply-text-secondary">
-              Enable SOC 2, ISO, HIPAA, GDPR, PCI, FedRAMP, or CMMC on one control graph.
+            <p className="mt-2 max-w-2xl text-sm text-comply-text-secondary">
+              SOC 2, ISO, HIPAA, GDPR, PCI, FedRAMP, CMMC, and more. Enable what the deal asks for
+              without rebuilding the program for each RFP.
             </p>
-            <div className="mt-8 flex flex-wrap gap-2">
+            <div className="mt-6 flex flex-wrap gap-2">
               {FRAMEWORKS.map((fw) => (
-                <span
-                  key={fw}
-                  className="inline-flex items-center rounded-md border border-[var(--border)] bg-[var(--bg-card)] px-3 py-1.5 font-mono text-xs text-comply-text-secondary"
-                >
-                  {fw}
-                </span>
+                <FrameworkPill key={fw} name={fw} />
               ))}
             </div>
           </div>
         </section>
 
-        <section id="how" className="mx-auto max-w-6xl px-6 py-20">
-          <h2 className="text-xl font-semibold tracking-tight text-comply-text-primary">
+        <section id="how" className="mx-auto max-w-5xl px-6 py-20">
+          <h2 className="text-lg font-semibold tracking-tight text-comply-text-primary">
             How it works
           </h2>
-          <ol className="mt-10 grid gap-6 md:grid-cols-3">
+          <ol className="mt-10 grid gap-10 md:grid-cols-3">
             {STEPS.map((step, i) => {
               const Icon = step.icon;
               return (
-                <li
-                  key={step.title}
-                  className="rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-card)] p-6 transition-colors hover:border-[var(--border-strong)]"
-                >
+                <li key={step.title}>
                   <span className="font-mono text-xs text-comply-text-tertiary">
                     {String(i + 1).padStart(2, "0")}
                   </span>
-                  <span className="mt-4 flex h-9 w-9 items-center justify-center rounded-md border border-[var(--border)] bg-[var(--bg-elevated)] text-comply-green">
+                  <span className="mt-3 flex h-9 w-9 items-center justify-center rounded-md border border-white/[0.1] bg-black/25 text-comply-purple-border">
                     <Icon size={18} stroke={1.5} />
                   </span>
-                  <h3 className="mt-4 text-sm font-medium text-comply-text-primary">{step.title}</h3>
+                  <h3 className="mt-4 text-sm font-medium">{step.title}</h3>
                   <p className="mt-2 text-sm leading-relaxed text-comply-text-secondary">
                     {step.description}
                   </p>
@@ -198,25 +202,24 @@ export function LandingPage() {
           </ol>
         </section>
 
-        <section id="integrations" className="border-t border-[var(--border)] py-20">
-          <div className="mx-auto max-w-6xl px-6">
-            <h2 className="text-xl font-semibold tracking-tight text-comply-text-primary">
+        <section id="integrations" className="border-t border-white/[0.08] py-20">
+          <div className="mx-auto max-w-5xl px-6">
+            <h2 className="text-lg font-semibold tracking-tight text-comply-text-primary">
               Evidence from the stack auditors review
             </h2>
             <p className="mt-2 max-w-2xl text-sm text-comply-text-secondary">
               IAM, branch protection, MFA, and cloud config, not only application code.
             </p>
-            <div className="mt-10 grid gap-4 sm:grid-cols-3">
+            <div className="mt-10 grid gap-8 sm:grid-cols-3">
               {INTEGRATION_GROUPS.map((group) => (
-                <div
-                  key={group.label}
-                  className="rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-card)] p-5"
-                >
+                <div key={group.label}>
                   <div className="flex items-center gap-2 text-comply-text-tertiary">
-                    {group.label === "Source control" ? <IconCode size={16} stroke={1.5} /> : null}
-                    {group.label === "Cloud" ? <IconCloud size={16} stroke={1.5} /> : null}
-                    {group.label === "Identity" ? <IconShieldCheck size={16} stroke={1.5} /> : null}
-                    <span className="text-xs font-medium uppercase tracking-wide">{group.label}</span>
+                    {group.label === "Source control" && <IconCode size={16} stroke={1.5} />}
+                    {group.label === "Cloud" && <IconCloud size={16} stroke={1.5} />}
+                    {group.label === "Identity" && <IconShieldCheck size={16} stroke={1.5} />}
+                    <span className="text-xs font-medium uppercase tracking-wide">
+                      {group.label}
+                    </span>
                   </div>
                   <ul className="mt-4 space-y-3">
                     {group.items.map((item) => {
@@ -238,9 +241,11 @@ export function LandingPage() {
           </div>
         </section>
 
-        <section id="pricing" className="border-t border-[var(--border)] py-20">
-          <div className="mx-auto max-w-6xl px-6">
-            <h2 className="text-xl font-semibold tracking-tight text-comply-text-primary">Pricing</h2>
+        <section id="pricing" className="border-t border-white/[0.08] py-20">
+          <div className="mx-auto max-w-5xl px-6">
+            <h2 className="text-lg font-semibold tracking-tight text-comply-text-primary">
+              Pricing
+            </h2>
             <p className="mt-2 max-w-lg text-sm text-comply-text-secondary">
               Published list prices. Upgrade when a deal needs more capacity.
             </p>
@@ -249,8 +254,8 @@ export function LandingPage() {
                 <div
                   key={plan.name}
                   className={cn(
-                    "flex flex-col rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-card)] p-5",
-                    plan.highlight && "border-comply-green/40 bg-comply-green/[0.06]"
+                    "flex flex-col rounded-md border border-white/[0.1] bg-black/20 p-5",
+                    plan.highlight && "border-comply-purple-border/50 bg-comply-purple/10"
                   )}
                 >
                   <h3 className="text-sm font-medium text-comply-text-secondary">{plan.name}</h3>
@@ -272,7 +277,15 @@ export function LandingPage() {
                       </li>
                     ))}
                   </ul>
-                  <Link href="/sign-up" className={cn(GREEN_CTA, "mt-6 w-full")}>
+                  <Link
+                    href="/sign-up"
+                    className={cn(
+                      "mt-6 inline-flex h-10 w-full items-center justify-center rounded-md text-sm font-medium",
+                      plan.highlight
+                        ? "btn-purple-cta max-w-none"
+                        : "border border-[var(--border)] text-comply-text-primary hover:border-comply-purple-border"
+                    )}
+                  >
                     {plan.cta}
                   </Link>
                 </div>
@@ -283,26 +296,23 @@ export function LandingPage() {
             </p>
             <p className="mt-3 text-center text-sm text-comply-text-secondary">
               {enterpriseFooterCopy}{" "}
-              <a
-                href="mailto:hello@vikela.com"
-                className="font-medium text-comply-green hover:underline"
-              >
+              <a href="mailto:hello@vikela.com" className="text-comply-purple-border hover:underline">
                 Contact sales
               </a>
             </p>
           </div>
         </section>
 
-        <section id="faq" className="border-t border-[var(--border)] py-20">
+        <section id="faq" className="border-t border-white/[0.08] py-20">
           <div className="mx-auto max-w-3xl px-6">
-            <h2 className="text-xl font-semibold tracking-tight text-comply-text-primary">FAQ</h2>
+            <h2 className="text-lg font-semibold tracking-tight text-comply-text-primary">FAQ</h2>
             <dl className="mt-10 space-y-2">
               {FAQ_ITEMS.map((item) => (
                 <details
                   key={item.q}
-                  className="group rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-card)] open:border-comply-green/30"
+                  className="group rounded-md border border-white/[0.1] bg-black/15 open:border-comply-purple-border/30"
                 >
-                  <summary className="cursor-pointer list-none px-5 py-4 text-sm font-medium text-comply-text-primary marker:content-none [&::-webkit-details-marker]:hidden">
+                  <summary className="cursor-pointer list-none px-4 py-3.5 text-sm font-medium text-comply-text-primary marker:content-none [&::-webkit-details-marker]:hidden">
                     <span className="flex items-center justify-between gap-4">
                       {item.q}
                       <span className="shrink-0 font-mono text-comply-text-tertiary transition-transform group-open:rotate-45">
@@ -310,7 +320,7 @@ export function LandingPage() {
                       </span>
                     </span>
                   </summary>
-                  <dd className="border-t border-[var(--border)] px-5 pb-4 pt-3 text-sm leading-relaxed text-comply-text-secondary">
+                  <dd className="border-t border-white/[0.06] px-4 pb-4 pt-3 text-sm leading-relaxed text-comply-text-secondary">
                     {item.a}
                   </dd>
                 </details>
@@ -319,20 +329,25 @@ export function LandingPage() {
           </div>
         </section>
 
-        <section className="border-t border-[var(--border)]">
-          <div className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-6 px-6 py-14 sm:flex-row sm:items-center">
-            <h2 className="text-lg font-semibold text-comply-text-primary">
-              Got the questionnaire? See your gaps today.
-            </h2>
-            <Link href="/sign-up" className={cn(GREEN_CTA, "px-6")}>
+        <section className="border-t border-white/[0.08]">
+          <div className="mx-auto flex max-w-5xl flex-col items-start justify-between gap-6 px-6 py-14 sm:flex-row sm:items-center">
+            <div>
+              <h2 className="text-lg font-semibold text-comply-text-primary">
+                Got the questionnaire? See your gaps today.
+              </h2>
+              <p className="mt-1 text-sm text-comply-text-secondary">
+                Free to start. No sales call.
+              </p>
+            </div>
+            <Link href="/sign-up" className="btn-purple-cta px-6">
               Start free
             </Link>
           </div>
         </section>
       </main>
 
-      <footer className="border-t border-[var(--border)]">
-        <div className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-6 px-6 py-10 sm:flex-row sm:items-center">
+      <footer className="border-t border-white/[0.08]">
+        <div className="mx-auto flex max-w-5xl flex-col items-start justify-between gap-6 px-6 py-10 sm:flex-row sm:items-center">
           <div>
             <LogoPill />
             <p className="mt-3 max-w-xs text-xs leading-relaxed text-comply-muted">

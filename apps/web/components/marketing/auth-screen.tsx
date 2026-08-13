@@ -87,7 +87,11 @@ const COPY = {
 } as const;
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
-  return <p className="page-eyebrow">{children}</p>;
+  return (
+    <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-comply-purple-border">
+      {children}
+    </p>
+  );
 }
 
 function SignupAside() {
@@ -102,7 +106,7 @@ function SignupAside() {
             const Icon = step.icon;
             return (
               <li key={step.label} className="flex flex-1 flex-col items-center text-center">
-                <span className="flex h-9 w-9 items-center justify-center rounded-md border border-comply-green-border/30 bg-comply-green/10 text-comply-green-border">
+                <span className="flex h-9 w-9 items-center justify-center rounded-md border border-comply-purple-border/30 bg-comply-purple/10 text-comply-purple-border">
                   <Icon size={16} stroke={1.5} />
                 </span>
                 <span className="mt-2 font-mono text-[10px] text-comply-text-tertiary">
@@ -158,7 +162,7 @@ export function AuthScreen({ mode }: { mode: keyof typeof COPY }) {
   return (
     <div className="relative min-h-screen overflow-hidden">
       <div
-        className="marketing-orb absolute -left-32 top-16 h-[380px] w-[380px] rounded-full bg-comply-green/25"
+        className="marketing-orb absolute -left-32 top-16 h-[380px] w-[380px] rounded-full bg-comply-purple/25"
         aria-hidden
       />
       <div
@@ -199,7 +203,7 @@ export function AuthScreen({ mode }: { mode: keyof typeof COPY }) {
                   className={cn(
                     "rounded-sm border px-2 py-0.5 font-mono text-[10px] backdrop-blur-sm",
                     i === 0
-                      ? "border-comply-green-border/50 bg-comply-green/15 text-comply-green-light"
+                      ? "border-comply-purple-border/50 bg-comply-purple/15 text-comply-purple-light"
                       : "border-white/[0.08] bg-white/[0.04] text-comply-text-secondary"
                   )}
                 >
@@ -278,7 +282,7 @@ export function AuthScreen({ mode }: { mode: keyof typeof COPY }) {
                       id="signup-name"
                       type="text"
                       placeholder="Alex Morgan"
-                      className="h-10 w-full rounded-md border border-white/[0.1] bg-black/35 px-3 text-sm text-comply-text-primary shadow-inner placeholder:text-comply-muted focus:border-comply-green-border/60 focus:outline-none focus:ring-2 focus:ring-comply-green/25"
+                      className="h-10 w-full rounded-md border border-white/[0.1] bg-black/35 px-3 text-sm text-comply-text-primary shadow-inner placeholder:text-comply-muted focus:border-comply-purple-border/60 focus:outline-none focus:ring-2 focus:ring-comply-purple/25"
                     />
                   </div>
                 )}
@@ -293,7 +297,7 @@ export function AuthScreen({ mode }: { mode: keyof typeof COPY }) {
                     id={emailInputId}
                     type="email"
                     placeholder="you@company.com"
-                    className="h-10 w-full rounded-md border border-white/[0.1] bg-black/35 px-3 text-sm text-comply-text-primary shadow-inner placeholder:text-comply-muted focus:border-comply-green-border/60 focus:outline-none focus:ring-2 focus:ring-comply-green/25"
+                    className="h-10 w-full rounded-md border border-white/[0.1] bg-black/35 px-3 text-sm text-comply-text-primary shadow-inner placeholder:text-comply-muted focus:border-comply-purple-border/60 focus:outline-none focus:ring-2 focus:ring-comply-purple/25"
                   />
                 </div>
                 {isSignup && (
@@ -308,7 +312,7 @@ export function AuthScreen({ mode }: { mode: keyof typeof COPY }) {
                       id="signup-company"
                       type="text"
                       placeholder="Acme Corp"
-                      className="h-10 w-full rounded-md border border-white/[0.1] bg-black/35 px-3 text-sm text-comply-text-primary shadow-inner placeholder:text-comply-muted focus:border-comply-green-border/60 focus:outline-none focus:ring-2 focus:ring-comply-green/25"
+                      className="h-10 w-full rounded-md border border-white/[0.1] bg-black/35 px-3 text-sm text-comply-text-primary shadow-inner placeholder:text-comply-muted focus:border-comply-purple-border/60 focus:outline-none focus:ring-2 focus:ring-comply-purple/25"
                     />
                   </div>
                 )}
@@ -325,7 +329,7 @@ export function AuthScreen({ mode }: { mode: keyof typeof COPY }) {
                 {copy.footerText}{" "}
                 <Link
                   href={copy.footerHref}
-                  className="font-medium text-comply-green-border hover:text-comply-green-light hover:underline"
+                  className="font-medium text-comply-purple-border hover:text-comply-purple-light hover:underline"
                 >
                   {copy.footerLink}
                 </Link>

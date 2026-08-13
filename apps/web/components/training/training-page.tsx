@@ -36,15 +36,19 @@ type TrainingStatus =
   | "Unassigned";
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
-  return <p className="page-eyebrow">{children}</p>;
+  return (
+    <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-comply-purple-border">
+      {children}
+    </p>
+  );
 }
 
 const STATUS_STYLES: Record<string, string> = {
   "On track": "border-comply-green/30 bg-comply-green/10 text-comply-green",
   "At risk": "border-comply-amber/30 bg-comply-amber/10 text-comply-amber-text",
-  Complete: "border-comply-green-border/30 bg-comply-green/10 text-comply-green-border",
+  Complete: "border-comply-purple-border/30 bg-comply-purple/10 text-comply-purple-border",
   Overdue: "border-comply-red/30 bg-comply-red/10 text-comply-red",
-  "In progress": "border-comply-green-border/30 bg-comply-green/10 text-comply-green-border",
+  "In progress": "border-comply-purple-border/30 bg-comply-purple/10 text-comply-purple-border",
   "Not started": "border-white/[0.12] bg-white/[0.04] text-comply-text-secondary",
   Unassigned: "border-white/[0.12] bg-white/[0.04] text-comply-text-secondary",
 };
@@ -563,7 +567,7 @@ export function TrainingPageContent({
                     <button
                       type="button"
                       disabled={saving}
-                      className="inline-flex items-center gap-1 text-xs font-medium text-comply-green-border hover:underline disabled:opacity-50"
+                      className="inline-flex items-center gap-1 text-xs font-medium text-comply-purple-border hover:underline disabled:opacity-50"
                       onClick={() => void downloadCertificate(a.id)}
                     >
                       <IconCertificate size={14} />
@@ -577,11 +581,15 @@ export function TrainingPageContent({
         </Card>
       ) : null}
 
-      <div className="marketing-panel marketing-panel-highlight relative overflow-hidden p-4 sm:p-6">
+      <div className="marketing-panel marketing-panel-highlight relative overflow-hidden p-6 sm:p-8">
+        <div
+          className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-comply-purple/20 blur-3xl"
+          aria-hidden
+        />
         <div className="relative grid gap-6 lg:grid-cols-[1fr_200px] lg:items-center">
           <div className="flex items-start gap-4">
-            <span className="hidden sm:flex h-14 w-14 shrink-0 items-center justify-center rounded-lg border border-comply-green-border/50 bg-comply-green/20">
-              <IconSchool size={28} className="text-comply-green-border" stroke={1.5} />
+            <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg border border-comply-purple-border/50 bg-comply-purple/20">
+              <IconSchool size={28} className="text-comply-purple-border" stroke={1.5} />
             </span>
             <div>
               <SectionLabel>Security training</SectionLabel>
@@ -595,7 +603,7 @@ export function TrainingPageContent({
             </div>
           </div>
           <div className="text-center lg:text-right">
-            <p className="font-mono text-4xl font-semibold tracking-tight text-comply-green">
+            <p className="font-mono text-4xl font-semibold tracking-tight text-comply-purple">
               {overallPct}%
             </p>
             <p className="text-xs text-comply-text-tertiary">overall completion</p>
@@ -612,7 +620,7 @@ export function TrainingPageContent({
       </div>
 
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-        <StatCard label="Modules" value={String(trainingModules.length)} accent="green" />
+        <StatCard label="Modules" value={String(trainingModules.length)} accent="purple" />
         <StatCard label="Complete" value={String(complete)} accent="green" />
         <StatCard label="At risk / overdue" value={String(atRisk)} accent="amber" />
         <StatCard label="Overdue (people)" value={String(overdueMembers.length)} accent="red" />
@@ -625,7 +633,7 @@ export function TrainingPageContent({
             <Card key={m.id} elevated={m.status === "At risk" || m.status === "Overdue"}>
               <CardBody>
                 <div className="flex items-start justify-between gap-2">
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-comply-green-border/30 bg-comply-green/15 text-comply-green-border">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-comply-purple-border/30 bg-comply-purple/15 text-comply-purple-border">
                     <IconSchool size={20} stroke={1.5} />
                   </span>
                   <span
@@ -642,13 +650,13 @@ export function TrainingPageContent({
                   {m.description}
                 </p>
                 {m.hasCourse ? (
-                  <p className="mt-2 text-[11px] font-medium text-comply-green-border">
+                  <p className="mt-2 text-[11px] font-medium text-comply-purple-border">
                     Interactive course · {m.lessonCount ?? 0} lessons + quiz
                   </p>
                 ) : (
                   <p className="mt-2 text-[11px] text-comply-text-tertiary">Custom module (no lessons)</p>
                 )}
-                <p className="mt-3 font-mono text-2xl font-semibold tracking-tight text-comply-green">
+                <p className="mt-3 font-mono text-2xl font-semibold tracking-tight text-comply-purple">
                   {m.completed}
                   <span className="text-base font-normal text-comply-text-tertiary">/{m.total}</span>
                   <span className="ml-2 text-sm font-sans font-normal text-comply-text-secondary">
@@ -664,7 +672,7 @@ export function TrainingPageContent({
                     {m.duration}
                   </span>
                   <span>{m.due ? `Due ${m.due}` : "No due date"}</span>
-                  <span className="font-mono text-[10px] text-comply-green-border">
+                  <span className="font-mono text-[10px] text-comply-purple-border">
                     {m.framework ?? "General"}
                   </span>
                 </div>
@@ -801,7 +809,7 @@ export function TrainingPageContent({
                     <td className="font-medium">
                       {m.name}
                       {currentMemberId === m.id ? (
-                        <span className="ml-1 text-[10px] text-comply-green-border">(you)</span>
+                        <span className="ml-1 text-[10px] text-comply-purple-border">(you)</span>
                       ) : null}
                     </td>
                     <td className="min-w-[160px]">
@@ -840,7 +848,7 @@ export function TrainingPageContent({
                                 <button
                                   type="button"
                                   disabled={saving}
-                                  className="text-left text-xs font-medium text-comply-green-border hover:underline disabled:opacity-50"
+                                  className="text-left text-xs font-medium text-comply-purple-border hover:underline disabled:opacity-50"
                                   onClick={() => openCourse(a.id, a.moduleId)}
                                 >
                                   Take {a.moduleName ?? "course"}
@@ -849,7 +857,7 @@ export function TrainingPageContent({
                                 <button
                                   type="button"
                                   disabled={saving}
-                                  className="text-left text-xs font-medium text-comply-text-tertiary hover:text-comply-green-border disabled:opacity-50"
+                                  className="text-left text-xs font-medium text-comply-text-tertiary hover:text-comply-purple-border disabled:opacity-50"
                                   onClick={() =>
                                     void updateAssignment(a.id, "COMPLETE", { force: true })
                                   }
@@ -861,7 +869,7 @@ export function TrainingPageContent({
                                 <button
                                   type="button"
                                   disabled={saving}
-                                  className="text-left text-xs font-medium text-comply-green-border hover:underline disabled:opacity-50"
+                                  className="text-left text-xs font-medium text-comply-purple-border hover:underline disabled:opacity-50"
                                   onClick={() => void updateAssignment(a.id, "COMPLETE")}
                                 >
                                   Complete {a.moduleName ?? "module"}
@@ -875,7 +883,7 @@ export function TrainingPageContent({
                             key={a.id}
                             type="button"
                             disabled={saving}
-                            className="inline-flex items-center gap-1 text-left text-[11px] text-comply-text-tertiary hover:text-comply-green-border disabled:opacity-50"
+                            className="inline-flex items-center gap-1 text-left text-[11px] text-comply-text-tertiary hover:text-comply-purple-border disabled:opacity-50"
                             onClick={() => void downloadCertificate(a.id)}
                           >
                             <IconCertificate size={12} />

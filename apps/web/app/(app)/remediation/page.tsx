@@ -60,7 +60,7 @@ export default async function RemediationPage() {
                 <ol className="mt-5 space-y-2.5 border-t border-[var(--border)] pt-5">
                   {plan.steps.map((s, i) => (
                     <li key={i} className="flex gap-3 text-sm text-comply-text-secondary">
-                      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-comply-elevated font-mono text-xs font-semibold text-comply-green-border">
+                      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-comply-elevated font-mono text-xs font-semibold text-comply-purple-border">
                         {i + 1}
                       </span>
                       <span className="pt-0.5 leading-relaxed">{s}</span>

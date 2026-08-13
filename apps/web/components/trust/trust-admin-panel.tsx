@@ -111,7 +111,7 @@ export function TrustAdminPanel({ initial }: { initial: TrustAdminData }) {
                 checked={published}
                 disabled={saving}
                 onChange={(e) => void save({ published: e.target.checked })}
-                className="rounded text-comply-green"
+                className="rounded text-comply-purple"
               />
             </label>
 
@@ -127,7 +127,7 @@ export function TrustAdminPanel({ initial }: { initial: TrustAdminData }) {
                 checked={showScores}
                 disabled={saving}
                 onChange={(e) => void save({ showScores: e.target.checked })}
-                className="rounded text-comply-green"
+                className="rounded text-comply-purple"
               />
             </label>
 

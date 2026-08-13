@@ -32,7 +32,7 @@ export function PlanUpgradePanel({
   const copy = FEATURE_COPY[feature];
   return (
     <div className="marketing-panel marketing-panel-highlight mx-auto max-w-lg p-8 text-center">
-      <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-md border border-comply-green-border/40 bg-comply-green/15 text-comply-green-border">
+      <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-md border border-comply-purple-border/40 bg-comply-purple/15 text-comply-purple-border">
         <IconLock size={22} stroke={1.5} />
       </span>
       <h2 className="mt-5 text-lg font-medium tracking-tight text-comply-text-primary">

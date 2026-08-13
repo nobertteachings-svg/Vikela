@@ -76,7 +76,7 @@ export function GapsListToolbar({ className }: GapsListToolbarProps) {
   }
 
   const selectClass =
-    "rounded-md border border-white/10 bg-white/[0.04] px-3 py-2 text-sm text-comply-text-primary focus:border-comply-green-border focus:outline-none focus:ring-1 focus:ring-comply-green-border/40";
+    "rounded-md border border-white/10 bg-white/[0.04] px-3 py-2 text-sm text-comply-text-primary focus:border-comply-purple-border focus:outline-none focus:ring-1 focus:ring-comply-purple-border/40";
 
   return (
     <div className={cn("flex flex-col gap-4", className)}>
@@ -89,7 +89,7 @@ export function GapsListToolbar({ className }: GapsListToolbarProps) {
             className={cn(
               "rounded-md border px-3 py-1.5 text-xs font-medium transition-colors",
               status === tab.value
-                ? "border-comply-green-border/50 bg-comply-green/15 text-comply-green-border"
+                ? "border-comply-purple-border/50 bg-comply-purple/15 text-comply-purple-border"
                 : "border-white/10 bg-white/[0.03] text-comply-text-secondary hover:border-white/20 hover:text-comply-text-primary"
             )}
           >

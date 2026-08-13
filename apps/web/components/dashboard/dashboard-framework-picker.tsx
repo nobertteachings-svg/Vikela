@@ -70,8 +70,8 @@ function FrameworkChip({
       className={cn(
         "relative flex w-full flex-col rounded-md border px-3 py-2.5 text-left transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-60",
         fw.enrolled
-          ? "border-comply-green/40 bg-comply-green/10"
-          : "border-[var(--border)] bg-[var(--bg-card)] hover:border-[var(--border-strong)]"
+          ? "border-comply-purple-border/60 bg-comply-purple/15 shadow-[0_0_20px_-8px_rgba(83,74,183,0.45)]"
+          : "border-white/[0.08] bg-black/25 hover:border-white/[0.14]"
       )}
     >
       <div className="flex items-start justify-between gap-2">
@@ -84,7 +84,7 @@ function FrameworkChip({
             "shrink-0 rounded-sm border px-1.5 py-0.5 text-[9px] font-medium uppercase tracking-wide",
             fw.enrolled
               ? "border-[var(--green-dark)] bg-[var(--green)] text-[var(--green-light)]"
-              : "border-[var(--border)] text-comply-muted"
+              : "border-white/[0.1] text-comply-muted"
           )}
         >
           {fw.enrolled ? "On" : "Add"}
@@ -92,17 +92,17 @@ function FrameworkChip({
       </div>
       <div className="mt-2 flex flex-wrap gap-1">
         {fw.recommended && (
-          <span className="rounded-sm border border-comply-green/30 bg-comply-green/10 px-1.5 py-0.5 text-[9px] text-comply-green">
+          <span className="rounded-sm border border-comply-purple-border/40 bg-comply-purple/10 px-1.5 py-0.5 text-[9px] text-comply-purple-light">
             Popular
           </span>
         )}
         {fw.isNew && (
-          <span className="rounded-sm border border-comply-amber/40 bg-comply-amber/10 px-1.5 py-0.5 text-[9px] text-comply-amber">
+          <span className="rounded-sm border border-comply-amber-dark/40 bg-comply-amber-light/20 px-1.5 py-0.5 text-[9px] text-comply-amber-text">
             New
           </span>
         )}
         {fw.enrolled && fw.score > 0 && (
-          <span className="rounded-sm bg-comply-green/10 px-1.5 py-0.5 font-mono text-[9px] text-comply-green">
+          <span className="rounded-sm bg-comply-purple/10 px-1.5 py-0.5 font-mono text-[9px] text-comply-purple-light">
             {fw.score}%
           </span>
         )}
@@ -218,7 +218,7 @@ export function DashboardFrameworkPicker({
       <CardBody className="space-y-5">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="flex items-start gap-2 text-sm text-comply-text-secondary">
-            <IconStack2 size={18} className="mt-0.5 shrink-0 text-comply-green-border" stroke={1.5} />
+            <IconStack2 size={18} className="mt-0.5 shrink-0 text-comply-purple-border" stroke={1.5} />
             <p className="max-w-xl leading-relaxed">
               Enable the frameworks your customers ask for. Vikela maps code, cloud, and identity
               findings into each program from one dashboard.
@@ -230,7 +230,7 @@ export function DashboardFrameworkPicker({
                 type="button"
                 disabled={busy}
                 onClick={addPopular}
-                className="rounded-md border border-white/[0.1] px-2.5 py-1 text-xs text-comply-text-secondary transition-colors hover:border-comply-green/40 hover:text-comply-text-primary disabled:opacity-50"
+                className="rounded-md border border-white/[0.1] px-2.5 py-1 text-xs text-comply-text-secondary transition-colors hover:border-comply-purple-border/40 hover:text-comply-text-primary disabled:opacity-50"
               >
                 Add popular
               </button>
@@ -238,7 +238,7 @@ export function DashboardFrameworkPicker({
                 type="button"
                 disabled={busy}
                 onClick={enableAll}
-                className="rounded-md border border-white/[0.1] px-2.5 py-1 text-xs text-comply-text-secondary transition-colors hover:border-comply-green/40 hover:text-comply-text-primary disabled:opacity-50"
+                className="rounded-md border border-white/[0.1] px-2.5 py-1 text-xs text-comply-text-secondary transition-colors hover:border-comply-purple-border/40 hover:text-comply-text-primary disabled:opacity-50"
               >
                 Enable all
               </button>
@@ -282,7 +282,7 @@ export function DashboardFrameworkPicker({
 
         {enrolled.length > 0 && (
           <div className="space-y-4 border-t border-white/[0.06] pt-5">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-comply-green-border">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-comply-purple-border">
               Readiness
             </p>
             {enrolled.map((fw) => (

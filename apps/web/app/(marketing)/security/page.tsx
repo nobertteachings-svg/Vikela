@@ -65,7 +65,7 @@ export default function SecurityPage() {
                       key={p.title}
                       className="flex gap-3 rounded-md border border-white/[0.08] bg-black/20 p-4"
                     >
-                      <Icon size={20} className="shrink-0 text-comply-green-border" stroke={1.5} />
+                      <Icon size={20} className="shrink-0 text-comply-purple-border" stroke={1.5} />
                       <div>
                         <p className="text-sm font-medium text-comply-text-primary">{p.title}</p>
                         <p className="mt-0.5 text-xs text-comply-text-secondary">{p.desc}</p>

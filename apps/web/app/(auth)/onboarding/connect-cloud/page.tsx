@@ -27,7 +27,7 @@ export default function OnboardingConnectCloudPage() {
           <Link
             key={c.name}
             href={c.href}
-            className="rounded-md border border-[var(--border)] bg-comply-card px-4 py-2 text-xs font-medium text-comply-text-primary hover:border-comply-green-border"
+            className="rounded-md border border-[var(--border)] bg-comply-card px-4 py-2 text-xs font-medium text-comply-text-primary hover:border-comply-purple-border"
           >
             {c.name}
           </Link>

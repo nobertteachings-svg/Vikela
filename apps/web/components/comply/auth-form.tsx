@@ -60,7 +60,7 @@ export function AuthFooterLink({
   return (
     <>
       {text}{" "}
-      <Link href={href} className="text-comply-green hover:underline">
+      <Link href={href} className="text-comply-purple hover:underline">
         {linkText}
       </Link>
     </>

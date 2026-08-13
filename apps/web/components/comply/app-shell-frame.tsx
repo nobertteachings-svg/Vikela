@@ -10,11 +10,21 @@ export function AppShellFrame({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="app-bg relative min-h-screen overflow-x-hidden">
+      <div
+        className="app-ambient-orb absolute -left-40 top-0 h-[420px] w-[420px] rounded-full bg-comply-purple/20"
+        aria-hidden
+      />
+      <div
+        className="app-ambient-orb absolute -right-32 top-1/3 h-[300px] w-[300px] rounded-full bg-comply-green/10"
+        aria-hidden
+      />
+      <div className="app-grid-overlay pointer-events-none absolute inset-0 opacity-50" aria-hidden />
+
       <Sidebar />
-      <main className="relative z-10 min-h-screen pt-12 md:pl-14 md:pt-0 lg:pl-56">
-        <div className="mx-auto w-full max-w-[1400px] px-3 py-4 sm:px-5 sm:py-5 lg:px-8 lg:py-7">
+      <main className="relative z-10 min-h-screen pl-[4.5rem] lg:pl-52">
+        <div className="px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
           <WorkspaceIdentityBar />
-          {isLoaded && auditor ? <ReadOnlyBadge /> : null}
+          {isLoaded && auditor && <ReadOnlyBadge />}
           {children}
         </div>
       </main>

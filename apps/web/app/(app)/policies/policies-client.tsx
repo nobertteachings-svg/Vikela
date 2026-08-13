@@ -266,7 +266,7 @@ export function PoliciesClient({
                 className={cn(
                   "w-full rounded-lg px-3 py-2.5 text-left text-xs transition-colors",
                   selectedId === p.id
-                    ? "nav-active-glow bg-comply-green font-medium text-white"
+                    ? "nav-active-glow bg-comply-purple font-medium text-white"
                     : "text-comply-text-secondary hover:bg-white/[0.04] hover:text-comply-text-primary"
                 )}
               >

@@ -18,7 +18,7 @@ export function OnboardingShell({
   skipHref?: string;
 }) {
   return (
-    <div className="flex min-h-screen flex-col items-center bg-comply-primary px-4 py-10 sm:px-6 sm:py-12">
+    <div className="flex min-h-screen flex-col items-center bg-comply-primary px-6 py-12">
       <div className="w-full max-w-lg">
         <p className="text-center text-xs text-comply-text-secondary">
           Step {step} of 3
@@ -27,7 +27,7 @@ export function OnboardingShell({
           {[1, 2, 3].map((s) => (
             <span
               key={s}
-              className={`h-2 w-2 rounded-full ${s <= step ? "bg-comply-green" : "bg-comply-text-secondary/30"}`}
+              className={`h-2 w-2 rounded-full ${s <= step ? "bg-comply-purple" : "bg-comply-text-secondary/30"}`}
             />
           ))}
         </div>
@@ -38,8 +38,8 @@ export function OnboardingShell({
           {continueHref && (
             <Link
               href={continueHref}
-              className={`rounded-md bg-comply-green px-6 py-2.5 text-sm font-medium text-comply-green-light ${
-                continueDisabled ? "pointer-events-none opacity-40" : "hover:bg-comply-green-dark"
+              className={`rounded-md bg-comply-purple px-6 py-2.5 text-sm font-medium text-white ${
+                continueDisabled ? "pointer-events-none opacity-40" : "hover:bg-comply-purple-dark"
               }`}
             >
               Continue

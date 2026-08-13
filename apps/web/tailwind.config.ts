@@ -17,8 +17,8 @@ const config: Config = {
           foreground: "var(--text-primary)",
         },
         primary: {
-          DEFAULT: "var(--green)",
-          foreground: "var(--green-light)",
+          DEFAULT: "var(--purple)",
+          foreground: "var(--text-primary)",
         },
         comply: {
           app: "var(--bg-app)",

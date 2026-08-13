@@ -27,7 +27,11 @@ import { settingsTabs, type SettingsTab } from "@/lib/product-config";
 import { cn } from "@/lib/utils";
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
-  return <p className="page-eyebrow">{children}</p>;
+  return (
+    <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-comply-purple-border">
+      {children}
+    </p>
+  );
 }
 
 const TAB_ICONS: Record<SettingsTab, typeof IconBuilding> = {
@@ -296,11 +300,15 @@ export function SettingsPageContent({
       </PageHeader>
 
       {/* Workspace overview hero */}
-      <div className="marketing-panel marketing-panel-highlight relative overflow-hidden p-4 sm:p-6">
+      <div className="marketing-panel marketing-panel-highlight relative overflow-hidden p-6 sm:p-8">
+        <div
+          className="pointer-events-none absolute -right-12 -top-12 h-40 w-40 rounded-full bg-comply-purple/25 blur-3xl"
+          aria-hidden
+        />
         <div className="relative grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
           <div className="flex items-start gap-4">
-            <span className="hidden sm:flex h-14 w-14 shrink-0 items-center justify-center rounded-lg border border-comply-green/40 bg-comply-green/15">
-              <IconShieldCheck size={28} className="text-comply-green-border" stroke={1.5} />
+            <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg border border-comply-purple-border/50 bg-comply-purple/20 shadow-[0_0_24px_-4px_rgba(83,74,183,0.5)]">
+              <IconShieldCheck size={28} className="text-comply-purple-border" stroke={1.5} />
             </span>
             <div>
               <SectionLabel>Workspace</SectionLabel>
@@ -311,7 +319,7 @@ export function SettingsPageContent({
                 {org.slug} · {org.id}
               </p>
               <div className="mt-3 flex flex-wrap gap-2">
-                <span className="rounded-sm border border-comply-green-border/40 bg-comply-green/15 px-2 py-0.5 text-[10px] font-medium text-comply-green-border">
+                <span className="rounded-sm border border-comply-purple-border/40 bg-comply-purple/15 px-2 py-0.5 text-[10px] font-medium text-comply-purple-border">
                   {org.plan} plan
                 </span>
                 <span className="rounded-sm border border-white/[0.08] bg-white/[0.04] px-2 py-0.5 text-[10px] text-comply-text-secondary">
@@ -339,7 +347,7 @@ export function SettingsPageContent({
       </div>
 
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-        <StatCard label="Team members" value={String(memberCount)} accent="green" />
+        <StatCard label="Team members" value={String(memberCount)} accent="purple" />
         <StatCard
           label="Help center"
           value="Docs"
@@ -347,7 +355,7 @@ export function SettingsPageContent({
           hint="In-app guide"
         />
         <StatCard label="API keys" value={String(apiKeys.length)} accent="amber" />
-        <StatCard label="Webhooks" value={String(webhooks.filter((w) => w.isActive).length)} accent="green" hint="active" />
+        <StatCard label="Webhooks" value={String(webhooks.filter((w) => w.isActive).length)} accent="purple" hint="active" />
       </div>
 
       <div className="flex flex-col gap-6 xl:flex-row">
@@ -368,7 +376,7 @@ export function SettingsPageContent({
                     tab === t
                       ? isDanger
                         ? "bg-comply-red/20 font-medium text-comply-red"
-                        : "bg-comply-green font-medium text-white"
+                        : "bg-comply-purple font-medium text-white"
                       : isDanger
                         ? "text-comply-red/80 hover:bg-comply-red/10"
                         : "text-comply-text-secondary hover:bg-white/[0.04] hover:text-comply-text-primary"
@@ -469,13 +477,13 @@ export function SettingsPageContent({
                   <label className="block text-sm">
                     <span className="text-comply-text-secondary">Trust center URL</span>
                     <div className="mt-1.5 flex flex-wrap items-center gap-2 rounded-md border border-white/[0.08] bg-black/25 px-3 py-2.5">
-                      <IconWorld size={16} className="text-comply-green-border" />
+                      <IconWorld size={16} className="text-comply-purple-border" />
                       <span className="font-mono text-xs text-comply-text-secondary">
                         /trust/{org.trustCenterSlug}
                       </span>
                       <Link
                         href="/trust"
-                        className="ml-auto text-xs font-medium text-comply-green-border hover:underline"
+                        className="ml-auto text-xs font-medium text-comply-purple-border hover:underline"
                       >
                         Manage &amp; publish
                       </Link>
@@ -506,7 +514,7 @@ export function SettingsPageContent({
                   <p className="text-sm text-comply-text-secondary">
                     Scan complete and gap alert emails go to org owners and admins. The same events
                     are also delivered to connected{" "}
-                    <Link href="/integrations" className="text-comply-green-border hover:underline">
+                    <Link href="/integrations" className="text-comply-purple-border hover:underline">
                       Slack and Microsoft Teams
                     </Link>{" "}
                     integrations. Weekly digest email is not available yet.
@@ -545,7 +553,7 @@ export function SettingsPageContent({
                           onChange={(e) =>
                             setNotifications((prev) => ({ ...prev, [n.key]: e.target.checked }))
                           }
-                          className="rounded text-comply-green"
+                          className="rounded text-comply-purple"
                         />
                       </label>
                       <div className="flex items-center justify-center">
@@ -560,7 +568,7 @@ export function SettingsPageContent({
                               setNotifications((prev) => ({ ...prev, [n.key]: e.target.checked }))
                             }
                             aria-label={`${n.label} Slack and Teams alerts`}
-                            className="rounded text-comply-green"
+                            className="rounded text-comply-purple"
                           />
                         )}
                       </div>
@@ -587,7 +595,7 @@ export function SettingsPageContent({
                       href="https://dashboard.clerk.com"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-comply-green-border hover:underline"
+                      className="text-comply-purple-border hover:underline"
                     >
                       Clerk
                     </a>
@@ -831,7 +839,7 @@ export function SettingsPageContent({
                       {wh.events.map((e) => (
                         <span
                           key={e}
-                          className="rounded-sm border border-comply-green-border/30 bg-comply-green/10 px-1.5 py-0.5 font-mono text-[10px] text-comply-green-border"
+                          className="rounded-sm border border-comply-purple-border/30 bg-comply-purple/10 px-1.5 py-0.5 font-mono text-[10px] text-comply-purple-border"
                         >
                           {e}
                         </span>

@@ -99,7 +99,11 @@ const PROVIDER_LABELS: Record<string, string> = {
 };
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
-  return <p className="page-eyebrow">{children}</p>;
+  return (
+    <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-comply-purple-border">
+      {children}
+    </p>
+  );
 }
 
 function ConnectAside() {
@@ -134,7 +138,7 @@ function ConnectAside() {
               key={check}
               className="flex items-start gap-2 text-xs leading-relaxed text-comply-text-secondary"
             >
-              <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-comply-green-border" />
+              <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-comply-purple-border" />
               {check}
             </li>
           ))}
@@ -154,7 +158,7 @@ function LoadingPanel({ message = "Preparing your workspace…" }: { message?: s
       <StepIndicator currentStep={1} />
       <div className="mt-8 flex flex-col items-center gap-4">
         <div
-          className="h-8 w-8 animate-spin rounded-full border-2 border-comply-green-border/30 border-t-comply-green"
+          className="h-8 w-8 animate-spin rounded-full border-2 border-comply-purple-border/30 border-t-comply-purple"
           aria-hidden
         />
         <p className="text-sm text-comply-text-secondary">{message}</p>
@@ -442,7 +446,7 @@ function NoReposFromProviderPanel({
             href={githubManageInstallationsUrl()}
             target="_blank"
             rel="noopener noreferrer"
-            className="font-medium text-comply-green-light underline"
+            className="font-medium text-comply-purple-light underline"
           >
             GitHub installed apps
           </a>
@@ -459,7 +463,7 @@ function NoReposFromProviderPanel({
               :{" "}
               <a
                 href={githubOAuthUrl(orgSlug, { from: "onboarding", clerkOrgId })}
-                className="font-medium text-comply-green-light underline"
+                className="font-medium text-comply-purple-light underline"
               >
                 Connect with GitHub OAuth again
               </a>
@@ -515,7 +519,7 @@ function MockRepoList({
                 "shrink-0 rounded-md border px-3 py-1.5 text-xs font-medium transition-all",
                 isConnected
                   ? "border-[var(--green-dark)] bg-[var(--green)] text-[var(--green-light)]"
-                  : "border-white/[0.12] bg-white/[0.04] text-comply-text-secondary hover:border-comply-green/40 hover:text-comply-text-primary"
+                  : "border-white/[0.12] bg-white/[0.04] text-comply-text-secondary hover:border-comply-purple-border/40 hover:text-comply-text-primary"
               )}
             >
               {isConnected ? "✓ Connected" : "Connect"}
@@ -631,7 +635,7 @@ function ConnectPanel({
             type="button"
             onClick={onRetry}
             disabled={retrying}
-            className="mt-2 inline-flex items-center gap-1 font-medium text-comply-green-light hover:underline disabled:opacity-50"
+            className="mt-2 inline-flex items-center gap-1 font-medium text-comply-purple-light hover:underline disabled:opacity-50"
           >
             <IconRefresh size={12} className={retrying ? "animate-spin" : ""} />
             {retrying ? "Retrying…" : "Retry setup"}
@@ -682,7 +686,7 @@ function ConnectPanel({
               {resolvedAuthMethod === "oauth" ? (
                 <a
                   href={githubOAuthUrl(connectSlug, { from: "onboarding", clerkOrgId })}
-                  className="text-comply-green-light hover:underline"
+                  className="text-comply-purple-light hover:underline"
                 >
                   Re-authorize GitHub OAuth
                 </a>
@@ -691,7 +695,7 @@ function ConnectPanel({
                   href={githubManageInstallationsUrl()}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-comply-green-light hover:underline"
+                  className="text-comply-purple-light hover:underline"
                 >
                   Update GitHub app access
                 </a>
@@ -712,7 +716,7 @@ function ConnectPanel({
       ) : (
         <div className="relative mt-8 flex flex-col items-center gap-3">
           <div
-            className="h-7 w-7 animate-spin rounded-full border-2 border-comply-green-border/30 border-t-comply-green"
+            className="h-7 w-7 animate-spin rounded-full border-2 border-comply-purple-border/30 border-t-comply-purple"
             aria-hidden
           />
           <p className="text-sm text-comply-text-secondary">Setting up your workspace…</p>

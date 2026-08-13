@@ -43,7 +43,7 @@ export function TrustCenterView({ data }: { data: TrustCenterViewData }) {
               {data.frameworks.map((f) => (
                 <span
                   key={f.id}
-                  className="comply-badge border-comply-green-border/40 bg-comply-green/15 text-comply-green-border normal-case"
+                  className="comply-badge border-comply-purple-border/40 bg-comply-purple/15 text-comply-purple-border normal-case"
                 >
                   {f.name}
                   {typeof f.score === "number" && f.score > 0 ? ` · ${f.score}%` : ""}

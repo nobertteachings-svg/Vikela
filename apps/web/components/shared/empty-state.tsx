@@ -26,7 +26,7 @@ export function EmptyState({
           {primaryAction ? (
             <Link
               href={primaryAction.href}
-              className="rounded-lg bg-comply-green px-4 py-2 text-sm font-medium text-white hover:opacity-90"
+              className="rounded-lg bg-comply-purple px-4 py-2 text-sm font-medium text-white hover:opacity-90"
             >
               {primaryAction.label}
             </Link>

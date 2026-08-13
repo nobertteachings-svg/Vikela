@@ -164,7 +164,7 @@ export function FullScanButton() {
   return (
     <div className="flex flex-col items-end gap-2">
       <ComplyButton
-        variant="primary"
+        variant="secondary"
         onClick={runFullScan}
         disabled={busy}
         className="text-sm"
@@ -191,7 +191,7 @@ export function FullScanButton() {
           <div className="flex items-start gap-3">
             <div className="mt-0.5 shrink-0">
               {busy ? (
-                <IconLoader2 size={20} className="animate-spin text-comply-green-border" />
+                <IconLoader2 size={20} className="animate-spin text-comply-purple-border" />
               ) : phase === "completed" ? (
                 <IconCheck size={20} className="text-comply-green" />
               ) : (
@@ -220,7 +220,7 @@ export function FullScanButton() {
                     This panel updates automatically, leave it open.
                   </p>
                   <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-comply-border/60">
-                    <div className="comply-scan-progress h-full rounded-full bg-comply-green-border" />
+                    <div className="comply-scan-progress h-full rounded-full bg-comply-purple-border" />
                   </div>
                   <p className="mt-2 font-mono text-[11px] text-comply-text-tertiary">
                     Elapsed {elapsedLabel}

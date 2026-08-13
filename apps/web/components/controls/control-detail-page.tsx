@@ -29,7 +29,7 @@ export function ControlDetailPageContent({ control }: { control: ControlDetail }
     <div className="comply-page max-w-3xl">
       <Link
         href="/controls"
-        className="inline-flex items-center gap-1.5 text-xs font-medium text-comply-text-secondary hover:text-comply-green-border"
+        className="inline-flex items-center gap-1.5 text-xs font-medium text-comply-text-secondary hover:text-comply-purple-border"
       >
         <IconArrowLeft size={14} />
         Back to controls
@@ -41,7 +41,7 @@ export function ControlDetailPageContent({ control }: { control: ControlDetail }
         description={control.description}
         className="border-b-0 pb-2"
       >
-        <span className="rounded-md border border-comply-green-border/40 bg-comply-green/15 px-3 py-1 font-mono text-sm font-semibold text-comply-green-border">
+        <span className="rounded-md border border-comply-purple-border/40 bg-comply-purple/15 px-3 py-1 font-mono text-sm font-semibold text-comply-purple-border">
           {control.code}
         </span>
       </PageHeader>
@@ -89,7 +89,7 @@ export function ControlDetailPageContent({ control }: { control: ControlDetail }
                 <Link
                   key={m.slug}
                   href={`/controls?framework=${m.slug}`}
-                  className="comply-badge border-comply-green-border/40 bg-comply-green/15 text-comply-green-border normal-case hover:border-comply-green-border"
+                  className="comply-badge border-comply-purple-border/40 bg-comply-purple/15 text-comply-purple-border normal-case hover:border-comply-purple-border"
                 >
                   {m.name}
                   {m.requirement ? ` · ${m.requirement}` : ""}
@@ -119,7 +119,7 @@ export function ControlDetailPageContent({ control }: { control: ControlDetail }
                 <li key={g.id} className="flex items-center justify-between gap-4 py-3 first:pt-0 last:pb-0">
                   <Link
                     href={`/gaps/${g.id}`}
-                    className="min-w-0 text-sm font-medium text-comply-text-primary hover:text-comply-green-border"
+                    className="min-w-0 text-sm font-medium text-comply-text-primary hover:text-comply-purple-border"
                   >
                     {g.title}
                   </Link>

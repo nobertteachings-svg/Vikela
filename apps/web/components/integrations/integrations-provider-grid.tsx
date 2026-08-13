@@ -182,7 +182,7 @@ export function IntegrationsProviderGrid({
               type="button"
               disabled={syncingId === int.integrationId}
               onClick={() => void syncRepos(int.integrationId!)}
-              className="text-xs font-medium text-comply-green-border hover:underline disabled:opacity-50"
+              className="text-xs font-medium text-comply-purple-border hover:underline disabled:opacity-50"
             >
               {syncingId === int.integrationId ? "Syncing…" : "Sync repos"}
             </button>
@@ -269,7 +269,7 @@ export function IntegrationsProviderGrid({
         {providers.map((int) => (
           <Card
             key={int.id}
-            className="transition-all hover:-translate-y-0.5 hover:border-comply-green-border/30"
+            className="transition-all hover:-translate-y-0.5 hover:border-comply-purple-border/30"
           >
             <CardBody>
               <div className="flex items-start justify-between gap-2">

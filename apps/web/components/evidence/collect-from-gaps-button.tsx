@@ -79,7 +79,7 @@ export function CollectFromGapsButton({
           className={cn(
             "rounded-md border px-3 py-2 text-xs",
             tone === "success" && "border-comply-green/30 bg-comply-green/10 text-comply-green",
-            tone === "neutral" && "border-comply-green-border/30 bg-comply-green/10 text-comply-text-secondary",
+            tone === "neutral" && "border-comply-purple-border/30 bg-comply-purple/10 text-comply-text-secondary",
             tone === "muted" && "border-white/10 bg-white/[0.04] text-comply-text-tertiary"
           )}
           role="status"
