@@ -1,4 +1,4 @@
-import { IconShieldCheck } from "@tabler/icons-react";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 type LogoPillProps = {
@@ -8,27 +8,38 @@ type LogoPillProps = {
 };
 
 export function LogoPill({ className, showLabel = true, size = "md" }: LogoPillProps) {
-  const iconBox =
-    size === "sm"
-      ? "h-9 w-9 shadow-[0_0_20px_-4px_var(--purple-glow)]"
-      : "h-11 w-11 shadow-[0_0_24px_-4px_rgba(83,74,183,0.5)]";
-  const iconSize = size === "sm" ? 18 : 22;
-  const labelClass =
-    size === "sm"
-      ? "text-base font-semibold tracking-tight text-comply-text-primary"
-      : "text-sm font-medium tracking-tight text-comply-text-primary";
+  if (!showLabel) {
+    const iconPx = size === "sm" ? 36 : 44;
+    return (
+      <span className={cn("inline-flex items-center", className)}>
+        <Image
+          src="/brand/shieldoq-icon.png"
+          alt="Shieldoq"
+          width={iconPx}
+          height={iconPx}
+          className="shrink-0 rounded-lg"
+          priority
+        />
+      </span>
+    );
+  }
+
+  const width = size === "sm" ? 148 : 176;
+  const height = size === "sm" ? 40 : 48;
 
   return (
-    <span className={cn("inline-flex items-center gap-2.5", className)}>
-      <span
+    <span className={cn("inline-flex items-center", className)}>
+      <Image
+        src="/brand/shieldoq-logo.png"
+        alt="Shieldoq"
+        width={width}
+        height={height}
         className={cn(
-          "relative flex shrink-0 items-center justify-center rounded-lg border border-comply-purple-border/50 bg-comply-purple/20",
-          iconBox
+          "w-auto object-contain object-left",
+          size === "sm" ? "h-8" : "h-10"
         )}
-      >
-        <IconShieldCheck size={iconSize} className="text-comply-purple-border" stroke={1.5} />
-      </span>
-      {showLabel && <span className={labelClass}>Shieldoq</span>}
+        priority
+      />
     </span>
   );
 }
