@@ -127,7 +127,7 @@ async function deliverScanNotifications(
     await deliverChannelAlerts(orgId, {
       kind: "scan_complete",
       orgName: org.name,
-      text: `Vikela: ${scanTypeLabel} finished for ${org.name}. Score: ${scoreLabel}. Gaps this scan: ${scan.gapCount ?? 0}.`,
+      text: `Shieldoq: ${scanTypeLabel} finished for ${org.name}. Score: ${scoreLabel}. Gaps this scan: ${scan.gapCount ?? 0}.`,
       scansUrl,
     });
   }
@@ -140,7 +140,7 @@ async function deliverScanNotifications(
     await deliverChannelAlerts(orgId, {
       kind: "gap_alerts",
       orgName: org.name,
-      text: `Vikela: ${totalMatching} critical/high gap(s) for ${org.name} (${criticalCount} critical, ${highCount} high).\n${top}`,
+      text: `Shieldoq: ${totalMatching} critical/high gap(s) for ${org.name} (${criticalCount} critical, ${highCount} high).\n${top}`,
       gapsUrl,
     });
   }

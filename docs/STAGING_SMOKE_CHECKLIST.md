@@ -49,7 +49,7 @@ Complete this section before running user flows.
 ### 1.1 Clerk
 
 - [ ] Staging Clerk app created (or dedicated dev instance) with **Organizations** enabled
-- [ ] Custom role **`org:auditor`** created: **Organizations → Roles** (Clerk key must be exactly `org:auditor`, maps to Vikela `AUDITOR` in DB)
+- [ ] Custom role **`org:auditor`** created: **Organizations → Roles** (Clerk key must be exactly `org:auditor`, maps to Shieldoq `AUDITOR` in DB)
 - [ ] **Web env:** `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` set on Vercel preview/production
 - [ ] **API env:** `CLERK_SECRET_KEY` set on Railway
 - [ ] **API env:** `CLERK_WEBHOOK_SECRET` set (from Clerk webhook endpoint)
@@ -60,7 +60,7 @@ Complete this section before running user flows.
 
 ### 1.2 Railway (API)
 
-- [ ] API deployed and healthy: `GET {API_URL}/health` → `{ "status": "ok", "service": "vikela-api" }`
+- [ ] API deployed and healthy: `GET {API_URL}/health` → `{ "status": "ok", "service": "shieldoq-api" }`
 - [ ] Required env vars set:
 
 | Variable | Required | Notes |
@@ -164,7 +164,7 @@ Requires §1.1 Clerk + §2 complete on same org.
 - [ ] **4.2** Click **Test** → `scan.completed` payload arrives (requires completed scan from §2)
 - [ ] **4.3** HMAC validates on raw POST body:
   ```bash
-  # X-Vikela-Signature: sha256=<hex>
+  # X-Shieldoq-Signature: sha256=<hex>
   # sha256 === HMAC-SHA256(webhook_secret, raw_body)
   ```
 - [ ] **4.4** Run scan (or use existing) → `gap.created` fires for **non-sample** gaps only (`isSample: false` in payload)

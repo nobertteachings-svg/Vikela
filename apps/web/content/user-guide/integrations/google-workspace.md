@@ -4,7 +4,7 @@
 **Connect type:** OAuth  
 **Path:** Integrations → Identity → **Google Workspace**
 
-## What Vikela uses it for
+## What Shieldoq uses it for
 
 Workspace directory posture: users, MFA, admin audit signals used by identity scans.
 
@@ -25,7 +25,7 @@ Separate from [Google Cloud](./gcp.md) project scanning.
 
 ## Permissions / scopes
 
-Admin SDK / directory scopes on the Vikela Google OAuth client.
+Admin SDK / directory scopes on the Shieldoq Google OAuth client.
 
 ## Customer vs platform
 
@@ -40,7 +40,7 @@ Connected; identity scan results appear.
 
 ## Disconnect
 
-Disconnect in Vikela; revoke third-party access in Google.
+Disconnect in Shieldoq; revoke third-party access in Google.
 
 ## Troubleshooting
 

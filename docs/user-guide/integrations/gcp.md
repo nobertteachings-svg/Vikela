@@ -4,7 +4,7 @@
 **Connect type:** OAuth  
 **Path:** Integrations → Cloud → **Google Cloud**
 
-## What Vikela uses it for
+## What Shieldoq uses it for
 
 GCP posture: IAM, audit logs, Security Command Center–related signals as implemented by the scanner.
 
@@ -18,11 +18,11 @@ GCP posture: IAM, audit logs, Security Command Center–related signals as imple
 
 1. **Integrations** → **Google Cloud** → **Connect**.
 2. Choose the Google account and grant OAuth consent.
-3. Return to Vikela; confirm **Connected**.
+3. Return to Shieldoq; confirm **Connected**.
 
 ## Permissions / scopes
 
-Cloud Platform / IAM read scopes as registered on the Vikela GCP OAuth client.
+Cloud Platform / IAM read scopes as registered on the Shieldoq GCP OAuth client.
 
 ## Customer vs platform
 
@@ -37,7 +37,7 @@ Connected; cloud or full scan completes.
 
 ## Disconnect
 
-Disconnect in Vikela; revoke under Google Account → Security → Third-party access.
+Disconnect in Shieldoq; revoke under Google Account → Security → Third-party access.
 
 ## Troubleshooting
 

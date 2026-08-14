@@ -1,24 +1,24 @@
-# Vikela Developer Handover Report
+# Shieldoq Developer Handover Report
 
 **Date:** June 15, 2026
-**Project:** Vikela - Universal Compliance Engine
+**Project:** Shieldoq - Universal Compliance Engine
 **Version:** 0.0.1
 
 ---
 
 ## Executive Summary
 
-Vikela is a comprehensive compliance automation platform that helps startups achieve and maintain compliance with major frameworks like SOC 2, ISO 27001, HIPAA, GDPR, and ISO 42001. The platform scans code repositories, cloud infrastructure, and identity providers to identify compliance gaps and provides AI-powered remediation assistance.
+Shieldoq is a comprehensive compliance automation platform that helps startups achieve and maintain compliance with major frameworks like SOC 2, ISO 27001, HIPAA, GDPR, and ISO 42001. The platform scans code repositories, cloud infrastructure, and identity providers to identify compliance gaps and provides AI-powered remediation assistance.
 
 **Current Status:** Development phase with core functionality implemented. Ready for deployment with proper configuration.
 
 ---
 
-## What Vikela Does
+## What Shieldoq Does
 
 ### Core Purpose
 
-Vikela automates compliance management by:
+Shieldoq automates compliance management by:
 - **Scanning** code repositories for security and compliance issues
 - **Monitoring** cloud infrastructure (AWS, Azure, GCP) for misconfigurations
 - **Auditing** identity providers (Okta, Azure AD, Google Workspace) for security best practices
@@ -125,7 +125,7 @@ The platform supports multi-tenant architecture:
 
 **Security Model:**
 - Uses AWS AssumeRole with external ID
-- Vikela platform credentials only for AssumeRole
+- Shieldoq platform credentials only for AssumeRole
 - Never stores customer AWS keys
 - CloudFormation template for customer setup
 
@@ -421,7 +421,7 @@ ENCRYPTION_KEY=  # Generate with: openssl rand -hex 32
 
 **Database:**
 ```bash
-DATABASE_URL=postgresql://postgres:postgres@localhost:5432/vikela
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/shieldoq
 DIRECT_URL=  # For Supabase pooler
 REDIS_URL=redis://localhost:6379
 ```
@@ -460,7 +460,7 @@ BITBUCKET_CLIENT_SECRET=
 AWS_VIKELA_ACCOUNT_ID=
 AWS_VIKELA_ACCESS_KEY_ID=
 AWS_VIKELA_SECRET_ACCESS_KEY=
-AWS_EXTERNAL_ID=vikela-scanner
+AWS_EXTERNAL_ID=shieldoq-scanner
 CLOUD_SCAN_CRON=0 2 * * *
 AZURE_TENANT_ID=
 AZURE_CLIENT_ID=
@@ -483,7 +483,7 @@ IDENTITY_SCAN_CRON=0 3 * * *
 AWS_S3_ACCESS_KEY_ID=
 AWS_S3_SECRET_ACCESS_KEY=
 AWS_S3_REGION=us-east-1
-AWS_S3_BUCKET=vikela-evidence
+AWS_S3_BUCKET=shieldoq-evidence
 ```
 
 **Billing:**
@@ -553,9 +553,9 @@ VIKELA_DEV_ORG_SLUG=demo
 5. Add environment variables
 
 **AWS AssumeRole (Required for Cloud Scanning):**
-1. Create IAM role in Vikela AWS account
+1. Create IAM role in Shieldoq AWS account
 2. Configure trust relationship with external ID
-3. Add Vikela platform credentials
+3. Add Shieldoq platform credentials
 4. Provide CloudFormation template to customers
 
 **AI Features (Optional but Recommended):**
@@ -651,7 +651,7 @@ npm audit fix --force      # Fix all (may include breaking changes)
 ```bash
 # 1. Clone repository
 git clone <repo-url>
-cd vikela
+cd shieldoq
 
 # 2. Copy environment file
 cp .env.example .env
@@ -817,7 +817,7 @@ npm run test:performance
 **AWS Security:**
 - AssumeRole only - no customer keys stored
 - External ID for cross-account role assumption
-- Vikela platform credentials for AssumeRole only
+- Shieldoq platform credentials for AssumeRole only
 
 ### Authentication
 
@@ -1055,7 +1055,7 @@ npm run dev -w @vikela/web
 
 ## Summary
 
-Vikela is a well-architected compliance automation platform with comprehensive features for code, cloud, and identity scanning. The application is functional for development with demo mode but requires proper configuration for production deployment.
+Shieldoq is a well-architected compliance automation platform with comprehensive features for code, cloud, and identity scanning. The application is functional for development with demo mode but requires proper configuration for production deployment.
 
 **Key Strengths:**
 - Comprehensive compliance scanning capabilities

@@ -28,7 +28,7 @@ export function LogoPill({ className, showLabel = true, size = "md" }: LogoPillP
       >
         <IconShieldCheck size={iconSize} className="text-comply-purple-border" stroke={1.5} />
       </span>
-      {showLabel && <span className={labelClass}>Vikela</span>}
+      {showLabel && <span className={labelClass}>Shieldoq</span>}
     </span>
   );
 }

@@ -17,8 +17,8 @@ type EnsureMembershipResult = {
   orgSlug?: string;
 };
 
-/** Prefer Vikela DB slug (may differ from Clerk slug after provision suffix). */
-async function resolveVikelaOrgSlug(): Promise<string | null> {
+/** Prefer Shieldoq DB slug (may differ from Clerk slug after provision suffix). */
+async function resolveShieldoqOrgSlug(): Promise<string | null> {
   if (!hasClerk) {
     return resolveDevOrgSlug() ?? null;
   }
@@ -49,7 +49,7 @@ export default async function IntegrationsPage() {
   let orgSlug: string | null = null;
 
   try {
-    orgSlug = await resolveVikelaOrgSlug();
+    orgSlug = await resolveShieldoqOrgSlug();
     [data, repos] = await Promise.all([
       complianceApi.integrations(),
       complianceApi.repositories(),

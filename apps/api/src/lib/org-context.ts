@@ -20,7 +20,7 @@ async function findOrgBySlugHint(slug: string): Promise<Organization | null> {
   const exact = await prisma.organization.findUnique({ where: { slug } });
   if (exact) return exact;
 
-  // Clerk orgSlug is often `optic-inc` while Vikela stores `optic-inc-tcwm3o`.
+  // Clerk orgSlug is often `optic-inc` while Shieldoq stores `optic-inc-tcwm3o`.
   const prefixed = await prisma.organization.findMany({
     where: { slug: { startsWith: `${slug}-` } },
     take: 2,

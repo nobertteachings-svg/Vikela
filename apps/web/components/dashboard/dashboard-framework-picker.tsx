@@ -220,7 +220,7 @@ export function DashboardFrameworkPicker({
           <div className="flex items-start gap-2 text-sm text-comply-text-secondary">
             <IconStack2 size={18} className="mt-0.5 shrink-0 text-comply-purple-border" stroke={1.5} />
             <p className="max-w-xl leading-relaxed">
-              Enable the frameworks your customers ask for. Vikela maps code, cloud, and identity
+              Enable the frameworks your customers ask for. Shieldoq maps code, cloud, and identity
               findings into each program from one dashboard.
             </p>
           </div>

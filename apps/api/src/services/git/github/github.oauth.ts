@@ -35,7 +35,7 @@ async function resolveOrg(orgSlug: string | null | undefined, clerkOrgId?: strin
 
   if (!org) {
     throw new Error(
-      `Organization not found${orgSlug ? `: ${orgSlug}` : ""}, create a workspace in Vikela first`
+      `Organization not found${orgSlug ? `: ${orgSlug}` : ""}, create a workspace in Shieldoq first`
     );
   }
   return org;

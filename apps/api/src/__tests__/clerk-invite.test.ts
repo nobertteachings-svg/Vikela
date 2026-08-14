@@ -19,7 +19,7 @@ describe("clerk roles", () => {
     assert.equal(parseInviteRole("MEMBER"), "MEMBER");
   });
 
-  it("maps Vikela roles to Clerk keys", () => {
+  it("maps Shieldoq roles to Clerk keys", () => {
     assert.equal(toClerkRole("AUDITOR"), "org:auditor");
     assert.equal(toClerkRole("MEMBER"), "org:member");
   });

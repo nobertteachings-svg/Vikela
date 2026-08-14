@@ -12,14 +12,14 @@ const CLOUDS = [
 
 export default function OnboardingConnectCloudPage() {
   return (
-    <BrowserChrome url="app.vikela.com/onboarding/connect-cloud" contentClassName="px-8 py-6">
+    <BrowserChrome url="app.shieldoq.com/onboarding/connect-cloud" contentClassName="px-8 py-6">
       <StepIndicator currentStep={1} />
 
       <h1 className="text-center text-sm font-medium text-comply-text-primary">
         Connect cloud infrastructure
       </h1>
       <p className="mt-1 max-w-md text-center text-xs text-comply-text-secondary">
-        AWS uses cross-account IAM AssumeRole. Vikela never stores your root credentials.
+        AWS uses cross-account IAM AssumeRole. Shieldoq never stores your root credentials.
       </p>
 
       <div className="mt-6 flex flex-wrap justify-center gap-2">

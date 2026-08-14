@@ -14,7 +14,7 @@ export default function TermsPage() {
   return (
     <DocPage
       title="Terms of Service"
-      description="Terms governing access to Vikela's compliance platform and related services."
+      description="Terms governing access to Shieldoq's compliance platform and related services."
       updated="May 22, 2025"
       sidebar={SIDEBAR}
       sections={[
@@ -23,7 +23,7 @@ export default function TermsPage() {
           title: "Agreement",
           content: (
             <ProseP>
-              By creating an account, connecting an integration, or using Vikela, you agree to
+              By creating an account, connecting an integration, or using Shieldoq, you agree to
               these Terms and our <a href="/privacy">Privacy Policy</a>. If you use the service
               on behalf of a company, you represent that you have authority to bind that company.
             </ProseP>
@@ -35,7 +35,7 @@ export default function TermsPage() {
           content: (
             <>
               <ProseP>
-                Vikela provides a Universal Compliance Engine: continuous mapping of security
+                Shieldoq provides a Universal Compliance Engine: continuous mapping of security
                 findings from code, cloud, and identity sources to controls across frameworks
                 including SOC 2, HIPAA, ISO 27001, ISO 42001, GDPR, PCI DSS, FedRAMP, CMMC, and
                 others supported in the product.
@@ -53,7 +53,7 @@ export default function TermsPage() {
           content: (
             <ProseUl>
               <ProseLi>Maintain accurate account information and protect login credentials</ProseLi>
-              <ProseLi>Ensure you have permission to connect third-party systems to Vikela</ProseLi>
+              <ProseLi>Ensure you have permission to connect third-party systems to Shieldoq</ProseLi>
               <ProseLi>Review AI-generated policies, gap remediations, and questionnaire answers before relying on them for audits</ProseLi>
               <ProseLi>Use the service in compliance with applicable laws and integration provider terms</ProseLi>
               <ProseLi>Not attempt to probe, disrupt, or reverse engineer the platform</ProseLi>
@@ -83,7 +83,7 @@ export default function TermsPage() {
           content: (
             <>
               <ProseP>
-                Vikela owns the platform, software, and documentation. You retain ownership of
+                Shieldoq owns the platform, software, and documentation. You retain ownership of
                 your data. You grant us a limited license to process your data solely to provide
                 and improve the service.
               </ProseP>
@@ -101,7 +101,7 @@ export default function TermsPage() {
           content: (
             <>
               <ProseP>
-                Vikela helps identify gaps and organize evidence; it does not guarantee
+                Shieldoq helps identify gaps and organize evidence; it does not guarantee
                 certification, audit outcomes, or regulatory approval. The service is provided
                 &quot;as is&quot; to the maximum extent permitted by law.
               </ProseP>
@@ -128,7 +128,7 @@ export default function TermsPage() {
                 delete or anonymize data per our retention schedule.
               </ProseP>
               <ProseP>
-                Questions: <a href="mailto:legal@vikela.com">legal@vikela.com</a>
+                Questions: <a href="mailto:legal@shieldoq.com">legal@shieldoq.com</a>
               </ProseP>
             </>
           ),

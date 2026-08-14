@@ -127,7 +127,7 @@ export function Sidebar() {
         <div className="mt-auto border-t border-white/[0.06] pt-3">
           <Link
             href="/"
-            title="Vikela website"
+            title="Shieldoq website"
             className="group flex items-center gap-3 rounded-lg px-2 py-2 text-sm text-comply-text-secondary transition-all hover:bg-white/[0.04] hover:text-comply-text-primary lg:px-3"
           >
             <IconHome

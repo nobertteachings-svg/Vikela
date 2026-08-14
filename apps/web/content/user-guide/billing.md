@@ -46,7 +46,7 @@ Exceeding limits returns upgrade messaging (HTTP 402).
 2. Review usage meters.
 3. Choose **Upgrade** / **Switch** / **Activate** on Starter or Growth.
 4. Complete **Stripe Checkout**.
-5. Return to Vikela; confirm plan badge and higher limits.
+5. Return to Shieldoq; confirm plan badge and higher limits.
 
 ### Manage payment & invoices
 

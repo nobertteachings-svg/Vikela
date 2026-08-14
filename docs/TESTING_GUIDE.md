@@ -1,6 +1,6 @@
 # Testing Guide for Developers
 
-This guide helps developers run and write tests for the Vikela project.
+This guide helps developers run and write tests for the Shieldoq project.
 
 ## Quick Start
 

@@ -91,7 +91,7 @@ export default function DocsPage() {
           content: (
             <>
               <ProseP>
-                Vikela reads configuration and security signals from your whole stack—not only
+                Shieldoq reads configuration and security signals from your whole stack—not only
                 application repositories.
               </ProseP>
               <div className="not-prose mt-4 grid gap-3 sm:grid-cols-3">
@@ -206,7 +206,7 @@ export default function DocsPage() {
                 Send header{" "}
                 <code className="rounded bg-black/40 px-1 font-mono text-xs">X-Org-Slug</code> on
                 every request. Contact{" "}
-                <a href="mailto:support@vikela.com">support@vikela.com</a> for OpenAPI access.
+                <a href="mailto:support@shieldoq.com">support@shieldoq.com</a> for OpenAPI access.
               </ProseP>
             </>
           ),

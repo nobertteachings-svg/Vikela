@@ -1,10 +1,10 @@
-# Vikela user guide
+# Shieldoq user guide
 
-**Audience:** organization admins and operators using Vikela day to day (not developers deploying the platform).
+**Audience:** organization admins and operators using Shieldoq day to day (not developers deploying the platform).
 
-Vikela maps **code**, **cloud**, and **identity** signals into compliance frameworks (SOC 2, ISO 27001, HIPAA, GDPR, and more). You connect providers, run scans, remediate gaps, collect evidence, and export for auditors.
+Shieldoq maps **code**, **cloud**, and **identity** signals into compliance frameworks (SOC 2, ISO 27001, HIPAA, GDPR, and more). You connect providers, run scans, remediate gaps, collect evidence, and export for auditors.
 
-## How Vikela fits together
+## How Shieldoq fits together
 
 ```text
 Integrations ──▶ Scans ──▶ Gaps / Findings ──▶ Controls & Frameworks

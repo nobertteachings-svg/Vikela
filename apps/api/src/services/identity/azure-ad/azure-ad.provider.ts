@@ -190,7 +190,7 @@ export class AzureAdProvider implements IIdentityProvider {
         source: "IAM",
         resourceType: "ConditionalAccessPolicy",
         resourceId: this.tenantId,
-        remediation: "Grant Policy.Read.All and re-consent the Vikela Azure AD application.",
+        remediation: "Grant Policy.Read.All and re-consent the Shieldoq Azure AD application.",
         controlCode: "CC6.1",
       });
     }

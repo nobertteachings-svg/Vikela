@@ -8,7 +8,7 @@ import "./globals.css";
 const hasClerk = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
 
 export const metadata: Metadata = {
-  title: "Vikela — Universal Compliance Engine",
+  title: "Shieldoq — Universal Compliance Engine",
   description:
     "Map code, cloud, and identity findings to SOC 2, HIPAA, ISO 27001, GDPR, PCI DSS, FedRAMP, CMMC, and more—one platform for your entire compliance program.",
 };

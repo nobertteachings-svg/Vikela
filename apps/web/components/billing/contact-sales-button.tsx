@@ -4,8 +4,8 @@ import { useEffect, useId, useRef, useState } from "react";
 import { IconCopy, IconMail, IconX } from "@tabler/icons-react";
 import { cn } from "@/lib/utils";
 
-const SALES_EMAIL = "hello@vikela.com";
-const SALES_SUBJECT = "Vikela Enterprise inquiry";
+const SALES_EMAIL = "hello@shieldoq.com";
+const SALES_SUBJECT = "Shieldoq Enterprise inquiry";
 
 type Variant = "card" | "cta" | "link";
 

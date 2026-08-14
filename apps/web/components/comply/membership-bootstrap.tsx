@@ -14,7 +14,7 @@ type EnsureMembershipResult = {
 const hasClerk = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
 
 /**
- * Ensures Vikela org + Member exist when Clerk session is ready.
+ * Ensures Shieldoq org + Member exist when Clerk session is ready.
  * Prevents 403 "not a member" on /dashboard before onboarding runs ensure-membership.
  */
 function MembershipBootstrapInner({ children }: { children: React.ReactNode }) {

@@ -43,7 +43,7 @@ export function requireApiAuth(req: FastifyRequest): { userId: string; orgId?: s
 export function verifyInternalApiSecret(req: FastifyRequest): boolean {
   const secret = process.env.INTERNAL_API_SECRET;
   if (!secret) return false;
-  const header = req.headers["x-vikela-internal-secret"];
+  const header = req.headers["x-shieldoq-internal-secret"];
   const value = Array.isArray(header) ? header[0] : header;
   return value === secret;
 }

@@ -50,7 +50,7 @@ export function Sidebar() {
           <Shield className="h-4 w-4 text-white" />
         </div>
         <div>
-          <span className="text-lg font-bold tracking-tight">Vikela</span>
+          <span className="text-lg font-bold tracking-tight">Shieldoq</span>
           <p className="text-[10px] text-muted leading-none">Protect. Shield. Comply.</p>
         </div>
       </div>

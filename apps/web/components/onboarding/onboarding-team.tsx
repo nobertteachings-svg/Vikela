@@ -52,7 +52,7 @@ export function OnboardingTeam() {
   };
 
   return (
-    <BrowserChrome url="app.vikela.com/onboarding/team" contentClassName="px-8 py-6">
+    <BrowserChrome url="app.shieldoq.com/onboarding/team" contentClassName="px-8 py-6">
       <StepIndicator currentStep={3} />
 
       <h1 className="text-center text-sm font-medium text-comply-text-primary">Invite your team</h1>

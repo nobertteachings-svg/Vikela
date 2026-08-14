@@ -37,7 +37,7 @@ export async function generateRemediation(params: {
     {
       model: MODEL,
       max_tokens: 1024,
-      system: `You are Vikela, a compliance copilot for ${params.orgName}. Write clear, actionable remediation steps for security findings mapped to SOC 2 / ISO 27001. Be specific about commands, config changes, and priority. Keep under 200 words.`,
+      system: `You are Shieldoq, a compliance copilot for ${params.orgName}. Write clear, actionable remediation steps for security findings mapped to SOC 2 / ISO 27001. Be specific about commands, config changes, and priority. Keep under 200 words.`,
       messages: [
         {
           role: "user",

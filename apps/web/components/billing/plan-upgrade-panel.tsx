@@ -3,7 +3,7 @@ import { IconLock, IconRocket } from "@tabler/icons-react";
 
 const FEATURE_COPY = {
   copilot: {
-    title: "Vikela Copilot is on Growth",
+    title: "Shieldoq Copilot is on Growth",
     body: "AI remediation, grounded answers, and gap explanations unlock on Growth. Built for teams closing audits and security questionnaires without a GRC hire.",
   },
   questionnaires: {

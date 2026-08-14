@@ -4,7 +4,7 @@
 **Connect type:** OAuth  
 **Path:** Integrations → Cloud → **Azure**
 
-## What Vikela uses it for
+## What Shieldoq uses it for
 
 Cloud posture related to Azure subscriptions (RBAC, Monitor, Defender-related signals as implemented by the scanner).
 
@@ -20,13 +20,13 @@ Cloud posture related to Azure subscriptions (RBAC, Monitor, Defender-related si
 1. **Integrations** → **Azure** → **Connect**.
 2. Sign in with your **Entra work/school** account.
 3. Consent to the requested Microsoft Graph / Azure permissions.
-4. Return to Vikela; confirm **Connected**.
+4. Return to Shieldoq; confirm **Connected**.
 
-> **Screenshot:** Microsoft consent screen for Vikela Azure app
+> **Screenshot:** Microsoft consent screen for Shieldoq Azure app
 
 ## Permissions / scopes
 
-Configured on the Vikela Azure AD app registration (directory read, subscription access as required for scanning). Your operator defines exact scopes.
+Configured on the Shieldoq Azure AD app registration (directory read, subscription access as required for scanning). Your operator defines exact scopes.
 
 ## Customer vs platform
 
@@ -41,7 +41,7 @@ Connected card; cloud/full scan runs against the linked subscription context.
 
 ## Disconnect
 
-Disconnect in Vikela; revoke the enterprise app under Entra ID → Enterprise applications if desired.
+Disconnect in Shieldoq; revoke the enterprise app under Entra ID → Enterprise applications if desired.
 
 ## Troubleshooting
 

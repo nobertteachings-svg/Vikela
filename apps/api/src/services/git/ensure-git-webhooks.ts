@@ -88,7 +88,7 @@ export async function ensureGitWebhooks(integrationId: string): Promise<{
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              description: "Vikela compliance scans",
+              description: "Shieldoq compliance scans",
               url: hookUrl,
               active: true,
               secret,

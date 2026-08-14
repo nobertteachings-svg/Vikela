@@ -70,8 +70,8 @@ jobs:
           exit 1
       - name: Setup database
         env:
-          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/vikela
-          DIRECT_URL: postgresql://postgres:postgres@localhost:5432/vikela
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/shieldoq
+          DIRECT_URL: postgresql://postgres:postgres@localhost:5432/shieldoq
           ENCRYPTION_KEY: 0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
         run: |
           npm run db:generate
@@ -79,8 +79,8 @@ jobs:
           npm run db:seed
       - name: Start API and Web
         env:
-          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/vikela
-          DIRECT_URL: postgresql://postgres:postgres@localhost:5432/vikela
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/shieldoq
+          DIRECT_URL: postgresql://postgres:postgres@localhost:5432/shieldoq
           REDIS_URL: redis://localhost:6379
           ENCRYPTION_KEY: 0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
           ANTHROPIC_API_KEY: sk-ant-ci-placeholder
@@ -126,8 +126,8 @@ jobs:
           sudo apt-get install k6
       - name: Start services
         env:
-          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/vikela
-          DIRECT_URL: postgresql://postgres:postgres@localhost:5432/vikela
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/shieldoq
+          DIRECT_URL: postgresql://postgres:postgres@localhost:5432/shieldoq
           REDIS_URL: redis://localhost:6379
           ENCRYPTION_KEY: 0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
         run: |

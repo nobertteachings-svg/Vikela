@@ -4,7 +4,7 @@
 **Connect type:** User API key (+ optional account ID / region)  
 **Path:** Integrations → Observability → **New Relic**
 
-## What Vikela uses it for
+## What Shieldoq uses it for
 
 APM and alert posture context via New Relic APIs (NerdGraph validation on connect).
 
@@ -19,9 +19,9 @@ APM and alert posture context via New Relic APIs (NerdGraph validation on connec
 
 1. In New Relic: **API keys** → create a **User** key (`NRAK-…`).
 2. Optionally note Account ID and whether you are on US or EU.
-3. In Vikela: **Integrations** → **New Relic** → **Connect**.
+3. In Shieldoq: **Integrations** → **New Relic** → **Connect**.
 4. Paste **User API key**, optional **account ID**, select **region**.
-5. Submit; Vikela validates via NerdGraph.
+5. Submit; Shieldoq validates via NerdGraph.
 6. Confirm **Connected**.
 
 > **Screenshot:** Connect New Relic dialog
@@ -43,7 +43,7 @@ Connected; NerdGraph validation passed.
 
 ## Disconnect
 
-Disconnect in Vikela; revoke the user key in New Relic.
+Disconnect in Shieldoq; revoke the user key in New Relic.
 
 ## Troubleshooting
 

@@ -7,9 +7,9 @@ export type OrgSettings = {
     memberInvites: boolean;
   };
   security: {
-    /** Reserved / unused until Vikela enforces MFA beyond Clerk. */
+    /** Reserved / unused until Shieldoq enforces MFA beyond Clerk. */
     mfaRequired: boolean;
-    /** Reserved / unused until Vikela enforces SSO beyond Clerk. */
+    /** Reserved / unused until Shieldoq enforces SSO beyond Clerk. */
     ssoEnforced: boolean;
     ipAllowlist: string[];
   };

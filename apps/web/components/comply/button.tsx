@@ -3,13 +3,13 @@
 import { cn } from "@/lib/utils";
 
 const variants = {
-  primary: "vikela-btn-primary",
-  secondary: "vikela-btn-secondary",
-  ghost: "vikela-btn-ghost",
-  success: "vikela-btn-success",
+  primary: "shieldoq-btn-primary",
+  secondary: "shieldoq-btn-secondary",
+  ghost: "shieldoq-btn-ghost",
+  success: "shieldoq-btn-success",
 } as const;
 
-export function VikelaButton({
+export function ShieldoqButton({
   children,
   variant = "primary",
   className,
@@ -30,5 +30,5 @@ export function VikelaButton({
   );
 }
 
-/** @deprecated Use VikelaButton */
-export const ComplyButton = VikelaButton;
+/** @deprecated Use ShieldoqButton */
+export const ComplyButton = ShieldoqButton;

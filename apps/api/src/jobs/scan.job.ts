@@ -5,7 +5,7 @@ const connection = new IORedis(process.env.REDIS_URL ?? "redis://localhost:6379"
   maxRetriesPerRequest: null,
 });
 
-export const scanQueue = new Queue("vikela-scans", { connection });
+export const scanQueue = new Queue("shieldoq-scans", { connection });
 
 export type ScanJobPayload =
   | {
@@ -27,7 +27,7 @@ export type ScanJobPayload =
 
 export function registerScanWorker(handler: (job: ScanJobPayload) => Promise<void>) {
   const worker = new Worker<ScanJobPayload>(
-    "vikela-scans",
+    "shieldoq-scans",
     async (job) => handler(job.data),
     { connection, concurrency: 2 }
   );

@@ -8,10 +8,10 @@ export function isValidAwsAccessKeyId(value: string | undefined): boolean {
 }
 
 /**
- * Resolve Vikela platform IAM credentials.
+ * Resolve Shieldoq platform IAM credentials.
  * Falls back to AWS_S3_* when AWS_VIKELA_ACCESS_KEY_ID was mistakenly set to the account id.
  */
-function resolveVikelaAccessKey(): { accessKeyId: string; secretAccessKey: string } | null {
+function resolveShieldoqAccessKey(): { accessKeyId: string; secretAccessKey: string } | null {
   const vikelaKey = process.env.AWS_VIKELA_ACCESS_KEY_ID?.trim();
   const vikelaSecret = process.env.AWS_VIKELA_SECRET_ACCESS_KEY?.trim();
   if (vikelaKey && vikelaSecret && isValidAwsAccessKeyId(vikelaKey)) {
@@ -29,12 +29,12 @@ function resolveVikelaAccessKey(): { accessKeyId: string; secretAccessKey: strin
   return null;
 }
 
-export function isVikelaAwsConfigured(): boolean {
-  return resolveVikelaAccessKey() != null;
+export function isShieldoqAwsConfigured(): boolean {
+  return resolveShieldoqAccessKey() != null;
 }
 
 function vikelaCredentials() {
-  const creds = resolveVikelaAccessKey();
+  const creds = resolveShieldoqAccessKey();
   if (!creds) {
     throw new Error(
       "AWS_VIKELA_ACCESS_KEY_ID must be an IAM access key (AKIA…/ASIA…), not the AWS account id. Set AWS_VIKELA_ACCESS_KEY_ID and AWS_VIKELA_SECRET_ACCESS_KEY."
@@ -47,9 +47,9 @@ export async function assumeCustomerRole(
   roleArn: string,
   externalId?: string
 ): Promise<AwsCredentialIdentity> {
-  if (!isVikelaAwsConfigured()) {
+  if (!isShieldoqAwsConfigured()) {
     throw new Error(
-      "Vikela AWS credentials not configured. Set AWS_VIKELA_ACCESS_KEY_ID (AKIA…) and AWS_VIKELA_SECRET_ACCESS_KEY."
+      "Shieldoq AWS credentials not configured. Set AWS_VIKELA_ACCESS_KEY_ID (AKIA…) and AWS_VIKELA_SECRET_ACCESS_KEY."
     );
   }
 
@@ -59,7 +59,7 @@ export async function assumeCustomerRole(
   const response = await sts.send(
     new AssumeRoleCommand({
       RoleArn: roleArn,
-      RoleSessionName: `vikela-${Date.now()}`,
+      RoleSessionName: `shieldoq-${Date.now()}`,
       ExternalId: externalId ?? process.env.AWS_EXTERNAL_ID,
       DurationSeconds: 3600,
     })

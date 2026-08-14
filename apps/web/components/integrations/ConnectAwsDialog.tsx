@@ -81,11 +81,11 @@ export function ConnectAwsDialog({ onClose, onSuccess }: { onClose: () => void; 
           </div>
 
           <p className="mb-4 text-sm text-muted">
-            Vikela uses cross-account <strong>AssumeRole</strong> only, we never store your AWS access keys.
+            Shieldoq uses cross-account <strong>AssumeRole</strong> only, we never store your AWS access keys.
           </p>
 
           <ol className="mb-4 list-decimal space-y-2 pl-5 text-sm text-zinc-300">
-            <li>Deploy the CloudFormation stack (creates VikelaScanner role)</li>
+            <li>Deploy the CloudFormation stack (creates ShieldoqScanner role)</li>
             <li>Copy the Role ARN from stack outputs</li>
             <li>Paste below and connect</li>
           </ol>
@@ -104,7 +104,7 @@ export function ConnectAwsDialog({ onClose, onSuccess }: { onClose: () => void; 
               <input
                 value={roleArn}
                 onChange={(e) => setRoleArn(e.target.value)}
-                placeholder="arn:aws:iam::123456789012:role/VikelaScanner"
+                placeholder="arn:aws:iam::123456789012:role/ShieldoqScanner"
                 className="mt-1 w-full rounded-md border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm focus:border-emerald-600 focus:outline-none"
               />
             </div>
@@ -113,7 +113,7 @@ export function ConnectAwsDialog({ onClose, onSuccess }: { onClose: () => void; 
               <input
                 value={externalId}
                 onChange={(e) => setExternalId(e.target.value)}
-                placeholder="vikela-scanner"
+                placeholder="shieldoq-scanner"
                 className="mt-1 w-full rounded-md border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm focus:border-emerald-600 focus:outline-none"
               />
             </div>

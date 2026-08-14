@@ -101,7 +101,7 @@ export class JumpCloudProvider implements IIdentityProvider {
       {
         title: `JumpCloud: ${users.length} active user(s) listed; MFA factor status not verified`,
         description:
-          "Vikela connected successfully and listed system users. Per-user MFA enrollment is not available via the current API scope, enforce MFA in JumpCloud policies and confirm in the Admin Portal.",
+          "Shieldoq connected successfully and listed system users. Per-user MFA enrollment is not available via the current API scope, enforce MFA in JumpCloud policies and confirm in the Admin Portal.",
         severity: "MEDIUM",
         source: "IAM",
         resourceType: "JumpCloudOrg",

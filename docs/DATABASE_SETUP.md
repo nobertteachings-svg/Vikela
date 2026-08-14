@@ -36,8 +36,8 @@ npm run db:local
 3. Point `.env` at local Postgres for day-to-day dev:
 
 ```env
-DATABASE_URL=postgresql://postgres:postgres@localhost:5432/vikela
-DIRECT_URL=postgresql://postgres:postgres@localhost:5432/vikela
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/shieldoq
+DIRECT_URL=postgresql://postgres:postgres@localhost:5432/shieldoq
 REDIS_URL=redis://localhost:6379
 ```
 

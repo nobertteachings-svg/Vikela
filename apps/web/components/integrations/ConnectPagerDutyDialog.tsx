@@ -41,7 +41,7 @@ export function ConnectPagerDutyDialog({
         <h2 className="text-lg font-semibold">Connect PagerDuty</h2>
         <p className="mt-2 text-sm text-muted">
           In PagerDuty: your user icon, My Profile, User Settings, Create API Access Key. Copy
-          the REST API key and paste it here. No Vikela .env variables are required.
+          the REST API key and paste it here. No Shieldoq .env variables are required.
         </p>
         <label className="mt-4 block text-sm font-medium">API access key</label>
         <input

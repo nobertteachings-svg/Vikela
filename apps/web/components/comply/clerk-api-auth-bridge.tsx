@@ -21,7 +21,7 @@ export function ClerkApiAuthBridge({ children }: { children: React.ReactNode }) 
       const resolvedClerkOrgId = orgId ?? storedClerkOrgId;
       if (resolvedClerkOrgId) headers["X-Clerk-Org-Id"] = resolvedClerkOrgId;
 
-      // Prefer Vikela DB slug (set after ensure-membership) over Clerk org slug.
+      // Prefer Shieldoq DB slug (set after ensure-membership) over Clerk org slug.
       const vikelaSlug =
         typeof window !== "undefined" ? localStorage.getItem("vikela_org_slug") : null;
       if (vikelaSlug) headers["X-Org-Slug"] = vikelaSlug;

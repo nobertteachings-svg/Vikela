@@ -4,7 +4,7 @@
 **Connect type:** OAuth  
 **Path:** Integrations → Git → **Bitbucket**
 
-## What Vikela uses it for
+## What Shieldoq uses it for
 
 - Workspaces and repositories for code scanning.
 - Pull request and repository settings signals.
@@ -19,8 +19,8 @@
 ## Connect steps
 
 1. **Integrations** → **Bitbucket** → **Connect**.
-2. Authorize Vikela in Bitbucket.
-3. Select workspace/repos when prompted in Vikela.
+2. Authorize Shieldoq in Bitbucket.
+3. Select workspace/repos when prompted in Shieldoq.
 4. Confirm **Connected**.
 
 ## Permissions / scopes
@@ -40,7 +40,7 @@ Connected card; repos listed; scan completes.
 
 ## Disconnect
 
-Disconnect in Vikela; revoke access under Bitbucket → Personal settings → App authorizations if desired.
+Disconnect in Shieldoq; revoke access under Bitbucket → Personal settings → App authorizations if desired.
 
 ## Troubleshooting
 

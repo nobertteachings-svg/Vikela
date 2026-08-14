@@ -185,7 +185,7 @@ export function LandingPage() {
                 One platform for every framework your customers ask for
               </h1>
               <p className="mt-5 max-w-lg text-base leading-relaxed text-comply-text-secondary">
-                Vikela maps findings from code, cloud, and identity into SOC 2, HIPAA,
+                Shieldoq maps findings from code, cloud, and identity into SOC 2, HIPAA,
                 ISO 27001, GDPR, PCI DSS, FedRAMP, CMMC, and more—so you run one program,
                 not ten spreadsheets.
               </p>
@@ -421,7 +421,7 @@ export function LandingPage() {
             </div>
             <p className="mt-10 text-center text-sm text-comply-text-secondary">
               {enterpriseFooterCopy}{" "}
-              <a href="mailto:hello@vikela.com" className="text-comply-purple-border hover:underline">
+              <a href="mailto:hello@shieldoq.com" className="text-comply-purple-border hover:underline">
                 Contact sales
               </a>
             </p>

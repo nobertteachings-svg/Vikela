@@ -98,7 +98,7 @@ export const billingPlans: BillingPlan[] = [
       "Up to 20 integrations",
       "Up to 25 team seats",
       "500 compliance checks per month",
-      "Vikela Copilot & policy generator",
+      "Shieldoq Copilot & policy generator",
       "Evidence vault & auditor exports",
       "Security questionnaires",
       "Priority support",

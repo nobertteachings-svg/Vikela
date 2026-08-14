@@ -81,7 +81,7 @@ async function syncMembership(
 export const clerkWebhookRoutes: FastifyPluginAsync = async (app) => {
   app.post("/webhooks/clerk", async (req, reply) => {
     // @clerk/backend verifyWebhook reads CLERK_WEBHOOK_SIGNING_SECRET;
-    // accept our existing CLERK_WEBHOOK_SECRET alias used across Vikela env docs.
+    // accept our existing CLERK_WEBHOOK_SECRET alias used across Shieldoq env docs.
     const secret =
       process.env.CLERK_WEBHOOK_SIGNING_SECRET?.trim() ||
       process.env.CLERK_WEBHOOK_SECRET?.trim();

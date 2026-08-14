@@ -4,7 +4,7 @@
 **Connect type:** API key  
 **Path:** Integrations → Identity → **JumpCloud**
 
-## What Vikela uses it for
+## What Shieldoq uses it for
 
 Directory / MFA / system user posture for identity compliance scans.
 
@@ -13,15 +13,15 @@ Directory / MFA / system user posture for identity compliance scans.
 - JumpCloud admin who can enable **API access** and create an API key.
 - Role note: API access is often tied to **Administrator with Billing**. Do not demote your last billing admin or you may lock yourself out of API access.
 - Free integration slot.
-- No Vikela-side JumpCloud platform secrets required.
+- No Shieldoq-side JumpCloud platform secrets required.
 
 ## Connect steps
 
 1. In JumpCloud Admin Portal, ensure your admin has API access enabled (**Enable API access**).
 2. Create / copy an **API key** (Settings → API Settings, or equivalent).
-3. In Vikela: **Integrations** → **JumpCloud** → **Connect**.
+3. In Shieldoq: **Integrations** → **JumpCloud** → **Connect**.
 4. Paste the **API key** only (no account ID field).
-5. Submit. Vikela verifies the key, then stores it encrypted.
+5. Submit. Shieldoq verifies the key, then stores it encrypted.
 6. Confirm **Connected**.
 
 > **Screenshot:** Connect JumpCloud dialog (API key)
@@ -43,7 +43,7 @@ Connected; identity scan completes.
 
 ## Disconnect
 
-Disconnect in Vikela; rotate/delete the API key in JumpCloud.
+Disconnect in Shieldoq; rotate/delete the API key in JumpCloud.
 
 ## Troubleshooting
 

@@ -3,7 +3,7 @@ import { readFileSync } from "fs";
 import { join } from "path";
 import { ok, err } from "../lib/response.js";
 import { connectAwsAccount } from "../services/cloud/aws/aws.connect.js";
-import { isVikelaAwsConfigured } from "../lib/aws-session.js";
+import { isShieldoqAwsConfigured } from "../lib/aws-session.js";
 import { scheduleCloudAccountScan } from "../jobs/cloud-scan.schedule.js";
 import { requireOrganization } from "../lib/org-context.js";
 import { ensureOrganizationFromSession } from "../lib/clerk-org-provision.js";
@@ -15,8 +15,8 @@ import { logAuditEvent } from "../lib/audit-log.js";
 
 function loadCloudFormationTemplate(): string {
   const candidates = [
-    join(process.cwd(), "src/assets/vikela-scanner-role.yaml"),
-    join(process.cwd(), "apps/api/src/assets/vikela-scanner-role.yaml"),
+    join(process.cwd(), "src/assets/shieldoq-scanner-role.yaml"),
+    join(process.cwd(), "apps/api/src/assets/shieldoq-scanner-role.yaml"),
   ];
   for (const p of candidates) {
     try {
@@ -31,24 +31,24 @@ function loadCloudFormationTemplate(): string {
 export const awsRoutes: FastifyPluginAsync = async (app) => {
   app.get("/aws/cloudformation-template", async (_req, reply) => {
     const vikelaAccount = process.env.AWS_VIKELA_ACCOUNT_ID ?? "VIKELA_ACCOUNT_ID";
-    const externalId = process.env.AWS_EXTERNAL_ID ?? "vikela-scanner";
+    const externalId = process.env.AWS_EXTERNAL_ID ?? "shieldoq-scanner";
     let template = loadCloudFormationTemplate();
     template = template
       .replace(/VIKELA_ACCOUNT_ID/g, vikelaAccount)
-      .replace(/vikela-scanner/g, externalId);
+      .replace(/shieldoq-scanner/g, externalId);
 
     return reply
       .header("Content-Type", "text/yaml")
-      .header("Content-Disposition", 'attachment; filename="vikela-scanner-role.yaml"')
+      .header("Content-Disposition", 'attachment; filename="shieldoq-scanner-role.yaml"')
       .send(template);
   });
 
   app.get("/aws/status", async (_req, reply) => {
     return reply.send(
       ok({
-        vikelaAwsConfigured: isVikelaAwsConfigured(),
+        vikelaAwsConfigured: isShieldoqAwsConfigured(),
         vikelaAccountId: process.env.AWS_VIKELA_ACCOUNT_ID ?? null,
-        externalId: process.env.AWS_EXTERNAL_ID ?? "vikela-scanner",
+        externalId: process.env.AWS_EXTERNAL_ID ?? "shieldoq-scanner",
       })
     );
   });

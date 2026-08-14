@@ -1,5 +1,5 @@
 import { isGitHubAppConfigured, isGitHubOAuthConfigured } from "./github-app.js";
-import { isVikelaAwsConfigured } from "./aws-session.js";
+import { isShieldoqAwsConfigured } from "./aws-session.js";
 import type { IntegrationProviderId } from "@vikela/shared";
 
 export type ConnectAvailability = {
@@ -51,7 +51,7 @@ export function getProviderConnectAvailability(
         ? { connectable: true }
         : { connectable: false, reason: "not_configured" };
     case "AWS":
-      // Dialog always shown; connect fails honestly if Vikela AWS STS is missing (unless demo).
+      // Dialog always shown; connect fails honestly if Shieldoq AWS STS is missing (unless demo).
       return { connectable: true };
     case "AZURE":
       return process.env.AZURE_CLIENT_ID || process.env.AZURE_CLOUD_CLIENT_ID
@@ -62,7 +62,7 @@ export function getProviderConnectAvailability(
         ? { connectable: true }
         : { connectable: false, reason: "not_configured" };
     case "CLOUDFLARE":
-      // Customer supplies API token, no Vikela-side Cloudflare app secrets required.
+      // Customer supplies API token, no Shieldoq-side Cloudflare app secrets required.
       return { connectable: true };
     case "OKTA":
       return process.env.OKTA_CLIENT_ID
@@ -83,13 +83,13 @@ export function getProviderConnectAvailability(
         ? { connectable: true }
         : { connectable: false, reason: "not_configured" };
     case "DATADOG":
-      // Customer supplies API + Application keys, no Vikela-side Datadog secrets required.
+      // Customer supplies API + Application keys, no Shieldoq-side Datadog secrets required.
       return { connectable: true };
     case "GRAFANA":
-      // Customer supplies base URL + service account token, no Vikela-side Grafana secrets required.
+      // Customer supplies base URL + service account token, no Shieldoq-side Grafana secrets required.
       return { connectable: true };
     case "PAGERDUTY":
-      // Customer supplies REST API token, no Vikela-side PagerDuty OAuth app required.
+      // Customer supplies REST API token, no Shieldoq-side PagerDuty OAuth app required.
       return { connectable: true };
     case "NEW_RELIC":
       // Customer supplies User API key (+ optional account id / region), no platform NR secrets.
@@ -99,7 +99,7 @@ export function getProviderConnectAvailability(
         ? { connectable: true }
         : { connectable: false, reason: "not_configured" };
     case "MICROSOFT_TEAMS":
-      // Customer supplies Incoming Webhook URL, no Vikela-side Teams OAuth app required.
+      // Customer supplies Incoming Webhook URL, no Shieldoq-side Teams OAuth app required.
       return { connectable: true };
     default:
       return { connectable: false, reason: "coming_soon" };
@@ -107,5 +107,5 @@ export function getProviderConnectAvailability(
 }
 
 export function awsPlatformReady(): boolean {
-  return isVikelaAwsConfigured();
+  return isShieldoqAwsConfigured();
 }

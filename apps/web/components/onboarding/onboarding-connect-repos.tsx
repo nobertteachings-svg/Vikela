@@ -200,7 +200,7 @@ function NeedsWorkspacePanel() {
         Create your workspace
       </h2>
       <p className="relative mt-1.5 text-center text-sm leading-relaxed text-comply-text-secondary">
-        Vikela links repositories per workspace. Create one for your company, then connect GitHub,
+        Shieldoq links repositories per workspace. Create one for your company, then connect GitHub,
         GitLab, or Bitbucket.
       </p>
       <div className="relative mt-6 flex justify-center [&_.cl-rootBox]:mx-auto">
@@ -247,7 +247,7 @@ function GitHubConnectSection({
   return (
     <div className="relative mt-4 rounded-md border border-white/[0.08] bg-black/20 p-3">
       <p className="mb-3 text-[11px] leading-relaxed text-comply-text-secondary">
-        Install the Vikela GitHub App and pick which repositories to grant (including{" "}
+        Install the Shieldoq GitHub App and pick which repositories to grant (including{" "}
         <strong className="text-comply-text-primary">private</strong> ones). Same flow as Railway /
         Vercel, choose <strong>Only select repositories</strong> on GitHub.
       </p>
@@ -450,14 +450,14 @@ function NoReposFromProviderPanel({
           >
             GitHub installed apps
           </a>
-          , select <strong>Vikela</strong>, click <strong>Configure</strong>, and grant access to the
+          , select <strong>Shieldoq</strong>, click <strong>Configure</strong>, and grant access to the
           repositories you want scanned. Then return here and click <strong>Refresh</strong>.
         </p>
       )}
       {provider === "github" && isOauth && (
         <p className="mt-2">
           Re-authorize GitHub with the <code className="font-mono text-[10px]">repo</code> scope so
-          Vikela can list your repositories
+          Shieldoq can list your repositories
           {orgSlug ? (
             <>
               :{" "}
@@ -593,7 +593,7 @@ function ConnectPanel({
         Select repositories to scan
       </h2>
       <p className="relative mt-1.5 text-center text-sm leading-relaxed text-comply-text-secondary">
-        After connecting GitHub, choose which repos Vikela can read. Your first scan runs on the
+        After connecting GitHub, choose which repos Shieldoq can read. Your first scan runs on the
         repo you pick below.
       </p>
 
@@ -975,7 +975,7 @@ function OnboardingConnectReposBody({
     if (urlError) setError(decodeURIComponent(urlError.replace(/\+/g, " ")));
   }, [urlError]);
 
-  /** Must be the Vikela DB slug (not Clerk slug) so OAuth resolves the correct org. */
+  /** Must be the Shieldoq DB slug (not Clerk slug) so OAuth resolves the correct org. */
   const connectSlug = status?.orgSlug ?? (status?.mode === "dev" ? "demo" : null);
 
   useEffect(() => {

@@ -28,7 +28,7 @@ export default function SecurityPage() {
   return (
     <DocPage
       title="Security"
-      description="How Vikela protects your compliance data, credentials, and connected systems."
+      description="How Shieldoq protects your compliance data, credentials, and connected systems."
       updated="May 22, 2025"
       sidebar={SIDEBAR}
       sections={[
@@ -38,7 +38,7 @@ export default function SecurityPage() {
           content: (
             <>
               <ProseP>
-                Vikela is built for teams that handle sensitive security posture data. Security
+                Shieldoq is built for teams that handle sensitive security posture data. Security
                 is not a checkbox on our roadmap—it is a constraint on every feature we ship.
               </ProseP>
               <div className="mt-6 grid gap-3 sm:grid-cols-2">
@@ -134,7 +134,7 @@ export default function SecurityPage() {
               </ProseP>
               <ProseP>
                 Report a vulnerability:{" "}
-                <a href="mailto:security@vikela.com">security@vikela.com</a>. We acknowledge
+                <a href="mailto:securityshieldoq.com">securityshieldoq.com</a>. We acknowledge
                 reports within two business days and coordinate disclosure responsibly.
               </ProseP>
             </>
@@ -146,7 +146,7 @@ export default function SecurityPage() {
           content: (
             <>
               <ProseP>
-                Vikela operates its own security program aligned with SOC 2 control objectives.
+                Shieldoq operates its own security program aligned with SOC 2 control objectives.
                 We practice what we sell: continuous monitoring, documented policies, and
                 evidence collection through the same engine our customers use.
               </ProseP>

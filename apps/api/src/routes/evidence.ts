@@ -135,7 +135,7 @@ export const evidenceRoutes: FastifyPluginAsync = async (app) => {
       (typeof sessionClaims?.primary_email_address === "string"
         ? sessionClaims.primary_email_address
         : undefined) ??
-      "unknown@vikela.local";
+      "unknown@shieldoq.local";
 
     if (auth?.userId) {
       captureProductEvent(

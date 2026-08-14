@@ -1,4 +1,4 @@
-// Shared types across Vikela apps
+// Shared types across Shieldoq apps
 
 export * from "./providers.js";
 

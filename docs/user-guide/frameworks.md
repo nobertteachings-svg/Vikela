@@ -5,7 +5,7 @@
 
 ## Purpose
 
-Enroll and monitor compliance frameworks. Vikela maps scan findings and evidence to framework controls so you can track **readiness** toward audit goals (SOC 2, ISO 27001, HIPAA, and others).
+Enroll and monitor compliance frameworks. Shieldoq maps scan findings and evidence to framework controls so you can track **readiness** toward audit goals (SOC 2, ISO 27001, HIPAA, and others).
 
 ## Catalog (typical)
 

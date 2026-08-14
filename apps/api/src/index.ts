@@ -125,7 +125,7 @@ async function main() {
 
   await app.register(authGuardPlugin);
 
-  app.get("/health", async () => ({ status: "ok", service: "vikela-api" }));
+  app.get("/health", async () => ({ status: "ok", service: "shieldoq-api" }));
 
   await app.register(dashboardRoutes, { prefix: "/api/v1" });
   await app.register(frameworksRoutes, { prefix: "/api/v1" });
@@ -169,7 +169,7 @@ async function main() {
   scheduleAllIdentityIntegrations().catch(() => {});
 
   await app.listen({ port: PORT, host: "0.0.0.0" });
-  console.log(`Vikela API running on http://localhost:${PORT}`);
+  console.log(`Shieldoq API running on http://localhost:${PORT}`);
 }
 
 main().catch((e) => {

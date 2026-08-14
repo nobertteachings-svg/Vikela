@@ -1,10 +1,10 @@
 # Auth0
 
 **Category:** Identity  
-**Connect type:** Management API (M2M) via dialog, customer Auth0 tenant + Vikela platform M2M client  
+**Connect type:** Management API (M2M) via dialog, customer Auth0 tenant + Shieldoq platform M2M client  
 **Path:** Integrations → Identity → **Auth0**
 
-## What Vikela uses it for
+## What Shieldoq uses it for
 
 Auth0 tenant posture for identity scans: users, roles, attack protection–related signals as implemented by the provider.
 
@@ -13,14 +13,14 @@ Auth0 tenant posture for identity scans: users, roles, attack protection–relat
 - Auth0 tenant (domain like `your-tenant.us.auth0.com`).
 - Free integration slot.
 - Platform must expose a Management API M2M application: `AUTH0_MANAGEMENT_CLIENT_ID` / `AUTH0_MANAGEMENT_CLIENT_SECRET` (or legacy `AUTH0_CLIENT_ID`). Else **Not configured**.
-- Your Auth0 tenant must authorize that M2M client (or you provide tenant domain so Vikela’s Management client can access it per your operator’s setup).
+- Your Auth0 tenant must authorize that M2M client (or you provide tenant domain so Shieldoq’s Management client can access it per your operator’s setup).
 
 ## Connect steps
 
 1. Note your Auth0 **Domain** (Auth0 Dashboard → tenant domain).
-2. In Vikela: **Integrations** → **Auth0** → **Connect**.
+2. In Shieldoq: **Integrations** → **Auth0** → **Connect**.
 3. In the dialog, enter your **Auth0 domain** (and any other fields shown).
-4. Submit. Vikela obtains a Management API token via the platform M2M client and verifies access.
+4. Submit. Shieldoq obtains a Management API token via the platform M2M client and verifies access.
 5. Confirm **Connected**.
 
 > **Screenshot:** Connect Auth0 dialog with domain field
@@ -42,7 +42,7 @@ Connected; identity or full scan runs without Auth0 auth errors.
 
 ## Disconnect
 
-Disconnect in Vikela. Optionally rotate the M2M client secret on the platform side.
+Disconnect in Shieldoq. Optionally rotate the M2M client secret on the platform side.
 
 ## Troubleshooting
 

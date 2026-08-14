@@ -4,7 +4,7 @@
 **Connect type:** OAuth v2  
 **Path:** Integrations → Communication → **Slack**
 
-## What Vikela uses it for
+## What Shieldoq uses it for
 
 Gap notifications and compliance alerts into Slack channels (chat write + channel discovery as scoped).
 
@@ -20,7 +20,7 @@ Gap notifications and compliance alerts into Slack channels (chat write + channe
 2. **Integrations** → **Slack** → **Connect**.
 3. Select workspace and approve scopes.
 4. Optionally pick a channel if the OAuth flow includes incoming-webhook channel selection.
-5. Return to Vikela; confirm **Connected**.
+5. Return to Shieldoq; confirm **Connected**.
 
 > **Screenshot:** Slack OAuth permission screen
 
@@ -32,13 +32,13 @@ Gap notifications and compliance alerts into Slack channels (chat write + channe
 - `team:read`
 - `incoming-webhook`
 
-Exact scopes are those requested by the Vikela Slack app.
+Exact scopes are those requested by the Shieldoq Slack app.
 
 ## Customer vs platform
 
 | Side | What |
 |------|------|
-| Platform | Slack app Client ID/Secret + redirect to Vikela callback (`/api/auth/slack/callback` via web proxy) |
+| Platform | Slack app Client ID/Secret + redirect to Shieldoq callback (`/api/auth/slack/callback` via web proxy) |
 | Customer | Authorize the workspace |
 
 ## Verify success
@@ -47,7 +47,7 @@ Connected; a test notification may appear depending on configuration. Check that
 
 ## Disconnect
 
-Disconnect in Vikela; remove the app under Slack → Manage apps.
+Disconnect in Shieldoq; remove the app under Slack → Manage apps.
 
 ## Troubleshooting
 

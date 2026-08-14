@@ -230,7 +230,7 @@ export const risks = [
     impact: "Medium",
     score: 8,
     owner: "sarah@acme.io",
-    mitigation: "SOC 2 reviews, DPAs, vendor inventory in Vikela",
+    mitigation: "SOC 2 reviews, DPAs, vendor inventory in Shieldoq",
     status: "Open" as RiskStatus,
     matrix: { l: 2, i: 2 },
     description: "Supply-chain breach via subprocessors with access to customer data.",

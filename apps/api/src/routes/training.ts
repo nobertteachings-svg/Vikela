@@ -502,7 +502,7 @@ export const trainingRoutes: FastifyPluginAsync = async (app) => {
   </style>
 </head>
 <body>
-  <p class="muted">Vikela · Security awareness training</p>
+  <p class="muted">Shieldoq · Security awareness training</p>
   <h1>Certificate of completion</h1>
   <p>This certifies that <strong>${escapeHtml(assignment.member.name)}</strong>
   (${escapeHtml(assignment.member.email)}) completed the following training for

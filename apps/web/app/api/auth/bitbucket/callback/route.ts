@@ -3,7 +3,7 @@ import { oauthProxyErrorRedirect } from "@/lib/oauth-callback-fallback";
 
 const API_URL = process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
 
-/** Complete Bitbucket OAuth on the API server-side, then redirect the browser to Vikela. */
+/** Complete Bitbucket OAuth on the API server-side, then redirect the browser to Shieldoq. */
 export async function GET(req: NextRequest) {
   const url = new URL(req.url);
   const state = url.searchParams.get("state");

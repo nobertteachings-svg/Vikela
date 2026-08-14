@@ -1,10 +1,10 @@
-# Vikela. Developer Handover
+# Shieldoq. Developer Handover
 
 **Last updated:** May 23, 2026  
-**Audience:** Engineers onboarding to the Vikela monorepo  
+**Audience:** Engineers onboarding to the Shieldoq monorepo  
 **Tagline:** *Protect. Shield. Comply.*. Universal Compliance Engine
 
-This document is the single read-through guide to how Vikela is built, how data flows, and where to change things safely.
+This document is the single read-through guide to how Shieldoq is built, how data flows, and where to change things safely.
 
 **Production status (May 2026):** Ready for design-partner / paid beta after env configuration and a passing [STAGING_SMOKE_CHECKLIST.md](./STAGING_SMOKE_CHECKLIST.md) run. Security (auth, RBAC, tenant isolation, secret redaction, webhook verification) is implemented, see the audit for launch checklist and remaining P2/GA items.
 
@@ -16,9 +16,9 @@ This document is the single read-through guide to how Vikela is built, how data 
 
 ---
 
-## 1. What Vikela Is
+## 1. What Shieldoq Is
 
-Vikela is a **B2B compliance platform** that:
+Shieldoq is a **B2B compliance platform** that:
 
 1. Connects **source control** (GitHub, GitLab, Bitbucket), **cloud** (AWS, Azure, GCP), and **identity** (Okta, Azure AD, Google Workspace, JumpCloud).
 2. Runs **scanners** that produce **gaps** (findings) mapped to **controls** and **frameworks** (SOC 2, HIPAA, ISO 27001, etc.).
@@ -31,7 +31,7 @@ New Clerk orgs go through an **onboarding flow** (connect repos → lite scan �
 ## 2. Repository Layout
 
 ```
-vikela/
+shieldoq/
 ├── apps/
 │   ├── api/                      # Fastify API, Prisma, BullMQ workers
 │   │   ├── prisma/
@@ -117,7 +117,7 @@ File: `apps/api/src/lib/org-context.ts`
 
 1. Org API key (`Bearer vk_*`) → `ApiKey.keyHash` → org
 2. Clerk session `orgId` → `Organization.clerkOrgId`
-3. Headers `X-Clerk-Org-Id` / `X-Org-Slug`, only when auth not enforced, user has Clerk session, or `X-Vikela-Internal-Secret` matches
+3. Headers `X-Clerk-Org-Id` / `X-Org-Slug`, only when auth not enforced, user has Clerk session, or `X-Shieldoq-Internal-Secret` matches
 4. Dev fallback: org `demo` when auth not enforced
 
 ### API authentication
@@ -215,7 +215,7 @@ Key models beyond core compliance entities:
 | Model | Purpose |
 |-------|---------|
 | `Organization.settings` | JSON, notifications, security prefs (incl. `ipAllowlist`) |
-| `Member` | Clerk user ↔ org with Vikela role |
+| `Member` | Clerk user ↔ org with Shieldoq role |
 | `PendingInvite` | Outstanding Clerk invites (email, role, expiry) |
 | `ApiKey` | Hashed API keys per org |
 | `OrgWebhook` | Outbound webhook endpoints |
@@ -519,4 +519,4 @@ See `.env.example`. Production-critical:
 
 ---
 
-*Vikela © 2026. Proprietary*
+*Shieldoq © 2026. Proprietary*

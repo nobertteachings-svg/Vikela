@@ -206,7 +206,7 @@ export function SettingsPageContent({
       const q = format === "PDF" ? "pdf" : format.toLowerCase();
       const { blob, filename } = await apiGetBlob(
         `/api/v1/settings/export?format=${q}`,
-        `vikela-export.${q === "pdf" ? "html" : q}`
+        `shieldoq-export.${q === "pdf" ? "html" : q}`
       );
       downloadBlob(blob, filename);
       setDangerMessage(`Exported ${filename}`);
@@ -223,7 +223,7 @@ export function SettingsPageContent({
       return;
     }
     setDangerMessage(
-      "Organization deletion is managed in Clerk (Organization settings, Delete). Vikela does not hard-delete orgs from this screen yet."
+      "Organization deletion is managed in Clerk (Organization settings, Delete). Shieldoq does not hard-delete orgs from this screen yet."
     );
   }
 
@@ -599,7 +599,7 @@ export function SettingsPageContent({
                     >
                       Clerk
                     </a>
-                    . Configure MFA policies and session settings there. Vikela does not override them.
+                    . Configure MFA policies and session settings there. Shieldoq does not override them.
                   </p>
                   <p className="text-sm leading-relaxed text-comply-text-secondary">
                     SSO / SAML is available through Clerk for Enterprise organizations. Contact sales if you need
@@ -735,7 +735,7 @@ export function SettingsPageContent({
                   </tbody>
                 </DataTable>
                 <p className="border-t border-white/[0.06] px-6 py-4 text-xs leading-relaxed text-comply-muted">
-                  Keys authenticate the Vikela API and CI scanners. Store secrets in your vault, keys are
+                  Keys authenticate the Shieldoq API and CI scanners. Store secrets in your vault, keys are
                   shown only once at creation.
                 </p>
               </CardBody>
@@ -781,7 +781,7 @@ export function SettingsPageContent({
                         value={webhookUrl}
                         onChange={(e) => setWebhookUrl(e.target.value)}
                         className="comply-input mt-1.5 font-mono text-xs"
-                        placeholder="https://example.com/webhooks/vikela"
+                        placeholder="https://example.com/webhooks/shieldoq"
                         type="url"
                       />
                     </label>

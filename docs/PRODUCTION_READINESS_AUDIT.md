@@ -1,7 +1,7 @@
-# Vikela. Production Readiness Audit
+# Shieldoq. Production Readiness Audit
 
 **Last updated:** August 12, 2026  
-**Scope:** `vikela` monorepo (`apps/web`, `apps/api`, `packages/shared`)  
+**Scope:** `shieldoq` monorepo (`apps/web`, `apps/api`, `packages/shared`)  
 **Companion docs:** [DEVELOPER_HANDOVER.md](./DEVELOPER_HANDOVER.md) · [STAGING_SMOKE_CHECKLIST.md](./STAGING_SMOKE_CHECKLIST.md) · [SMOKE_RUN_LOCAL.md](./SMOKE_RUN_LOCAL.md)
 
 This audit tracks what is **implemented**, what **still blocks production**, and what remains for enterprise scale. Use it with the handover doc for file-level detail and the staging checklist as the pre-launch gate.
@@ -33,7 +33,7 @@ This audit tracks what is **implemented**, what **still blocks production**, and
 | Outbound org webhooks | **Ready** | HMAC-signed `scan.completed` / `gap.created` dispatch |
 | Trust center | **Ready (basic public)** | In-app `/trust` admin + public `/trust/[slug]`; report requests persisted; no custom subdomain/CDN yet |
 
-**Verdict:** Vikela is **ready for design-partner / paid beta** once Clerk, Stripe, Postgres, Redis, and production env vars are configured and [STAGING_SMOKE_CHECKLIST.md](./STAGING_SMOKE_CHECKLIST.md) passes on staging. **GA** still needs scanner accuracy hardening, gap suppressions, public trust center, full provider coverage, HIPAA, and operational queue metrics.
+**Verdict:** Shieldoq is **ready for design-partner / paid beta** once Clerk, Stripe, Postgres, Redis, and production env vars are configured and [STAGING_SMOKE_CHECKLIST.md](./STAGING_SMOKE_CHECKLIST.md) passes on staging. **GA** still needs scanner accuracy hardening, gap suppressions, public trust center, full provider coverage, HIPAA, and operational queue metrics.
 
 ---
 
@@ -210,7 +210,7 @@ Required before auditor invites work in each Clerk instance (dev, staging, prod)
 - [ ] Confirm role key matches API constants in `apps/api/src/lib/clerk-roles.ts`
 - [ ] Smoke test: invite with `"role": "org:auditor"` via Clerk API or Team → Send invite (Auditor)
 - [ ] If invite returns 422, the role is missing, not an application bug
-- [ ] Inviter must hold Clerk **`org:admin`** (Vikela ADMIN/OWNER)
+- [ ] Inviter must hold Clerk **`org:admin`** (Shieldoq ADMIN/OWNER)
 
 ---
 

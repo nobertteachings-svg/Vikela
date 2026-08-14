@@ -6,7 +6,7 @@ export function apiHeaders(extra: Record<string, string> = {}): Record<string, s
   };
   const internal = process.env.INTERNAL_API_SECRET?.trim();
   if (internal) {
-    headers["X-Vikela-Internal-Secret"] = internal;
+    headers["X-Shieldoq-Internal-Secret"] = internal;
   }
   return headers;
 }

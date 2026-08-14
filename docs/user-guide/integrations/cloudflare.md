@@ -4,7 +4,7 @@
 **Connect type:** API token (customer-supplied)  
 **Path:** Integrations → Cloud → **Cloudflare**
 
-## What Vikela uses it for
+## What Shieldoq uses it for
 
 Cloudflare account posture: Access / Zero Trust, WAF, SSL, and related configuration signals used in compliance scanning.
 
@@ -13,22 +13,22 @@ Cloudflare account posture: Access / Zero Trust, WAF, SSL, and related configura
 - Cloudflare account with permission to create API tokens.
 - Your **Account ID** (Cloudflare dashboard → overview / account home).
 - Free integration slot.
-- **No** Vikela-side Cloudflare platform secrets are required.
+- **No** Shieldoq-side Cloudflare platform secrets are required.
 
 ## Connect steps
 
-1. In Cloudflare, create an **API Token** with read access to the resources Vikela needs (account-level read for Zero Trust / zone settings as appropriate). Prefer least privilege.
+1. In Cloudflare, create an **API Token** with read access to the resources Shieldoq needs (account-level read for Zero Trust / zone settings as appropriate). Prefer least privilege.
 2. Copy the **Account ID**.
-3. In Vikela: **Integrations** → **Cloudflare** → **Connect**.
+3. In Shieldoq: **Integrations** → **Cloudflare** → **Connect**.
 4. Paste **API token** and **Account ID** in the dialog.
-5. Submit. Vikela verifies the token, then stores it encrypted.
+5. Submit. Shieldoq verifies the token, then stores it encrypted.
 6. Confirm **Connected**.
 
 > **Screenshot:** Connect Cloudflare dialog (token + account ID)
 
 ## Permissions / scopes
 
-Token permissions must allow Vikela’s verify call and subsequent scanner reads. If verify fails, widen read scopes or confirm Account ID.
+Token permissions must allow Shieldoq’s verify call and subsequent scanner reads. If verify fails, widen read scopes or confirm Account ID.
 
 ## Customer vs platform
 
@@ -43,7 +43,7 @@ Connected card; optional cloud/full scan includes Cloudflare-sourced findings.
 
 ## Disconnect
 
-Disconnect in Vikela. Rotate/delete the API token in Cloudflare.
+Disconnect in Shieldoq. Rotate/delete the API token in Cloudflare.
 
 ## Troubleshooting
 

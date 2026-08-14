@@ -1,4 +1,4 @@
-# Vikela
+# Shieldoq
 
 **Protect. Shield. Comply.**: Universal compliance engine for startups.
 
@@ -41,7 +41,7 @@ npm run dev -w @vikela/web   # :3000
 
 End-user documentation for org admins and operators (sign-up, integrations, frameworks, evidence, billing, and more):
 
-- **[docs/user-guide/](./docs/user-guide/README.md)**: index and how Vikela fits together
+- **[docs/user-guide/](./docs/user-guide/README.md)**: index and how Shieldoq fits together
 - [Getting started](./docs/user-guide/getting-started.md)
 - [Integrations](./docs/user-guide/integrations/README.md), per-provider connect how-tos
 
@@ -70,11 +70,11 @@ For cloud deployment, see [RAILWAY_DEPLOYMENT.md](./RAILWAY_DEPLOYMENT.md) for c
 - **Daily scheduled scans** via BullMQ (`CLOUD_SCAN_CRON`, default 2am)
 
 ```bash
-# Vikela platform credentials (your AWS account used only to AssumeRole into customers)
+# Shieldoq platform credentials (your AWS account used only to AssumeRole into customers)
 AWS_VIKELA_ACCESS_KEY_ID=
 AWS_VIKELA_SECRET_ACCESS_KEY=
 AWS_VIKELA_ACCOUNT_ID=
-AWS_EXTERNAL_ID=vikela-scanner
+AWS_EXTERNAL_ID=shieldoq-scanner
 
 # Scan cloud account
 curl -X POST http://localhost:3001/api/v1/cloud-accounts/{id}/scan -d '{"async":true}'
@@ -152,7 +152,7 @@ UI: **Evidence** (coverage matrix) · **Policies** (editor + bundle)
 ## Phase 8. Multi-tenant + Azure/GCP + Full Scan ✅
 
 - **Org context**: API resolves tenant via `X-Org-Slug` or `X-Clerk-Org-Id` (demo fallback)
-- **Clerk webhook**: `POST /api/v1/webhooks/clerk` syncs `organization.created` → Vikela org + SOC 2 controls
+- **Clerk webhook**: `POST /api/v1/webhooks/clerk` syncs `organization.created` → Shieldoq org + SOC 2 controls
 - **Azure cloud scanner**: Activity logs, storage public access, NSG rules (ARM API)
 - **GCP cloud scanner**: Log sinks, GCS public access, firewall rules, service accounts
 - **Full scan**: `POST /api/v1/scans/full` runs code + all cloud accounts + identity integrations
@@ -220,4 +220,4 @@ See build prompt for full tree. Key paths:
 
 ## License
 
-Proprietary. Vikela © 2026
+Proprietary. Shieldoq © 2026

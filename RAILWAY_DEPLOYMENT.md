@@ -1,11 +1,11 @@
 # Railway Deployment Guide
 
-This guide explains how to deploy Vikela to Railway.
+This guide explains how to deploy Shieldoq to Railway.
 
 ## Prerequisites
 
 - Railway account ([railway.app](https://railway.app))
-- GitHub repository with your Vikela code
+- GitHub repository with your Shieldoq code
 - Clerk account for authentication (`ALLOW_DEMO_INTEGRATIONS` is local-dev only, keep `false` on Railway)
 
 ## Architecture on Railway
@@ -23,7 +23,7 @@ You'll need to create 4 services in your Railway project:
 
 1. Go to [railway.app](https://railway.app) and click "New Project"
 2. Select "Deploy from GitHub repo"
-3. Choose your Vikela repository
+3. Choose your Shieldoq repository
 4. Railway will analyze your repo and detect the services
 
 ### 2. Add PostgreSQL Database
@@ -97,7 +97,7 @@ GITHUB_REDIRECT_URI=https://YOUR_WEB.up.railway.app/api/auth/github/callback
 AWS_VIKELA_ACCOUNT_ID=
 AWS_VIKELA_ACCESS_KEY_ID=
 AWS_VIKELA_SECRET_ACCESS_KEY=
-AWS_EXTERNAL_ID=vikela-scanner
+AWS_EXTERNAL_ID=shieldoq-scanner
 CLOUD_SCAN_CRON=0 2 * * *
 
 # Identity scanning (optional)
@@ -107,7 +107,7 @@ IDENTITY_SCAN_CRON=0 3 * * *
 AWS_S3_ACCESS_KEY_ID=
 AWS_S3_SECRET_ACCESS_KEY=
 AWS_S3_REGION=us-east-1
-AWS_S3_BUCKET=vikela-evidence
+AWS_S3_BUCKET=shieldoq-evidence
 
 # Observability (optional)
 SENTRY_DSN=
@@ -158,7 +158,7 @@ API_URL=https://YOUR_API.up.railway.app
 
 ### 5b. GitHub App setup (required for repo connect)
 
-Vikela uses a **public GitHub App** install flow (same model as Railway / Vercel / Render). A **private** App blocks non-owners with “This is a private GitHub App” and repos never sync.
+Shieldoq uses a **public GitHub App** install flow (same model as Railway / Vercel / Render). A **private** App blocks non-owners with “This is a private GitHub App” and repos never sync.
 
 1. GitHub → **Settings** → **Developer settings** → **GitHub Apps** → your app (e.g. `vikela1`)
 2. **Make public** (Advanced → Make public). Without this, customer install keeps failing.
@@ -173,7 +173,7 @@ Vikela uses a **public GitHub App** install flow (same model as Railway / Vercel
 7. Copy **App ID** → `GITHUB_APP_ID`, slug → `GITHUB_APP_SLUG`, and the App’s **Client ID / Client secret** → `GITHUB_CLIENT_ID` / `GITHUB_CLIENT_SECRET` (OAuth fallback).
 8. Set `GITHUB_REDIRECT_URI` to the same Setup/Callback URL as above.
 
-**Connect flow:** user clicks Connect GitHub → GitHub install wizard → **Only select repositories** → callback with `installation_id` → Vikela syncs granted repos → user picks which to scan.
+**Connect flow:** user clicks Connect GitHub → GitHub install wizard → **Only select repositories** → callback with `installation_id` → Shieldoq syncs granted repos → user picks which to scan.
 
 OAuth (`/api/auth/github/oauth`) remains a fallback when the App PEM is missing.
 
@@ -219,7 +219,7 @@ npm run db:seed
 ### 9. Test the Deployment
 
 1. Visit your web app URL: `https://YOUR_WEB.up.railway.app`
-2. You should see the Vikela interface
+2. You should see the Shieldoq interface
 3. Test authentication flow
 4. Try connecting an integration or running a scan
 

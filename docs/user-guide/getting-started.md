@@ -5,17 +5,17 @@ This guide walks a new organization from sign-up through the first meaningful sc
 ## Prerequisites
 
 - A work email (Clerk authentication).
-- Admin rights in your Vikela organization (first user who creates the org is typically admin).
+- Admin rights in your Shieldoq organization (first user who creates the org is typically admin).
 - At least one integration slot on your plan ([plan limits](./README.md#plan-limits-enforced)).
 
 ## Sign up and sign in
 
-1. Open your Vikela app URL (for example `https://app.example.com` or local `http://localhost:3000`).
+1. Open your Shieldoq app URL (for example `https://app.example.com` or local `http://localhost:3000`).
 2. Choose **Sign up** or **Sign in**.
 3. Complete Clerk authentication (email / SSO as configured by your operator).
 4. After auth, create or join an organization if prompted.
 
-> **Screenshot:** Sign-in card with Vikela branding
+> **Screenshot:** Sign-in card with Shieldoq branding
 
 ### Troubleshooting
 

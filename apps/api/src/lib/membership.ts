@@ -90,7 +90,7 @@ export async function ensureMembershipFromSession(req: FastifyRequest): Promise<
     where: { orgId_clerkId: { orgId: org.id, clerkId: auth.userId } },
   });
   if (existing) {
-    // Keep Vikela role aligned with Clerk org role (admin connects integrations).
+    // Keep Shieldoq role aligned with Clerk org role (admin connects integrations).
     const mapped = mapClerkRole((auth as { orgRole?: string }).orgRole);
     if (
       (mapped === "ADMIN" || mapped === "OWNER") &&

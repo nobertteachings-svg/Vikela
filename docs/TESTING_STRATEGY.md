@@ -1,10 +1,10 @@
 # Comprehensive Testing Strategy
 
-This document outlines the complete testing strategy for the Vikela project, covering all testing types as requested.
+This document outlines the complete testing strategy for the Shieldoq project, covering all testing types as requested.
 
 ## Testing Overview
 
-The Vikela project implements a comprehensive testing strategy covering functional, non-functional, structural, and regression testing types.
+The Shieldoq project implements a comprehensive testing strategy covering functional, non-functional, structural, and regression testing types.
 
 ## Functional Testing
 
@@ -259,7 +259,7 @@ The CI pipeline (`.github/workflows/ci.yml`) includes:
 ## Test Structure
 
 ```
-vikela/
+shieldoq/
 ├── apps/
 │   ├── api/
 │   │   ├── src/

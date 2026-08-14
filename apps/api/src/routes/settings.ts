@@ -361,7 +361,7 @@ export const settingsRoutes: FastifyPluginAsync = async (app) => {
     if (format === "json") {
       return reply
         .header("Content-Type", "application/json; charset=utf-8")
-        .header("Content-Disposition", `attachment; filename="vikela-export-${stamp}.json"`)
+        .header("Content-Disposition", `attachment; filename="shieldoq-export-${stamp}.json"`)
         .send(JSON.stringify(payload, null, 2));
     }
 
@@ -380,11 +380,11 @@ export const settingsRoutes: FastifyPluginAsync = async (app) => {
       ];
       return reply
         .header("Content-Type", "text/csv; charset=utf-8")
-        .header("Content-Disposition", `attachment; filename="vikela-export-${stamp}.csv"`)
+        .header("Content-Disposition", `attachment; filename="shieldoq-export-${stamp}.csv"`)
         .send(lines.join("\n"));
     }
 
-    const html = `<!DOCTYPE html><html><head><meta charset="utf-8"/><title>Vikela export, ${org.name}</title>
+    const html = `<!DOCTYPE html><html><head><meta charset="utf-8"/><title>Shieldoq export, ${org.name}</title>
 <style>body{font-family:system-ui,sans-serif;max-width:800px;margin:2rem auto;color:#222}h1{font-size:1.4rem}table{border-collapse:collapse;width:100%;font-size:12px}td,th{border:1px solid #ddd;padding:6px;text-align:left}</style></head><body>
 <h1>${escapeHtml(org.name)}, workspace export</h1>
 <p>Exported ${payload.exportedAt}. Print this page to PDF.</p>
@@ -403,7 +403,7 @@ ${gaps
 
     return reply
       .header("Content-Type", "text/html; charset=utf-8")
-      .header("Content-Disposition", `attachment; filename="vikela-export-${stamp}.html"`)
+      .header("Content-Disposition", `attachment; filename="shieldoq-export-${stamp}.html"`)
       .send(html);
   });
 };

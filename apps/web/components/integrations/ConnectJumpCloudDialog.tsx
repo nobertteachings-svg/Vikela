@@ -39,7 +39,7 @@ export function ConnectJumpCloudDialog({
         <h2 className="text-lg font-semibold">Connect JumpCloud</h2>
         <p className="mt-2 text-sm text-muted">
           JumpCloud Admin Portal, Settings (gear), API Settings, Create new API key. Copy the
-          key once and paste it here. No Vikela .env variables are required.
+          key once and paste it here. No Shieldoq .env variables are required.
         </p>
         <label className="mt-4 block text-sm font-medium">API key</label>
         <input

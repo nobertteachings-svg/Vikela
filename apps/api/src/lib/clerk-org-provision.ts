@@ -21,7 +21,7 @@ function clerkOrgSlugBase(name: string, claimSlug?: string): string {
   );
 }
 
-/** Create or update Vikela org row from Clerk session (when webhooks lag or are unset). */
+/** Create or update Shieldoq org row from Clerk session (when webhooks lag or are unset). */
 export async function ensureOrganizationFromSession(
   req: FastifyRequest
 ): Promise<Organization | null> {

@@ -102,7 +102,7 @@ export function ControlsPageContent({
                 {controls.length} controls for {org.name}
               </h2>
               <p className="mt-2 max-w-lg text-sm leading-relaxed text-comply-text-secondary">
-                Vikela maps findings from code, cloud, and identity into{" "}
+                Shieldoq maps findings from code, cloud, and identity into{" "}
                 {enrolledFrameworks.length > 0
                   ? enrolledFrameworks.map((f) => f.name).join(", ")
                   : "Enable frameworks on your dashboard to start tracking controls"}

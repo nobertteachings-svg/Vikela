@@ -4,7 +4,7 @@
 **Connect type:** API key + Application key  
 **Path:** Integrations → Observability → **Datadog**
 
-## What Vikela uses it for
+## What Shieldoq uses it for
 
 Monitors, logs, and security signals context for compliance evidence and operational visibility.
 
@@ -13,16 +13,16 @@ Monitors, logs, and security signals context for compliance evidence and operati
 - Datadog org access to create an **API key** and **Application key**.
 - Know your Datadog **site** (e.g. `datadoghq.com`, `datadoghq.eu`).
 - Free integration slot.
-- No Vikela-side Datadog secrets required.
+- No Shieldoq-side Datadog secrets required.
 
 ## Connect steps
 
 1. In Datadog: **Organization Settings** → **API Keys** → create an API key.
 2. **Organization Settings** → **Application Keys** → create an Application key (associated with a user that has needed read permissions).
-3. If you are in Datadog product onboarding (Agent / AWS), you can **skip** those steps for Vikela connect, keys are enough.
-4. In Vikela: **Integrations** → **Datadog** → **Connect**.
+3. If you are in Datadog product onboarding (Agent / AWS), you can **skip** those steps for Shieldoq connect, keys are enough.
+4. In Shieldoq: **Integrations** → **Datadog** → **Connect**.
 5. Enter **API key**, **Application key**, and **site**.
-6. Submit; Vikela verifies then encrypts credentials.
+6. Submit; Shieldoq verifies then encrypts credentials.
 7. Confirm **Connected**.
 
 > **Screenshot:** Connect Datadog dialog (API key, app key, site)
@@ -44,7 +44,7 @@ Connected card; optional scans/workflows that read Datadog succeed.
 
 ## Disconnect
 
-Disconnect in Vikela; revoke keys in Datadog.
+Disconnect in Shieldoq; revoke keys in Datadog.
 
 ## Troubleshooting
 

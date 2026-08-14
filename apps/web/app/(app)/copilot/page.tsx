@@ -22,7 +22,7 @@ export default async function CopilotPage() {
       <div className="comply-page">
         <PageHeader
           eyebrow="AI"
-          title="Vikela Copilot"
+          title="Shieldoq Copilot"
           description="Remediation guidance and answers grounded in your workspace."
         />
         <PlanUpgradePanel feature="copilot" currentPlan={plan} />

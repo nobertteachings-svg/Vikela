@@ -34,7 +34,7 @@ export function dispatchOrgWebhooks(
 export type WebhookPostResult = {
   /** True when the remote endpoint returned 2xx. */
   ok: boolean;
-  /** True when Vikela reached the host and got an HTTP response (any status). */
+  /** True when Shieldoq reached the host and got an HTTP response (any status). */
   reached: boolean;
   status?: number;
   error?: string;
@@ -62,10 +62,10 @@ async function postWebhook(
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "User-Agent": "Vikela-Webhooks/1.0",
-        "X-Vikela-Event": event,
-        "X-Vikela-Delivery-Id": envelope.id,
-        "X-Vikela-Signature": `sha256=${signature}`,
+        "User-Agent": "Shieldoq-Webhooks/1.0",
+        "X-Shieldoq-Event": event,
+        "X-Shieldoq-Delivery-Id": envelope.id,
+        "X-Shieldoq-Signature": `sha256=${signature}`,
       },
       body,
       signal,

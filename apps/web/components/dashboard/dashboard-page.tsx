@@ -190,7 +190,7 @@ export function DashboardPageContent({
               One platform for every framework your customers ask for
             </h2>
             <p className="mt-4 max-w-2xl text-sm leading-relaxed text-comply-text-secondary">
-              Vikela maps findings from code, cloud, and identity into{" "}
+              Shieldoq maps findings from code, cloud, and identity into{" "}
               {enrolledFrameworks.length > 0
                 ? enrolledFrameworks.map((f) => f.name).join(", ")
                 : "SOC 2, HIPAA, ISO 27001, GDPR, PCI DSS, FedRAMP, CMMC, and more"}

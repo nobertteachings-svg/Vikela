@@ -1,6 +1,6 @@
 import { prisma } from "../../../lib/prisma.js";
 import { encrypt } from "../../../lib/crypto.js";
-import { verifyAssumeRole, isVikelaAwsConfigured } from "../../../lib/aws-session.js";
+import { verifyAssumeRole, isShieldoqAwsConfigured } from "../../../lib/aws-session.js";
 
 export async function connectAwsAccount(params: {
   roleArn: string;
@@ -12,9 +12,9 @@ export async function connectAwsAccount(params: {
   const org = await prisma.organization.findFirst({ where: { slug: params.orgSlug } });
   if (!org) throw new Error(`Organization not found: ${params.orgSlug}`);
 
-  if (!isVikelaAwsConfigured()) {
+  if (!isShieldoqAwsConfigured()) {
     throw new Error(
-      "Vikela AWS credentials are not configured. Set AWS_VIKELA_ACCESS_KEY_ID to an IAM access key (AKIA…), not the account id, plus AWS_VIKELA_SECRET_ACCESS_KEY."
+      "Shieldoq AWS credentials are not configured. Set AWS_VIKELA_ACCESS_KEY_ID to an IAM access key (AKIA…), not the account id, plus AWS_VIKELA_SECRET_ACCESS_KEY."
     );
   }
 

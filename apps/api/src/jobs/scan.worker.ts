@@ -7,7 +7,7 @@ import { executeFullScan } from "../services/scanner/execute-full-scan.js";
 import { finalizeLiteScan } from "../services/scanner/finalize-lite-scan.js";
 import { prisma } from "../lib/prisma.js";
 
-const WORKER_LOCK_KEY = "vikela:scan-worker-lock";
+const WORKER_LOCK_KEY = "shieldoq:scan-worker-lock";
 const WORKER_LOCK_TTL_SEC = 45;
 
 async function handleScanJob(payload: ScanJobPayload) {

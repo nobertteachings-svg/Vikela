@@ -2,13 +2,13 @@
   "Version": "2012-10-17",
   "Statement": [
     {
-      "Sid": "AllowAssumeCustomerVikelaScannerRoles",
+      "Sid": "AllowAssumeCustomerShieldoqScannerRoles",
       "Effect": "Allow",
       "Action": "sts:AssumeRole",
-      "Resource": "arn:aws:iam::*:role/VikelaScanner",
+      "Resource": "arn:aws:iam::*:role/ShieldoqScanner",
       "Condition": {
         "StringEquals": {
-          "sts:ExternalId": "vikela-scanner"
+          "sts:ExternalId": "shieldoq-scanner"
         }
       }
     }

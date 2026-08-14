@@ -45,7 +45,7 @@ export async function getServerApiHeaders(): Promise<Record<string, string>> {
     if (devSlug) headers["X-Org-Slug"] = devSlug;
     const internalSecret = devInternalSecret();
     if (internalSecret) {
-      headers["X-Vikela-Internal-Secret"] = internalSecret;
+      headers["X-Shieldoq-Internal-Secret"] = internalSecret;
     }
     return headers;
   }
@@ -72,7 +72,7 @@ export async function getServerApiHeaders(): Promise<Record<string, string>> {
   // Dev: allow internal secret for local API, but never overwrite Clerk org slug/id.
   const internalSecret = devInternalSecret();
   if (internalSecret) {
-    headers["X-Vikela-Internal-Secret"] = internalSecret;
+    headers["X-Shieldoq-Internal-Secret"] = internalSecret;
     if (!session.orgId && !session.orgSlug) {
       const devSlug = resolveDevOrgSlug();
       if (devSlug) headers["X-Org-Slug"] = devSlug;

@@ -68,7 +68,7 @@ const SOC2_CONTROLS: Array<{
 ];
 
 async function main() {
-  console.log("Seeding Vikela database..");
+  console.log("Seeding Shieldoq database..");
 
   for (const fw of COMPLIANCE_FRAMEWORKS) {
     await prisma.framework.upsert({
@@ -198,7 +198,7 @@ async function main() {
       externalId: "123456789012",
       accessToken: encrypt("assume-role-only"),
       scopes: [],
-      metadata: { roleArn: "arn:aws:iam::123456789012:role/VikelaScanner" },
+      metadata: { roleArn: "arn:aws:iam::123456789012:role/ShieldoqScanner" },
       isActive: false,
     },
   });

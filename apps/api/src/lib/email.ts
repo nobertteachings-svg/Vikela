@@ -1,4 +1,4 @@
-const FROM = process.env.RESEND_FROM_EMAIL ?? "Vikela <onboarding@vikela.com>";
+const FROM = process.env.RESEND_FROM_EMAIL ?? "Shieldoq <onboarding@shieldoq.com>";
 
 export async function sendEmail(params: {
   to: string;
@@ -51,8 +51,8 @@ export async function sendScanCompleteEmail(params: {
         <li>Posture score: <strong>${scoreLabel}</strong></li>
         <li>Gaps found this scan: <strong>${params.gapCount}</strong></li>
       </ul>
-      <p><a href="${params.scansUrl}">View scans in Vikela</a></p>
-      <p style="color:#666;font-size:12px">Vikela. Universal Compliance Engine</p>
+      <p><a href="${params.scansUrl}">View scans in Shieldoq</a></p>
+      <p style="color:#666;font-size:12px">Shieldoq. Universal Compliance Engine</p>
     `,
   });
 }
@@ -87,8 +87,8 @@ export async function sendGapAlertsEmail(params: {
       <p>New compliance gaps were detected in <strong>${params.orgName}</strong>.</p>
       <p><strong>${params.totalCount}</strong> critical/high finding${params.totalCount === 1 ? "" : "s"} (${breakdown}).</p>
       <ul>${findingsHtml}</ul>
-      <p><a href="${params.gapsUrl}">Review gaps in Vikela</a></p>
-      <p style="color:#666;font-size:12px">Vikela. Universal Compliance Engine</p>
+      <p><a href="${params.gapsUrl}">Review gaps in Shieldoq</a></p>
+      <p style="color:#666;font-size:12px">Shieldoq. Universal Compliance Engine</p>
     `,
   });
 }
@@ -109,11 +109,11 @@ export async function sendMemberInviteEmail(params: {
 }) {
   return sendEmail({
     to: params.to,
-    subject: `You've been invited to ${params.orgName} on Vikela`,
+    subject: `You've been invited to ${params.orgName} on Shieldoq`,
     html: `
-      <p>${params.inviterName} invited you to join <strong>${params.orgName}</strong> on Vikela.</p>
+      <p>${params.inviterName} invited you to join <strong>${params.orgName}</strong> on Shieldoq.</p>
       <p><a href="${params.inviteUrl}">Accept invitation</a></p>
-      <p style="color:#666;font-size:12px">Vikela. Universal Compliance Engine</p>
+      <p style="color:#666;font-size:12px">Shieldoq. Universal Compliance Engine</p>
     `,
   });
 }
@@ -131,7 +131,7 @@ export async function sendCriticalGapAlert(params: {
     html: `
       <p>A <strong>${params.severity}</strong> gap was detected in <strong>${params.orgName}</strong>:</p>
       <p>${params.gapTitle}</p>
-      <p><a href="${params.dashboardUrl}">View in Vikela</a></p>
+      <p><a href="${params.dashboardUrl}">View in Shieldoq</a></p>
     `,
   });
 }
@@ -153,8 +153,8 @@ export async function sendTrainingReminderEmail(params: {
       <p>Hi ${escapeHtml(params.name)},</p>
       <p>You have overdue security training for <strong>${escapeHtml(params.orgName)}</strong>:</p>
       <ul>${list}</ul>
-      <p><a href="${params.trainingUrl}">Complete training in Vikela</a></p>
-      <p style="color:#666;font-size:12px">Vikela. Universal Compliance Engine</p>
+      <p><a href="${params.trainingUrl}">Complete training in Shieldoq</a></p>
+      <p style="color:#666;font-size:12px">Shieldoq. Universal Compliance Engine</p>
     `,
   });
 }

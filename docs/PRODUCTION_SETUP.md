@@ -1,6 +1,6 @@
 # Production setup guide
 
-Use this checklist to move Vikela from local demo mode to production.
+Use this checklist to move Shieldoq from local demo mode to production.
 
 ## 1. Install dependencies and fix audit issues
 

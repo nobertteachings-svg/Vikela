@@ -1,27 +1,27 @@
 AWSTemplateFormatVersion: "2010-09-09"
-Description: Vikela cross-account scanner role (read-only SecurityAudit-style access)
+Description: Shieldoq cross-account scanner role (read-only SecurityAudit-style access)
 
 Parameters:
-  VikelaAccountId:
+  ShieldoqAccountId:
     Type: String
-    Description: Vikela AWS account ID that will assume this role
+    Description: Shieldoq AWS account ID that will assume this role
   ExternalId:
     Type: String
-    Description: External ID for secure AssumeRole (set AWS_EXTERNAL_ID in Vikela)
-    Default: vikela-scanner
+    Description: External ID for secure AssumeRole (set AWS_EXTERNAL_ID in Shieldoq)
+    Default: shieldoq-scanner
 
 Resources:
-  VikelaScannerRole:
+  ShieldoqScannerRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: VikelaScanner
+      RoleName: ShieldoqScanner
       MaxSessionDuration: 3600
       AssumeRolePolicyDocument:
         Version: "2012-10-17"
         Statement:
           - Effect: Allow
             Principal:
-              AWS: !Sub "arn:aws:iam::${VikelaAccountId}:root"
+              AWS: !Sub "arn:aws:iam::${ShieldoqAccountId}:root"
             Action: sts:AssumeRole
             Condition:
               StringEquals:
@@ -32,8 +32,8 @@ Resources:
 
 Outputs:
   RoleArn:
-    Description: Paste this ARN into Vikela AWS integration
-    Value: !GetAtt VikelaScannerRole.Arn
+    Description: Paste this ARN into Shieldoq AWS integration
+    Value: !GetAtt ShieldoqScannerRole.Arn
   ExternalId:
     Description: External ID configured on the trust policy
     Value: !Ref ExternalId

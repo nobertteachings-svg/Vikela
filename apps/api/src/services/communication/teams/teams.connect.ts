@@ -42,7 +42,7 @@ async function probeWebhook(webhookUrl: string): Promise<void> {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      text: "Vikela connected successfully. You can ignore this test message.",
+      text: "Shieldoq connected successfully. You can ignore this test message.",
     }),
   });
 

@@ -458,7 +458,7 @@ export function CopilotWorkspace() {
                 {messages.length === 0 && !loading && (
                   <div className="flex flex-col items-center justify-center py-16 text-center">
                     <Bot className="mb-4 h-12 w-12 text-comply-purple" />
-                    <h3 className="text-lg font-semibold text-comply-text-primary">Vikela Copilot</h3>
+                    <h3 className="text-lg font-semibold text-comply-text-primary">Shieldoq Copilot</h3>
                     <p className="mt-1 max-w-md text-sm text-comply-text-secondary">
                       Claude-powered assistant with RAG over your gaps, controls, policies, and
                       evidence. Ask how to fix findings or what auditors need.

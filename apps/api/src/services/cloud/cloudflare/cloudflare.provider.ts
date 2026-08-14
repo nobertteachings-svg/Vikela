@@ -143,7 +143,7 @@ export class CloudflareProvider implements ICloudProvider {
     if (this.accountId === "unknown") {
       findings.push({
         title: "Cloudflare account ID missing on integration",
-        description: "Reconnect Cloudflare so Vikela can scope zone and Access checks.",
+        description: "Reconnect Cloudflare so Shieldoq can scope zone and Access checks.",
         severity: "MEDIUM",
         source: "IAM",
         cloudProvider: "CLOUDFLARE",

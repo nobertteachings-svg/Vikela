@@ -3,7 +3,7 @@
 **Path:** Sidebar → **Integrations** (`/integrations`)  
 **Who can manage:** **Admin** (and other roles allowed by your org policy for connect). Auditors cannot open this page.
 
-Integrations are how Vikela reads your systems. Each **active provider** counts toward your plan’s integration limit.
+Integrations are how Shieldoq reads your systems. Each **active provider** counts toward your plan’s integration limit.
 
 ## Categories
 
@@ -19,11 +19,11 @@ Integrations are how Vikela reads your systems. Each **active provider** counts 
 
 ## Connect types
 
-| Type | What you do in Vikela | Examples |
+| Type | What you do in Shieldoq | Examples |
 |------|----------------------|----------|
 | **App install / OAuth** | Click Connect → authorize in the provider | GitHub, GitLab, Bitbucket, Azure, GCP, Okta, Slack |
 | **AssumeRole** | Paste Role ARN (+ external ID) after deploying a stack | AWS |
-| **API key / token** | Paste keys or webhook URL in a dialog; Vikela verifies then stores encrypted | Cloudflare, JumpCloud, Auth0 (M2M), Datadog, Grafana, PagerDuty, New Relic, Teams |
+| **API key / token** | Paste keys or webhook URL in a dialog; Shieldoq verifies then stores encrypted | Cloudflare, JumpCloud, Auth0 (M2M), Datadog, Grafana, PagerDuty, New Relic, Teams |
 
 Tokens are encrypted at rest (AES-256-GCM). AWS never stores long-lived customer access keys, only AssumeRole.
 
@@ -44,7 +44,7 @@ If you see **Integration limit reached**, disconnect an unused provider or [upgr
 |-------|---------|
 | **Connected** | Active integration for this org |
 | **Connect** | Ready to connect |
-| **Not configured** | Vikela platform credentials for this provider are missing (ask your operator) |
+| **Not configured** | Shieldoq platform credentials for this provider are missing (ask your operator) |
 | **Coming soon** | No live connect path yet |
 
 > **Screenshot:** Integrations provider grid by category
@@ -79,7 +79,7 @@ Exact disconnect UX may vary by provider; if a card stays Connected after an err
 
 | Kind | Who configures | Examples |
 |------|----------------|----------|
-| **Platform** (Vikela operator `.env`) | Your Vikela host | `GITHUB_*`, `GITLAB_APP_ID`, `SLACK_CLIENT_ID`, `AUTH0_MANAGEMENT_CLIENT_ID`, Azure/GCP OAuth apps |
+| **Platform** (Shieldoq operator `.env`) | Your Shieldoq host | `GITHUB_*`, `GITLAB_APP_ID`, `SLACK_CLIENT_ID`, `AUTH0_MANAGEMENT_CLIENT_ID`, Azure/GCP OAuth apps |
 | **Customer** (you in the UI) | Org admin | AWS Role ARN, Cloudflare API token, Datadog keys, Teams webhook URL |
 
 If Connect shows **Not configured**, the platform side is incomplete, customer keys alone cannot fix it.

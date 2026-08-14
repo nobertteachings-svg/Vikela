@@ -4,7 +4,7 @@
 **Connect type:** Base URL + service account token  
 **Path:** Integrations → Observability → **Grafana**
 
-## What Vikela uses it for
+## What Shieldoq uses it for
 
 Dashboards and alert configuration context for compliance/operations.
 
@@ -13,16 +13,16 @@ Dashboards and alert configuration context for compliance/operations.
 - A Grafana stack URL (Cloud example: `https://yourstack.grafana.net`) or self-managed base URL.
 - Ability to create a **service account** and token (`glsa_…`) **on that stack**.
 - Free integration slot.
-- No Vikela-side Grafana OAuth secrets required.
+- No Shieldoq-side Grafana OAuth secrets required.
 
 ## Connect steps
 
 1. Open your Grafana **stack** (not only grafana.com access policies).
 2. Create a **Service account** with Viewer (or appropriate read) role.
 3. Add a token; copy the `glsa_…` value.
-4. In Vikela: **Integrations** → **Grafana** → **Connect**.
+4. In Shieldoq: **Integrations** → **Grafana** → **Connect**.
 5. Enter **Grafana URL** and **service account token**.
-6. Submit. Vikela verifies (e.g. via authenticated `/api/user`).
+6. Submit. Shieldoq verifies (e.g. via authenticated `/api/user`).
 7. Confirm **Connected**.
 
 > **Screenshot:** Connect Grafana dialog (URL + token)
@@ -43,11 +43,11 @@ Dashboards and alert configuration context for compliance/operations.
 
 ## Verify success
 
-Connected; verify call succeeds (Play Grafana’s public `/api/org` is not sufficient alone. Vikela uses authenticated endpoints).
+Connected; verify call succeeds (Play Grafana’s public `/api/org` is not sufficient alone. Shieldoq uses authenticated endpoints).
 
 ## Disconnect
 
-Disconnect in Vikela; delete the service account token in Grafana.
+Disconnect in Shieldoq; delete the service account token in Grafana.
 
 ## Troubleshooting
 

@@ -4,13 +4,13 @@
 **Connect type:** OAuth  
 **Path:** Integrations → Identity → **Okta**
 
-## What Vikela uses it for
+## What Shieldoq uses it for
 
 Identity compliance scans: MFA coverage, users/groups posture, audit-related signals.
 
 ## Prerequisites
 
-- Okta admin (or app admin) able to authorize the Vikela OAuth app for your org.
+- Okta admin (or app admin) able to authorize the Shieldoq OAuth app for your org.
 - Free integration slot.
 - Platform: `OKTA_CLIENT_ID` (and related Okta app config). Else **Not configured**.
 
@@ -18,12 +18,12 @@ Identity compliance scans: MFA coverage, users/groups posture, audit-related sig
 
 1. **Integrations** → **Okta** → **Connect**.
 2. Complete Okta sign-in and consent for your org domain.
-3. Return to Vikela; confirm **Connected**.
+3. Return to Shieldoq; confirm **Connected**.
 4. Run an identity or full scan.
 
 ## Permissions / scopes
 
-OAuth scopes registered on the Vikela Okta application (typically read users, groups, factors/policies as needed for scanning).
+OAuth scopes registered on the Shieldoq Okta application (typically read users, groups, factors/policies as needed for scanning).
 
 ## Customer vs platform
 
@@ -38,7 +38,7 @@ Connected; identity scan completes; gaps may appear under source **Identity**.
 
 ## Disconnect
 
-Disconnect in Vikela; deactivate the app assignment in Okta if desired.
+Disconnect in Shieldoq; deactivate the app assignment in Okta if desired.
 
 ## Troubleshooting
 

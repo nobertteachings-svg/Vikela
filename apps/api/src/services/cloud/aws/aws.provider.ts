@@ -20,7 +20,7 @@ import type {
   StorageBucket,
   VPC,
 } from "../types.js";
-import { assumeCustomerRole, isVikelaAwsConfigured } from "../../../lib/aws-session.js";
+import { assumeCustomerRole, isShieldoqAwsConfigured } from "../../../lib/aws-session.js";
 import type { AwsCredentialIdentity } from "@aws-sdk/types";
 import { fetchIamUsers, fetchMfaReport, fetchStaleAccessKeys } from "./aws.iam.js";
 import { auditCloudTrail } from "./aws.cloudtrail.js";
@@ -135,7 +135,7 @@ export class AWSProvider implements ICloudProvider {
   }
 
   async runComplianceChecks(): Promise<ScanFinding[]> {
-    if (!isVikelaAwsConfigured()) {
+    if (!isShieldoqAwsConfigured()) {
       return demoAwsFindings();
     }
 

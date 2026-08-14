@@ -208,7 +208,7 @@ async function postPrReviewComments(
   if (top.length === 0) return;
 
   const summary = [
-    "## Vikela Compliance Scan",
+    "## Shieldoq Compliance Scan",
     "",
     `Found **${findings.length}** potential compliance issue(s) in this PR.`,
     "", ...top.map(
@@ -216,7 +216,7 @@ async function postPrReviewComments(
         `- **${f.severity}** \`${f.filePath}${f.lineNumber ? `:${f.lineNumber}` : ""}\`, ${f.title}`
     ),
     "",
-    "_Powered by [Vikela](https://vikela.dev). Protect. Shield. Comply._",
+    "_Powered by [Shieldoq](https://shieldoq.com). Protect. Shield. Comply._",
   ].join("\n");
 
   await git.commentOnPR(repoFullName, prNumber, { body: summary });

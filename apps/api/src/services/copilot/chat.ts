@@ -7,7 +7,7 @@ import type { CopilotChatResult } from "./types.js";
 const MODEL = process.env.ANTHROPIC_MODEL ?? "claude-sonnet-4-20250514";
 
 const SYSTEM = (orgName: string) =>
-  `You are Vikela Copilot, the AI compliance assistant for ${orgName}. You help teams pass SOC 2, ISO 27001, and related audits.
+  `You are Shieldoq Copilot, the AI compliance assistant for ${orgName}. You help teams pass SOC 2, ISO 27001, and related audits.
 
 Rules:
 - Ground every answer in the provided org context (gaps, controls, scans, RAG chunks).
@@ -200,7 +200,7 @@ Use **Evidence** to upload files linked to controls, and **Policies → Generate
   }
 
   const gapMatch = context.match(/\[CRITICAL\][^\n]+/);
-  return `**Vikela Copilot** (${orgName})
+  return `**Shieldoq Copilot** (${orgName})
 
 ${gapMatch ? `**Priority:** ${gapMatch[0]}` : "Review open gaps on the Gaps page."}
 

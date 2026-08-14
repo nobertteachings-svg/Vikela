@@ -52,7 +52,7 @@ export function DocPage({
 
           <article className="min-w-0">
             <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-comply-purple-border">
-              Vikela
+              Shieldoq
             </p>
             <h1 className="mt-2 text-3xl font-medium tracking-tight text-comply-text-primary">
               {title}

@@ -267,7 +267,7 @@ export const trustRoutes: FastifyPluginAsync = async (app) => {
               ${company ? `<li>Company: <strong>${escapeHtml(company)}</strong></li>` : ""}
               ${note ? `<li>Note: ${escapeHtml(note)}</li>` : ""}
             </ul>
-            <p><a href="${adminUrl}">Open trust center in Vikela</a> to follow up.</p>
+            <p><a href="${adminUrl}">Open trust center in Shieldoq</a> to follow up.</p>
           `,
         }).catch((e) => {
           console.warn("[trust] admin notify failed", { to, e });

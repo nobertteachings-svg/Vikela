@@ -4,7 +4,7 @@
 **Connect type:** OAuth  
 **Path:** Integrations → Identity → **Azure AD**
 
-## What Vikela uses it for
+## What Shieldoq uses it for
 
 Directory / identity posture: conditional access signals, sign-in related compliance checks, MFA and user posture as implemented by the identity scanner.
 
@@ -12,7 +12,7 @@ This is separate from the **Azure** cloud integration (subscriptions / cloud res
 
 ## Prerequisites
 
-- Work/school Entra account with rights to consent to the Vikela app.
+- Work/school Entra account with rights to consent to the Shieldoq app.
 - Free integration slot.
 - Platform: `AZURE_AD_CLIENT_ID` or shared `AZURE_CLIENT_ID`. Else **Not configured**.
 
@@ -25,7 +25,7 @@ This is separate from the **Azure** cloud integration (subscriptions / cloud res
 
 ## Permissions / scopes
 
-Microsoft Graph permissions configured on the Vikela app (directory read, policy read, etc. as deployed).
+Microsoft Graph permissions configured on the Shieldoq app (directory read, policy read, etc. as deployed).
 
 ## Customer vs platform
 
@@ -40,7 +40,7 @@ Connected; identity findings on Gaps/Scans.
 
 ## Disconnect
 
-Disconnect in Vikela; revoke under Entra → Enterprise applications.
+Disconnect in Shieldoq; revoke under Entra → Enterprise applications.
 
 ## Troubleshooting
 

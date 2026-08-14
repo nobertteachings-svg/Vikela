@@ -1,5 +1,5 @@
 /**
- * Cross-framework control graph, maps canonical Vikela controls (SOC 2 codes)
+ * Cross-framework control graph, maps canonical Shieldoq controls (SOC 2 codes)
  * to each compliance framework's requirement identifiers.
  * One scan finding on CC6.1 satisfies SOC 2, HIPAA, ISO 27001, etc.
  */

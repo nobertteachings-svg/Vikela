@@ -1,7 +1,7 @@
 import type { Organization } from "@prisma/client";
 import { prisma } from "./prisma.js";
 
-/** Resolve Vikela org from OAuth state slug and optional Clerk org id fallback. */
+/** Resolve Shieldoq org from OAuth state slug and optional Clerk org id fallback. */
 export async function resolveOAuthOrganization(
   orgSlug: string | null | undefined,
   clerkOrgId?: string | null

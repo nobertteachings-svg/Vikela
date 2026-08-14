@@ -51,7 +51,7 @@ const config: Config = {
           "text-dark": "var(--text-dark)",
         },
         /** Preferred namespace — same tokens as `comply` (legacy). */
-        vikela: {
+        shieldoq: {
           app: "var(--bg-app)",
           card: "var(--bg-card)",
           cream: "var(--bg-cream)",
