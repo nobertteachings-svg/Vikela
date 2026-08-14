@@ -4,7 +4,7 @@ import { prisma } from "../lib/prisma.js";
 import { ok, err } from "../lib/response.js";
 import { logAuditEvent } from "../lib/audit-log.js";
 import { getAdminEmails } from "../lib/notify-helpers.js";
-import { sendEmail } from "../lib/email.js";
+import { sendEmail, escapeHtml } from "../lib/email.js";
 import { mergeOrgSettingsJson, parseOrgSettings } from "../lib/org-settings.js";
 import { requireOrganization } from "../lib/org-context.js";
 import { requireAdmin, requireRead } from "../lib/authorization.js";
@@ -18,14 +18,6 @@ const REPORT_MAX_PER_WINDOW = 8;
 
 function isValidEmail(value: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-}
-
-function escapeHtml(s: string): string {
-  return s
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
 }
 
 function allowReportRequest(key: string): boolean {
@@ -261,13 +253,21 @@ export const trustRoutes: FastifyPluginAsync = async (app) => {
           to,
           subject: `Trust center report request, ${org.name}`,
           html: `
-            <p>Someone requested a compliance report via your trust center.</p>
-            <ul>
-              <li>Email: <strong>${escapeHtml(email)}</strong></li>
-              ${company ? `<li>Company: <strong>${escapeHtml(company)}</strong></li>` : ""}
-              ${note ? `<li>Note: ${escapeHtml(note)}</li>` : ""}
+            <p style="margin:0 0 12px;font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#2dd4bf;">Trust center</p>
+            <h1 style="margin:0 0 16px;font-size:22px;font-weight:600;line-height:1.3;color:#faf9f5;">Report request received</h1>
+            <p style="margin:0 0 16px;color:#a8a29e;">Someone requested a compliance report via your public trust center.</p>
+            <ul style="margin:0 0 8px;padding-left:18px;color:#a8a29e;">
+              <li style="margin:0 0 8px;">Email: <strong style="color:#f5f5f4;">${escapeHtml(email)}</strong></li>
+              ${company ? `<li style="margin:0 0 8px;">Company: <strong style="color:#f5f5f4;">${escapeHtml(company)}</strong></li>` : ""}
+              ${note ? `<li style="margin:0 0 8px;">Note: ${escapeHtml(note)}</li>` : ""}
             </ul>
-            <p><a href="${adminUrl}">Open trust center in Shieldoq</a> to follow up.</p>
+            <table role="presentation" cellpadding="0" cellspacing="0" style="margin:24px 0 8px;">
+              <tr>
+                <td style="border-radius:6px;background-color:#0f766e;">
+                  <a href="${adminUrl}" style="display:inline-block;padding:12px 20px;font-size:14px;font-weight:600;color:#ccfbf1;text-decoration:none;">Open trust center</a>
+                </td>
+              </tr>
+            </table>
           `,
         }).catch((e) => {
           console.warn("[trust] admin notify failed", { to, e });
